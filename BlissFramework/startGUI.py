@@ -17,6 +17,22 @@ from BlissFramework.Utils import ErrorHandler
 from BlissFramework.Utils import GUILogHandler
 
 from HardwareRepository import HardwareRepository
+import mock
+import inspect
+from common_api import connect
+
+# mock Hardware Repository module to be able to catch all calls
+def patchedGetHardwareObject(name):
+    caller = inspect.getargvalues(inspect.getouterframes(inspect.currentframe())[1][0]).locals['self']
+    brick_name = caller.__class__.__name__
+    common_api.connect(brick_name, caller)
+    return mock.Mock()
+def returnPatchedHwr(*args,**kwargs):
+    hwr_mock = mock.MagicMock()
+    hwr_mock.configure_mock(getHardwareObject=patchedGetHardwareObject)
+    return hwr_mock 
+HardwareRepository.HardwareRepository=returnPatchedHwr
+
 
 _logger = logging.getLogger()
 _GUIhdlr = GUILogHandler.GUILogHandler()
