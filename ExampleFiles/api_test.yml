@@ -1,0 +1,44 @@
+- children:
+  - brick: {class: NullBrick, name: Qt4_ApiTestBrick0}
+    children: []
+    connections: []
+    name: Qt4_ApiTestBrick0
+    properties: []
+    type: Qt4_ApiTestBrick
+  connections: []
+  name: mxCuBE
+  properties:
+  - choices: [none, top center, top left, top right, bottom center, bottom left, bottom
+        right, center, hcenter, vcenter, left, right]
+    comment: ''
+    defaultValue: none
+    hidden: false
+    name: alignment
+    oldValue: null
+    type: combo
+    value: none
+  - {comment: '', defaultValue: MXCuBE, hidden: false, name: caption, oldValue: null,
+    type: string, value: MXCuBE}
+  - {comment: '', defaultValue: 1, hidden: false, name: closeOnExit, oldValue: null,
+    type: boolean, value: 1}
+  - {comment: '', defaultValue: '123', hidden: false, name: expertPwd, oldValue: null,
+    type: string, value: '123'}
+  - {comment: '', defaultValue: 1, hidden: false, name: menubar, oldValue: null, type: boolean,
+    value: 1}
+  - comment: ''
+    defaultValue: &id001 {}
+    hidden: true
+    name: menudata
+    oldValue: null
+    type: undefined
+    value: *id001
+  - {comment: '', defaultValue: 1, hidden: false, name: show, oldValue: null, type: boolean,
+    value: 1}
+  - {comment: '', defaultValue: 1, hidden: false, name: statusbar, oldValue: null,
+    type: boolean, value: 1}
+  signals:
+    enableExpertMode: !!python/tuple []
+    isHidden: !!python/tuple []
+    isShown: !!python/tuple []
+    quit: !!python/tuple []
+  type: window
