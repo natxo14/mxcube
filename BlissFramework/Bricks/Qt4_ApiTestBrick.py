@@ -65,6 +65,12 @@ class Qt4_ApiTestBrick(BlissWidget):
         self.mount_button.clicked.connect(self.mount_clicked)
         self.unmount_button.clicked.connect(self.unmount_clicked)
 
+        sample_changer.stateChangedSignal.connect(self.state_changed)
+        sample_changer.statusChangedSignal.connect(self.status_changed)
+        sample_changer.infoChangedSignal.connect(self.info_changed)
+        sample_changer.sampleLoadedSignal.connect(self.sample_loaded)
+        sample_changer.selectionChangedSignal.connect(self.selection_changed)
+        sample_changer.taskFinishedSignal.connect(self.task_finished)
         # Other --------------------------------------------------------------- 
 
     def propertyChanged(self, property_name, old_value, new_value):
@@ -77,3 +83,21 @@ class Qt4_ApiTestBrick(BlissWidget):
 
     def unmount_clicked(self):
         sample_changer.unmount_current_sample() 
+
+    def state_changed(self, old_state, new_state):
+        print old_state, new_state      
+
+    def status_changed(self, status):
+        print status
+
+    def info_changed(self):
+        pass
+
+    def sample_loaded(self, sample):
+        print sample
+
+    def selection_changed(self, sample):
+        print sample
+
+    def task_finished(self, info):
+        print info
