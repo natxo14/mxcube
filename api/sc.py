@@ -20,8 +20,10 @@ class SC(CoreComponent):
 
     def mount_sample(self, location, device_name=None, wait=False):
         """
-        Mounts sample to the diffractometer.
-        During the sample mount queue is blocked 
+        Mounts sample to the diffractometer. If there is a sample on the
+        diffractometer then it is unmounted and requested sample is mounted.
+        During the sample mount queue is blocked.
+        If the sample mount fails then user is informed with an error message.
 
         :param LocationStr location: location
         :returns: True if mount successful otherwise False
@@ -37,8 +39,9 @@ class SC(CoreComponent):
     def unmount_sample(self, location=None):
         """
         Un-mounts mounted sample to location,
-        If no location passed then un mounts the sample
-        to where it was last mounted from
+        If no location passed then unmounts the sample to where it was last
+        time mounted from.
+        During the sample unmount queue is blocked.
 
         :param LocationStr location: location
         :returns: True if un-mount successful otherwise False
@@ -53,8 +56,6 @@ class SC(CoreComponent):
         Method is called when the sample changer state has been changed
         (from ready to busy, busy to error, etc). Sample changer state is
         represented as an integer in the GenericSampleChanger
-
-
         """
  
         data = {"old_state": old_state,
