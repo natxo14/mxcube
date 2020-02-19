@@ -1292,7 +1292,7 @@ class WindowDisplayWidget(QtImport.QScrollArea):
             window.close()
 
         # reset colors
-        if isinstance(self.__put_back_colors, collections.Callable):
+        if isinstance(self.__put_back_colors, collections.abc.Callable):
             self.__put_back_colors()
             self.__put_back_colors = None
 

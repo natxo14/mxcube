@@ -375,7 +375,7 @@ class GUISupervisor(QtImport.QWidget):
             widgets_dict = dict(
                 [
                     (
-                        isinstance(w.objectName, collections.Callable)
+                        isinstance(w.objectName, collections.abc.Callable)
                         and str(w.objectName())
                         or None,
                         w,
