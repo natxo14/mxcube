@@ -682,7 +682,7 @@ class MotorBrick(BaseWidget):
 
     def step_forward_value_changed(self, value):
         """Act when forward step button value changed."""
-        logging.getLogger().error(
+        logging.getLogger().warning(
             f"MotorBrick step_forward_value_changed : {value}"
         )
         self.step_backward.set_value(value)
