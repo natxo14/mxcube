@@ -3,10 +3,8 @@ import sys
 import os
 
 MXCUBE_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-ID13_ROOT = os.path.abspath(os.path.join(os.path.dirname("/users/blissadm/local/id13.git/")))
- 
+
 sys.path.insert(0, MXCUBE_ROOT)
-sys.path.insert(0, ID13_ROOT)
 
 MXCUBE_GUI_FILE = os.environ.get('MXCUBE_GUI_FILE')
 if not MXCUBE_GUI_FILE:
