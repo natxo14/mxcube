@@ -138,8 +138,9 @@ class EnergyBrick(BaseWidget):
             )
 
             HWR.beamline.energy.update_values()
-            HWR.beamline.energy.set_do_beam_alignment(self["doBeamAlignment"])
-            if HWR.beamline.energy.isReady():
+            if hasattr(HWR.beamline.energy, "set_do_beam_alignment"):
+                HWR.beamline.energy.set_do_beam_alignment(self["doBeamAlignment"])
+            if HWR.beamline.energy.is_ready():
                 self.connected()
             else:
                 self.disconnected()
@@ -164,7 +165,7 @@ class EnergyBrick(BaseWidget):
 
     def connected(self):
         self.setEnabled(True)
-        tunable_energy = HWR.beamline.energy.can_move_energy()
+        tunable_energy = HWR.beamline.energy.tunable
         if tunable_energy is None:
             tunable_energy = False
         self.set_to_label.setEnabled(tunable_energy)
@@ -210,9 +211,9 @@ class EnergyBrick(BaseWidget):
         ):
             if self.units_combobox.currentIndex() == 0:
                 BaseWidget.set_status_info("status", "Setting energy...", "running")
-                HWR.beamline.energy.move_energy(float(input_field_text))
+                HWR.beamline.energy.set_value(float(input_field_text))
             else:
-                HWR.beamline.energy.move_wavelength(float(input_field_text))
+                HWR.beamline.energy.set_wavelength(float(input_field_text))
             self.new_value_ledit.setText("")
             Colors.set_widget_color(
                 self.new_value_ledit, Colors.LINE_EDIT_ACTIVE, QtImport.QPalette.Base
@@ -236,7 +237,7 @@ class EnergyBrick(BaseWidget):
 
     def set_new_value_limits(self):
         if self.units_combobox.currentIndex() == 0:
-            value_limits = HWR.beamline.energy.get_energy_limits()
+            value_limits = HWR.beamline.energy.get_limits()
             self.group_box.setTitle("Energy")
             self.new_value_ledit.setToolTip(
                 "Energy limits %.4f : %.4f keV" % (value_limits[0], value_limits[1])

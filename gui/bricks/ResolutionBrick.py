@@ -140,7 +140,7 @@ class ResolutionBrick(BaseWidget):
             )
             self.connect(
                 HWR.beamline.detector.distance,
-                "positionChanged",
+                "valueChanged",
                 self.detector_distance_changed
             )
             self.connect(
@@ -170,7 +170,7 @@ class ResolutionBrick(BaseWidget):
             )
             self.connect(
                 HWR.beamline.resolution,
-                "positionChanged",
+                "valueChanged",
                 self.resolution_value_changed
             )
             self.connect(
@@ -275,15 +275,10 @@ class ResolutionBrick(BaseWidget):
         if detector_distance is None:
             detector_ready = False
         elif detector_ready is None:
-            try:
-                if detector_distance.connection.isSpecConnected():
-                    detector_ready = detector_distance.isReady()
-            except AttributeError:
-                detector_ready = detector_distance.is_ready()
-
+            detector_ready = detector_distance.is_ready()
         if detector_ready:
             self.get_detector_distance_limits()
-            curr_detector_distance = detector_distance.get_position()
+            curr_detector_distance = detector_distance.get_value()
             self.detector_distance_changed(curr_detector_distance)
             self.detector_distance_state_changed(detector_distance.get_state())
             if self.units_combobox.currentText() == "mm":
@@ -299,17 +294,12 @@ class ResolutionBrick(BaseWidget):
         if HWR.beamline.resolution is None:
             resolution_ready = False
         elif resolution_ready is None:
-            try:
-                if HWR.beamline.resolution.connection.isSpecConnected():
-                    resolution_ready = HWR.beamline.resolution.isReady()
-            except AttributeError:
-                resolution_ready = HWR.beamline.resolution.isReady()
-
+            resolution_ready = HWR.beamline.resolution.is_ready()
         if resolution_ready:
             self.get_resolution_limits()
-            curr_resolution = HWR.beamline.resolution.getPosition()
+            curr_resolution = HWR.beamline.resolution.get_value()
             self.resolution_value_changed(curr_resolution)
-            self.resolution_state_changed(HWR.beamline.resolution.getState())
+            self.resolution_state_changed(HWR.beamline.resolution.get_state())
             if self.units_combobox.currentText() != "mm":
                 groupbox_title = "Resolution"
                 self.new_value_validator.setRange(
@@ -339,7 +329,7 @@ class ResolutionBrick(BaseWidget):
     def set_resolution(self, value):
         if self.resolution_limits is not None:
             if self.resolution_limits[0] < value < self.resolution_limits[1]:
-                HWR.beamline.resolution.move(value)
+                HWR.beamline.resolution.set_value(value)
 
     def set_detector_distance(self, value):
         if self.detector_distance_limits is not None:
@@ -348,7 +338,7 @@ class ResolutionBrick(BaseWidget):
                 < value
                 < self.detector_distance_limits[1]
             ):
-                HWR.beamline.detector.distance.move(value)
+                HWR.beamline.detector.distance.set_value(value)
 
     def energy_changed(self, energy_kev, energy_wavelength):
         self.get_resolution_limits(True)
@@ -360,18 +350,9 @@ class ResolutionBrick(BaseWidget):
         if resolution_ready is None:
             resolution_ready = False
             if HWR.beamline.resolution is not None:
-                try:
-                    if HWR.beamline.resolution.connection.isSpecConnected():
-                        resolution_ready = HWR.beamline.resolution.isReady()
-                except AttributeError:
-                    resolution_ready = HWR.beamline.resolution.isReady()
-
+                resolution_ready = HWR.beamline.resolution.is_ready()
         if resolution_ready:
-            # TODO remove this check and use get_limits
-            if hasattr(HWR.beamline.resolution, "getLimits"):
-                self.resolution_limits_changed(HWR.beamline.resolution.getLimits())
-            else:
-                self.resolution_limits_changed(HWR.beamline.resolution.get_limits())
+            self.resolution_limits_changed(HWR.beamline.resolution.get_limits())
         else:
             self.resolution_limits = None
 
@@ -382,12 +363,7 @@ class ResolutionBrick(BaseWidget):
         detector_ready = False
         detector_distance = HWR.beamline.detector.distance
         if detector_distance is not None:
-            try:
-                if detector_distance.connection.isSpecConnected():
-                    detector_ready = detector_distance.is_ready()
-            except AttributeError:
-                detector_ready = detector_distance.is_ready()
-
+            detector_ready = detector_distance.is_ready()
         if detector_ready:
             self.detector_distance_limits_changed(
                 detector_distance.get_limits()
@@ -409,7 +385,7 @@ class ResolutionBrick(BaseWidget):
         detector_distance = HWR.beamline.detector.distance
         if detector_distance is not None:
             if state:
-                color = ResolutionBrick.STATE_COLORS[state]
+                color = ResolutionBrick.STATE_COLORS[state.value]
             else:
                 color = Colors.LIGHT_RED
 
@@ -435,7 +411,7 @@ class ResolutionBrick(BaseWidget):
             return
 
         detector_distance = HWR.beamline.detector.distance
-        color = ResolutionBrick.STATE_COLORS[state]
+        color = ResolutionBrick.STATE_COLORS[state.value]
         unit = self.units_combobox.currentText()
         if unit == "mm":
             if state == detector_distance.motor_states.READY:

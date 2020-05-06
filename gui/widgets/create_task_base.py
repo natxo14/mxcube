@@ -86,19 +86,19 @@ class CreateTaskBase(QtImport.QWidget):
                 "limitsChanged", self.set_transmission_limits
             )
             HWR.beamline.resolution.connect(
-                "positionChanged", self.set_resolution
+                "valueChanged", self.set_resolution
             )
             HWR.beamline.resolution.connect(
                 "limitsChanged", self.set_resolution_limits
             )
             HWR.beamline.diffractometer.omega.connect(
-                "positionChanged", self.set_osc_start
+                "valueChanged", self.set_osc_start
             )
             HWR.beamline.diffractometer.kappa.connect(
-                "positionChanged", self.set_kappa
+                "valueChanged", self.set_kappa
             )
             HWR.beamline.diffractometer.kappa_phi.connect(
-                "positionChanged", self.set_kappa_phi
+                "valueChanged", self.set_kappa_phi
             )
             HWR.beamline.detector.connect(
                 "detectorRoiModeChanged", self.set_detector_roi_mode
@@ -240,6 +240,9 @@ class CreateTaskBase(QtImport.QWidget):
         else:
             return None
 
+    def get_task_node_name(self):
+        return self._task_node_name
+
     def get_acquisition_widget(self):
         return self._acq_widget
 
@@ -377,7 +380,7 @@ class CreateTaskBase(QtImport.QWidget):
         self.update_selection()
 
     def select_shape_with_cpos(self, cpos):
-        HWR.beamline.microscope.select_shape_with_cpos(cpos)
+        HWR.beamline.sample_view.select_shape_with_cpos(cpos)
 
     def selection_changed(self, items):
         if items:
@@ -414,7 +417,7 @@ class CreateTaskBase(QtImport.QWidget):
             self._acquisition_parameters.centred_position.snapshot_image = None
             self._acquisition_parameters = deepcopy(self._acquisition_parameters)
             self._acquisition_parameters.centred_position.snapshot_image = (
-                HWR.beamline.microscope.get_scene_snapshot()
+                HWR.beamline.sample_view.get_scene_snapshot()
             )
 
             # Sample with lims information, use values from lims
@@ -581,7 +584,7 @@ class CreateTaskBase(QtImport.QWidget):
                     if hasattr(cpos, "kappa_phi"):
                         kappa_phi = cpos.kappa_phi
                     if isinstance(item, queue_item.TaskQueueItem):
-                        snapshot = HWR.beamline.microscope.get_scene_snapshot(
+                        snapshot = HWR.beamline.sample_view.get_scene_snapshot(
                             position
                         )
                         cpos.snapshot_image = snapshot
@@ -826,7 +829,7 @@ class CreateTaskBase(QtImport.QWidget):
         parameters.centred_position.snapshot_image = None
         acq.acquisition_parameters = deepcopy(parameters)
         self._acquisition_parameters.centred_position.snapshot_image = (
-            HWR.beamline.microscope.get_scene_snapshot()
+            HWR.beamline.sample_view.get_scene_snapshot()
         )
         acq.acquisition_parameters.collect_agent = (
             queue_model_enumerables.COLLECTION_ORIGIN.MXCUBE
@@ -841,9 +844,9 @@ class CreateTaskBase(QtImport.QWidget):
 
     def _create_dc_from_grid(self, sample, grid=None):
         if grid is None:
-            grid = HWR.beamline.microscope.create_auto_grid()
+            grid = HWR.beamline.sample_view.create_auto_grid()
 
-        grid.set_snapshot(HWR.beamline.microscope.get_scene_snapshot(grid))
+        grid.set_snapshot(HWR.beamline.sample_view.get_snapshot(grid))
 
         grid_properties = grid.get_properties()
 
