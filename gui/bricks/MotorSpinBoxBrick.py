@@ -71,6 +71,9 @@ class MotorSpinBoxBrick(BaseWidget):
         self.in_expert_mode = None
         self.position_history = []
 
+        self.move_down_pressed = False
+        self.move_up_pressed = False
+
         # Properties ----------------------------------------------------------
         self.add_property("mnemonic", "string", "")
         self.add_property("formatString", "formatString", "+##.##")
@@ -108,14 +111,14 @@ class MotorSpinBoxBrick(BaseWidget):
         self.move_left_button.setIcon(Icons.load_icon("Left2"))
         self.move_left_button.setToolTip("Moves the motor down (while pressed)")
         self.move_left_button.setFixedSize(27, 27)
-        self.move_left_button.setAutoRepeatDelay(500)
-        self.move_left_button.setAutoRepeatInterval(500)
+        self.move_left_button.setAutoRepeatDelay(50000)
+        self.move_left_button.setAutoRepeatInterval(50)
         self.move_right_button = QtImport.QPushButton(self.main_gbox)
         self.move_right_button.setIcon(Icons.load_icon("Right2"))
         self.move_right_button.setToolTip("Moves the motor up (while pressed)")
         self.move_right_button.setFixedSize(27, 27)
-        self.move_right_button.setAutoRepeatDelay(500)
-        self.move_right_button.setAutoRepeatInterval(500)
+        self.move_right_button.setAutoRepeatDelay(50000)
+        self.move_right_button.setAutoRepeatInterval(50)
         self.position_spinbox = QtImport.QDoubleSpinBox(self.main_gbox)
         self.position_spinbox.setMinimum(-10000)
         self.position_spinbox.setMaximum(10000)
@@ -247,7 +250,7 @@ class MotorSpinBoxBrick(BaseWidget):
         if not found:
             self.step_combo.addItem(self.step_button_icon, str(self.move_step))
             self.step_combo.setCurrentIndex(self.step_combo.count() - 1)
-
+                
     def go_to_step(self, step_index):
         step = str(self.step_combo.currentText())
         if step != "":
@@ -265,12 +268,18 @@ class MotorSpinBoxBrick(BaseWidget):
         self.motor_hwobj.stop()
 
     def stop_moving(self):
+        print(f"MSBB stop_moving : {self.sender()} button released")
+        #button released. If button with AutoRepeat ON => stop motor
+        if self.move_left_button.autoRepeat() or self.move_right_button.autoRepeat():
+            self.stop_motor()
         self.demand_move = 0
 
     def move_up(self):
+        self.move_up_pressed = True
         # self.demand_move = 1
         self.update_gui()
         state = self.motor_hwobj.get_state()
+        print(f"self.move_up_pressed state {state}")
         if state == self.motor_hwobj.STATES.READY:
             if self["invertButtons"]:
                 self.really_move_down()
@@ -278,9 +287,11 @@ class MotorSpinBoxBrick(BaseWidget):
                 self.really_move_up()
 
     def move_down(self):
+        self.move_down_pressed = True
         # self.demand_move = -1
         self.update_gui()
         state = self.motor_hwobj.get_state()
+        print(f"self.move_down_pressed state {state}")
         if state == self.motor_hwobj.STATES.READY:
             if self["invertButtons"]:
                 self.really_move_up()
@@ -410,6 +421,7 @@ class MotorSpinBoxBrick(BaseWidget):
         self.set_position_spinbox_color(state)
 
         if state is self.motor_hwobj.STATES.READY:
+            print(f"MSSB state_changed state=READY self.demand_move : {self.demand_move}")
             if self.demand_move == 1:
                 if self["invertButtons"]:
                     self.really_move_down()
@@ -428,17 +440,38 @@ class MotorSpinBoxBrick(BaseWidget):
             self.move_left_button.setEnabled(True)
             self.move_right_button.setEnabled(True)
             self.step_combo.setEnabled(True)
+            
+            # mobuttons = QtImport.QApplication.mouseButtons()
+            # if mobuttons == QtImport.Qt.LeftButton:
+            #     print(f"left button pressed")
+            #     print(f"self.move_down_pressed {self.move_down_pressed}")
+            #     print(f"self.move_up_pressed {self.move_up_pressed}")
+        
+            #     if self.move_down_pressed:
+            #         print(f"left button pressed under left button")
+            #         self.move_left_button.pressed.emit()
+            #     if self.move_up_pressed:
+            #         print(f"left button pressed under right button")
+            #         self.move_right_button.pressed.emit()
+                
+                # self.closed.emit()
+                #QAbstractButton::isDown()
+            self.move_down_pressed = False
+            self.move_up_pressed = False
         elif state == self.motor_hwobj.STATES.FAULT:
             self.position_spinbox.setEnabled(False)
             self.stop_button.setEnabled(False)
             self.move_left_button.setEnabled(False)
             self.move_right_button.setEnabled(False)
+            
         elif state == self.motor_hwobj.STATES.BUSY:
             # self.update_history(self.motor_hwobj.get_value())
             self.position_spinbox.setEnabled(False)
             self.stop_button.setEnabled(True)
-            self.move_left_button.setEnabled(False)
-            self.move_right_button.setEnabled(False)
+            buttons = QtImport.QApplication.mouseButtons()
+            if QtImport.QApplication.mouseButtons() != QtImport.Qt.LeftButton:
+                self.move_left_button.setEnabled(False)
+                self.move_right_button.setEnabled(False)
             self.step_combo.setEnabled(False)
         elif state in (
             self.motor_hwobj.STATES.READY,
@@ -527,6 +560,8 @@ class MotorSpinBoxBrick(BaseWidget):
         if label == "":
             if self.motor_hwobj is not None:
                 label = self.motor_hwobj.username
+                if label is None:
+                    label = ""
 
         if self["showBox"]:
             self.motor_label.hide()
