@@ -1,0 +1,3326 @@
+- children:
+  - children:
+    - children:
+      - brick: {class: CameraBrick, name: CameraBrick0}
+        children: []
+        connections: []
+        name: CameraBrick0
+        properties:
+        - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: 0,
+          type: boolean, value: 0}
+        - {comment: '', default_value: 0, hidden: false, name: cameraControls, old_value: 0,
+          type: boolean, value: 0}
+        - {comment: '', default_value: 1, hidden: false, name: displayBeam, old_value: 1,
+          type: boolean, value: 1}
+        - {comment: '', default_value: 1, hidden: false, name: displayOmegaAxis, old_value: 1,
+          type: boolean, value: 1}
+        - {comment: '', default_value: 1, hidden: false, name: displayScale, old_value: 1,
+          type: boolean, value: 1}
+        - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+          name: fixedHeight, old_value: -1, type: integer, value: -1}
+        - {comment: '', default_value: '', hidden: false, name: fixedSize, old_value: '',
+          type: string, value: ''}
+        - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
+          old_value: -1, type: integer, value: -1}
+        - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+          type: string, value: '9'}
+        - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+          name: frame, old_value: 0, type: boolean, value: 0}
+        - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
+          type: boolean, value: 0}
+        - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+          name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+        - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+          name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+        - {comment: '', default_value: /graphics, hidden: false, name: mnemonic, old_value: /graphics,
+          type: string, value: /graphics}
+        type: CameraBrick
+      - children:
+        - children:
+          - children:
+            - children:
+              - brick: {class: BeamAlignBrick, name: BeamAlignBrick0}
+                children: []
+                connections: []
+                name: BeamAlignBrick0
+                properties:
+                - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+                  name: fixedHeight, old_value: -1, type: integer, value: -1}
+                - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+                  name: fixedWidth, old_value: -1, type: integer, value: -1}
+                - {comment: '', default_value: '9', hidden: false, name: fontSize,
+                  old_value: '9', type: string, value: '9'}
+                - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+                  name: frame, old_value: 0, type: boolean, value: 0}
+                - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: Allow to control brick in all modes, default_value: 0,
+                  hidden: false, name: instanceAllowAlways, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: Allow to control brick in slave mode, default_value: 0,
+                  hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: '', default_value: '', hidden: false, name: mnemonic,
+                  old_value: '', type: string, value: ''}
+                type: BeamAlignBrick
+              - brick: {class: MultipleMotorsBrick, name: MultipleMotorsBrick0}
+                children: []
+                connections: []
+                name: MultipleMotorsBrick0
+                properties:
+                - choices: [vertical, horizontal]
+                  comment: ''
+                  default_value: vertical
+                  hidden: false
+                  name: alignment
+                  old_value: vertical
+                  type: combo
+                  value: vertical
+                - {comment: '', default_value: '', hidden: false, name: defaultDecimals,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: defaultDeltas,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: defaultSteps,
+                  old_value: '', type: string, value: ''}
+                - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+                  name: fixedHeight, old_value: -1, type: integer, value: -1}
+                - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+                  name: fixedWidth, old_value: -1, type: integer, value: -1}
+                - {comment: '', default_value: '9', hidden: false, name: fontSize,
+                  old_value: '9', type: string, value: '9'}
+                - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+                  name: frame, old_value: 0, type: boolean, value: 0}
+                - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 0, hidden: false, name: inExpertMode,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: Allow to control brick in all modes, default_value: 0,
+                  hidden: false, name: instanceAllowAlways, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: Allow to control brick in slave mode, default_value: 0,
+                  hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: '', default_value: '', hidden: false, name: labels, old_value: '',
+                  type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: mnemonic,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: moveButtonIcons,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: predefinedPositions,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: 0, hidden: false, name: showEnableButtons,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+                  old_value: 1, type: boolean, value: 1}
+                - {comment: '', default_value: 0, hidden: false, name: showSlider,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+                  type: boolean, value: 1}
+                - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+                  type: boolean, value: 1}
+                type: MultipleMotorsBrick
+              - children: []
+                connections: []
+                name: vspacer0
+                properties:
+                - choices: [none, top center, top left, top right, bottom center,
+                    bottom left, bottom right, center, hcenter, vcenter, left, right]
+                  comment: ''
+                  default_value: none
+                  hidden: false
+                  name: alignment
+                  old_value: none
+                  type: combo
+                  value: none
+                - {comment: '', default_value: 0, hidden: false, name: fixed_size,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                  type: integer, value: 100}
+                type: vspacer
+              connections: []
+              name: vbox1
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+                type: color, value: null}
+              - {comment: '', default_value: -1, hidden: false, name: fixedheight,
+                old_value: -1, type: integer, value: -1}
+              - {comment: '', default_value: -1, hidden: false, name: fixedwidth,
+                old_value: -1, type: integer, value: -1}
+              - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: frameshape
+                old_value: default
+                type: combo
+                value: default
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: hsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+                type: integer, value: 2}
+              - choices: [plain, raised, sunken, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: shadowstyle
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+                type: integer, value: 2}
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: vsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              type: vbox
+            - children:
+              - brick: {class: ChatBrick, name: ChatBrick0}
+                children: []
+                connections: []
+                name: ChatBrick0
+                properties:
+                - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+                  name: fixedHeight, old_value: -1, type: integer, value: -1}
+                - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+                  name: fixedWidth, old_value: -1, type: integer, value: -1}
+                - {comment: '', default_value: '9', hidden: false, name: fontSize,
+                  old_value: '9', type: string, value: '9'}
+                - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+                  name: frame, old_value: 0, type: boolean, value: 0}
+                - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+                  type: string, value: ''}
+                - {comment: Allow to control brick in all modes, default_value: 0,
+                  hidden: false, name: instanceAllowAlways, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: Allow to control brick in slave mode, default_value: 0,
+                  hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: '', default_value: '', hidden: false, name: mnemonic,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: myTabLabel,
+                  old_value: '', type: string, value: ''}
+                type: ChatBrick
+              - children: []
+                connections: []
+                name: vspacer1
+                properties:
+                - choices: [none, top center, top left, top right, bottom center,
+                    bottom left, bottom right, center, hcenter, vcenter, left, right]
+                  comment: ''
+                  default_value: none
+                  hidden: false
+                  name: alignment
+                  old_value: none
+                  type: combo
+                  value: none
+                - {comment: '', default_value: 0, hidden: false, name: fixed_size,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                  type: integer, value: 100}
+                type: vspacer
+              connections: []
+              name: vbox2
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+                type: color, value: null}
+              - {comment: '', default_value: -1, hidden: false, name: fixedheight,
+                old_value: -1, type: integer, value: -1}
+              - {comment: '', default_value: -1, hidden: false, name: fixedwidth,
+                old_value: -1, type: integer, value: -1}
+              - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: frameshape
+                old_value: default
+                type: combo
+                value: default
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: hsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+                type: integer, value: 2}
+              - choices: [plain, raised, sunken, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: shadowstyle
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+                type: integer, value: 2}
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: vsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              type: vbox
+            - children: []
+              connections: []
+              name: hspacer0
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+                type: boolean, value: 0}
+              - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                type: integer, value: 100}
+              type: hspacer
+            connections: []
+            name: hbox0
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+              type: color, value: null}
+            - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+              type: integer, value: -1}
+            - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+              type: integer, value: -1}
+            - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: frameshape
+              old_value: default
+              type: combo
+              value: default
+            - choices: [fixed, expanding, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: hsizepolicy
+              old_value: default
+              type: combo
+              value: default
+            - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+              type: integer, value: 2}
+            - choices: [plain, raised, sunken, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: shadowstyle
+              old_value: default
+              type: combo
+              value: default
+            - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+              type: integer, value: 2}
+            - choices: [fixed, expanding, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: vsizepolicy
+              old_value: default
+              type: combo
+              value: default
+            type: hbox
+          - children:
+            - children:
+              - brick: {class: MultipleMotorsBrick, name: MultipleMotorsBrick1}
+                children: []
+                connections: []
+                name: MultipleMotorsBrick1
+                properties:
+                - choices: [vertical, horizontal]
+                  comment: ''
+                  default_value: vertical
+                  hidden: false
+                  name: alignment
+                  old_value: vertical
+                  type: combo
+                  value: vertical
+                - {comment: '', default_value: '', hidden: false, name: defaultDecimals,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: defaultDeltas,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: defaultSteps,
+                  old_value: '', type: string, value: ''}
+                - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+                  name: fixedHeight, old_value: -1, type: integer, value: -1}
+                - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+                  name: fixedWidth, old_value: -1, type: integer, value: -1}
+                - {comment: '', default_value: '9', hidden: false, name: fontSize,
+                  old_value: '9', type: string, value: '9'}
+                - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+                  name: frame, old_value: 0, type: boolean, value: 0}
+                - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 0, hidden: false, name: inExpertMode,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: Allow to control brick in all modes, default_value: 0,
+                  hidden: false, name: instanceAllowAlways, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: Allow to control brick in slave mode, default_value: 0,
+                  hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: '', default_value: '', hidden: false, name: labels, old_value: '',
+                  type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: mnemonic,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: moveButtonIcons,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: predefinedPositions,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: 0, hidden: false, name: showEnableButtons,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+                  old_value: 1, type: boolean, value: 1}
+                - {comment: '', default_value: 0, hidden: false, name: showSlider,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+                  type: boolean, value: 1}
+                - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+                  type: boolean, value: 1}
+                type: MultipleMotorsBrick
+              - children: []
+                connections: []
+                name: vspacer2
+                properties:
+                - choices: [none, top center, top left, top right, bottom center,
+                    bottom left, bottom right, center, hcenter, vcenter, left, right]
+                  comment: ''
+                  default_value: none
+                  hidden: false
+                  name: alignment
+                  old_value: none
+                  type: combo
+                  value: none
+                - {comment: '', default_value: 0, hidden: false, name: fixed_size,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                  type: integer, value: 100}
+                type: vspacer
+              connections: []
+              name: vbox3
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+                type: color, value: null}
+              - {comment: '', default_value: -1, hidden: false, name: fixedheight,
+                old_value: -1, type: integer, value: -1}
+              - {comment: '', default_value: -1, hidden: false, name: fixedwidth,
+                old_value: -1, type: integer, value: -1}
+              - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: frameshape
+                old_value: default
+                type: combo
+                value: default
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: hsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+                type: integer, value: 2}
+              - choices: [plain, raised, sunken, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: shadowstyle
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+                type: integer, value: 2}
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: vsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              type: vbox
+            - children:
+              - brick: {class: MultipleMotorsBrick, name: MultipleMotorsBrick2}
+                children: []
+                connections: []
+                name: MultipleMotorsBrick2
+                properties:
+                - choices: [vertical, horizontal]
+                  comment: ''
+                  default_value: vertical
+                  hidden: false
+                  name: alignment
+                  old_value: vertical
+                  type: combo
+                  value: vertical
+                - {comment: '', default_value: '', hidden: false, name: defaultDecimals,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: defaultDeltas,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: defaultSteps,
+                  old_value: '', type: string, value: ''}
+                - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+                  name: fixedHeight, old_value: -1, type: integer, value: -1}
+                - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+                  name: fixedWidth, old_value: -1, type: integer, value: -1}
+                - {comment: '', default_value: '9', hidden: false, name: fontSize,
+                  old_value: '9', type: string, value: '9'}
+                - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+                  name: frame, old_value: 0, type: boolean, value: 0}
+                - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 0, hidden: false, name: inExpertMode,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: Allow to control brick in all modes, default_value: 0,
+                  hidden: false, name: instanceAllowAlways, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: Allow to control brick in slave mode, default_value: 0,
+                  hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: '', default_value: '', hidden: false, name: labels, old_value: '',
+                  type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: mnemonic,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: moveButtonIcons,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: '', hidden: false, name: predefinedPositions,
+                  old_value: '', type: string, value: ''}
+                - {comment: '', default_value: 0, hidden: false, name: showEnableButtons,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+                  old_value: 1, type: boolean, value: 1}
+                - {comment: '', default_value: 0, hidden: false, name: showSlider,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+                  type: boolean, value: 1}
+                - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+                  type: boolean, value: 1}
+                type: MultipleMotorsBrick
+              - children: []
+                connections: []
+                name: vspacer3
+                properties:
+                - choices: [none, top center, top left, top right, bottom center,
+                    bottom left, bottom right, center, hcenter, vcenter, left, right]
+                  comment: ''
+                  default_value: none
+                  hidden: false
+                  name: alignment
+                  old_value: none
+                  type: combo
+                  value: none
+                - {comment: '', default_value: 0, hidden: false, name: fixed_size,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                  type: integer, value: 100}
+                type: vspacer
+              connections: []
+              name: vbox4
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+                type: color, value: null}
+              - {comment: '', default_value: -1, hidden: false, name: fixedheight,
+                old_value: -1, type: integer, value: -1}
+              - {comment: '', default_value: -1, hidden: false, name: fixedwidth,
+                old_value: -1, type: integer, value: -1}
+              - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: frameshape
+                old_value: default
+                type: combo
+                value: default
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: hsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+                type: integer, value: 2}
+              - choices: [plain, raised, sunken, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: shadowstyle
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+                type: integer, value: 2}
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: vsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              type: vbox
+            - children:
+              - brick: {class: GraphicsToolsBrick, name: GraphicsToolsBrick0}
+                children: []
+                connections: []
+                name: GraphicsToolsBrick0
+                properties:
+                - {comment: '', default_value: 0, hidden: false, name: beamDefiner,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+                  name: fixedHeight, old_value: -1, type: integer, value: -1}
+                - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+                  name: fixedWidth, old_value: -1, type: integer, value: -1}
+                - {comment: '', default_value: '9', hidden: false, name: fontSize,
+                  old_value: '9', type: string, value: '9'}
+                - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+                  name: frame, old_value: 0, type: boolean, value: 0}
+                - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: Allow to control brick in all modes, default_value: 0,
+                  hidden: false, name: instanceAllowAlways, old_value: 0, type: boolean,
+                  value: 0}
+                - {comment: Allow to control brick in slave mode, default_value: 0,
+                  hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
+                  value: 0}
+                - choices: [menuBar, toolBar, both]
+                  comment: ''
+                  default_value: menuBar
+                  hidden: false
+                  name: targetMenu
+                  old_value: menuBar
+                  type: combo
+                  value: menuBar
+                type: GraphicsToolsBrick
+              - children: []
+                connections: []
+                name: vspacer4
+                properties:
+                - choices: [none, top center, top left, top right, bottom center,
+                    bottom left, bottom right, center, hcenter, vcenter, left, right]
+                  comment: ''
+                  default_value: none
+                  hidden: false
+                  name: alignment
+                  old_value: none
+                  type: combo
+                  value: none
+                - {comment: '', default_value: 0, hidden: false, name: fixed_size,
+                  old_value: 0, type: boolean, value: 0}
+                - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                  type: integer, value: 100}
+                type: vspacer
+              connections: []
+              name: vbox5
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+                type: color, value: null}
+              - {comment: '', default_value: -1, hidden: false, name: fixedheight,
+                old_value: -1, type: integer, value: -1}
+              - {comment: '', default_value: -1, hidden: false, name: fixedwidth,
+                old_value: -1, type: integer, value: -1}
+              - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: frameshape
+                old_value: default
+                type: combo
+                value: default
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: hsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+                type: string, value: ''}
+              - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+                type: integer, value: 2}
+              - choices: [plain, raised, sunken, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: shadowstyle
+                old_value: default
+                type: combo
+                value: default
+              - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+                type: integer, value: 2}
+              - choices: [fixed, expanding, default]
+                comment: ''
+                default_value: default
+                hidden: false
+                name: vsizepolicy
+                old_value: default
+                type: combo
+                value: default
+              type: vbox
+            - children: []
+              connections: []
+              name: hspacer1
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+                type: boolean, value: 0}
+              - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                type: integer, value: 100}
+              type: hspacer
+            connections: []
+            name: hbox1
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+              type: color, value: null}
+            - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+              type: integer, value: -1}
+            - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+              type: integer, value: -1}
+            - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: frameshape
+              old_value: default
+              type: combo
+              value: default
+            - choices: [fixed, expanding, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: hsizepolicy
+              old_value: default
+              type: combo
+              value: default
+            - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+              type: integer, value: 2}
+            - choices: [plain, raised, sunken, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: shadowstyle
+              old_value: default
+              type: combo
+              value: default
+            - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+              type: integer, value: 2}
+            - choices: [fixed, expanding, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: vsizepolicy
+              old_value: default
+              type: combo
+              value: default
+            type: hbox
+          connections: []
+          name: vbox0
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: Graphics Objects}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        - children:
+          - children:
+            - brick: {class: NullBrick, name: BeamSizeBrick0}
+              children: []
+              connections: []
+              name: BeamSizeBrick0
+              properties:
+              - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+                name: fixedHeight, old_value: -1, type: integer, value: -1}
+              - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+                name: fixedWidth, old_value: -1, type: integer, value: -1}
+              - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+                type: string, value: '9'}
+              - {comment: '', default_value: '#.#', format_string: '%1.1f', format_string_length: 3,
+                hidden: false, name: formatString, old_value: '#.#', type: formatString,
+                value: '#.#'}
+              - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+                name: frame, old_value: 0, type: boolean, value: 0}
+              - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+                old_value: 0, type: boolean, value: 0}
+              - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+                name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+              - {comment: Allow to control brick in slave mode, default_value: 0,
+                hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
+                value: 0}
+              type: BeamSizeBrick
+            - children: []
+              connections: []
+              name: hspacer2
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+                type: boolean, value: 0}
+              - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                type: integer, value: 100}
+              type: hspacer
+            - children: []
+              connections: []
+              name: vspacer5
+              properties:
+              - choices: [none, top center, top left, top right, bottom center, bottom
+                    left, bottom right, center, hcenter, vcenter, left, right]
+                comment: ''
+                default_value: none
+                hidden: false
+                name: alignment
+                old_value: none
+                type: combo
+                value: none
+              - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+                type: boolean, value: 0}
+              - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+                type: integer, value: 100}
+              type: vspacer
+            connections: []
+            name: hbox2
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+              type: color, value: null}
+            - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+              type: integer, value: -1}
+            - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+              type: integer, value: -1}
+            - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: frameshape
+              old_value: default
+              type: combo
+              value: default
+            - choices: [fixed, expanding, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: hsizepolicy
+              old_value: default
+              type: combo
+              value: default
+            - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+              type: integer, value: 2}
+            - choices: [plain, raised, sunken, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: shadowstyle
+              old_value: default
+              type: combo
+              value: default
+            - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+              type: integer, value: 2}
+            - choices: [fixed, expanding, default]
+              comment: ''
+              default_value: default
+              hidden: false
+              name: vsizepolicy
+              old_value: default
+              type: combo
+              value: default
+            type: hbox
+          connections: []
+          name: vbox6
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: Calibration}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        connections: []
+        name: tab0
+        properties:
+        - choices: [none, top center, top left, top right, bottom center, bottom left,
+            bottom right, center, hcenter, vcenter, left, right]
+          comment: ''
+          default_value: none
+          hidden: false
+          name: alignment
+          old_value: none
+          type: combo
+          value: none
+        - {comment: '', default_value: 0, hidden: false, name: closable_Calibration,
+          old_value: null, type: boolean, value: 0}
+        - {comment: '', default_value: 0, hidden: false, name: closable_Graphics_Objects,
+          old_value: null, type: boolean, value: 0}
+        - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+          type: color, value: null}
+        - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+          type: integer, value: -1}
+        - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+          type: integer, value: -1}
+        - {comment: '', default_value: 0, hidden: false, name: fontSize, old_value: 0,
+          type: integer, value: 9}
+        - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: frameshape
+          old_value: default
+          type: combo
+          value: default
+        - choices: [fixed, expanding, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: hsizepolicy
+          old_value: default
+          type: combo
+          value: default
+        - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+          type: string, value: ''}
+        - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+          type: string, value: ''}
+        - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+          type: integer, value: 2}
+        - {comment: '', default_value: 0, hidden: false, name: newdialog_Calibration,
+          old_value: null, type: boolean, value: 0}
+        - {comment: '', default_value: 0, hidden: false, name: newdialog_Graphics_Objects,
+          old_value: null, type: boolean, value: 0}
+        - choices: [plain, raised, sunken, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: shadowstyle
+          old_value: default
+          type: combo
+          value: default
+        - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+          type: integer, value: 2}
+        - choices: [fixed, expanding, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: vsizepolicy
+          old_value: default
+          type: combo
+          value: default
+        type: tab
+      connections: []
+      name: hsplitter0
+      properties:
+      - choices: [none, top center, top left, top right, bottom center, bottom left,
+          bottom right, center, hcenter, vcenter, left, right]
+        comment: ''
+        default_value: none
+        hidden: false
+        name: alignment
+        old_value: none
+        type: combo
+        value: none
+      - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+        type: color, value: null}
+      - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+        type: integer, value: -1}
+      - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+        type: integer, value: -1}
+      - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: frameshape
+        old_value: default
+        type: combo
+        value: default
+      - choices: [fixed, expanding, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: hsizepolicy
+        old_value: default
+        type: combo
+        value: default
+      - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+        type: string, value: ''}
+      - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+        type: string, value: ''}
+      - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+        type: integer, value: 2}
+      - choices: [plain, raised, sunken, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: shadowstyle
+        old_value: default
+        type: combo
+        value: default
+      - {comment: '', default_value: '[]', hidden: true, name: sizes, old_value: '[]',
+        type: string, value: '[]'}
+      - {comment: '', default_value: '[]', hidden: true, name: sizes_16777272, old_value: '[]',
+        type: string, value: '[]'}
+      - {comment: '', default_value: '[]', hidden: true, name: sizes_16777273, old_value: '[]',
+        type: string, value: '[]'}
+      - {comment: '', default_value: '[]', hidden: true, name: sizes_16777274, old_value: '[]',
+        type: string, value: '[]'}
+      - {comment: '', default_value: '[]', hidden: true, name: sizes_16777275, old_value: '[]',
+        type: string, value: '[]'}
+      - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+        type: integer, value: 2}
+      - choices: [fixed, expanding, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: vsizepolicy
+        old_value: default
+        type: combo
+        value: default
+      type: hsplitter
+    - children:
+      - children:
+        - children:
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick0}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick0
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: gy}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /gy}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick1}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick1
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: gz}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /gz}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick2}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick2
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: thx}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /thx}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick3}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick3
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: ths}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /ths}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick4}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick4
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: thy}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /thy}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - children: []
+            connections: []
+            name: vspacer6
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+              type: integer, value: 100}
+            type: vspacer
+          connections: []
+          name: vbox7
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        - children:
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick5}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick5
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: sx}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /sx}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick6}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick6
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: sy}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /sy}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick7}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick7
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: sz}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /sz}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick8}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick8
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: cx}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /cx}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick9}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick9
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: cy}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /cy}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - children: []
+            connections: []
+            name: vspacer7
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+              type: integer, value: 100}
+            type: vspacer
+          connections: []
+          name: vbox8
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        - children:
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick10}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick10
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: pol}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /pol}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick11}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick11
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: zoom}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /zoom}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick12}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick12
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: mroty}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /mroty}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick13}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick13
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: mrotz}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /mrotz}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick14}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick14
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: blight}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /blight}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - children: []
+            connections: []
+            name: vspacer8
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+              type: integer, value: 100}
+            type: vspacer
+          connections: []
+          name: vbox9
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        - children:
+          - brick: {class: MultipleMotorsBrick, name: MultipleMotorsBrick3}
+            children: []
+            connections: []
+            name: MultipleMotorsBrick3
+            properties:
+            - choices: [vertical, horizontal]
+              comment: ''
+              default_value: vertical
+              hidden: false
+              name: alignment
+              old_value: vertical
+              type: combo
+              value: vertical
+            - {comment: '', default_value: '', hidden: false, name: defaultDecimals,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: defaultDeltas,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: defaultSteps,
+              old_value: '', type: string, value: ''}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: inExpertMode, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: labels, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: moveButtonIcons,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: predefinedPositions,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: showEnableButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MultipleMotorsBrick
+          - children: []
+            connections: []
+            name: vspacer9
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+              type: integer, value: 100}
+            type: vspacer
+          connections: []
+          name: vbox10
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        - children: []
+          connections: []
+          name: hspacer3
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+            type: boolean, value: 0}
+          - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+            type: integer, value: 100}
+          type: hspacer
+        connections: []
+        name: hbox3
+        properties:
+        - choices: [none, top center, top left, top right, bottom center, bottom left,
+            bottom right, center, hcenter, vcenter, left, right]
+          comment: ''
+          default_value: none
+          hidden: false
+          name: alignment
+          old_value: none
+          type: combo
+          value: none
+        - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+          type: color, value: null}
+        - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+          type: integer, value: -1}
+        - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+          type: integer, value: -1}
+        - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: frameshape
+          old_value: default
+          type: combo
+          value: default
+        - choices: [fixed, expanding, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: hsizepolicy
+          old_value: default
+          type: combo
+          value: default
+        - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+          type: string, value: ''}
+        - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+          type: string, value: Motors}
+        - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+          type: integer, value: 2}
+        - choices: [plain, raised, sunken, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: shadowstyle
+          old_value: default
+          type: combo
+          value: default
+        - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+          type: integer, value: 2}
+        - choices: [fixed, expanding, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: vsizepolicy
+          old_value: default
+          type: combo
+          value: default
+        type: hbox
+      - children:
+        - children:
+          - brick: {class: NullBrick, name: KappaPhiMotorsBrick0}
+            children: []
+            connections: []
+            name: KappaPhiMotorsBrick0
+            properties: []
+            type: KappaPhiMotorsBrick
+          - children: []
+            connections: []
+            name: vspacer10
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: none
+              type: combo
+              value: none
+            - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+              type: integer, value: 100}
+            type: vspacer
+          connections: []
+          name: vbox11
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        - children:
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick15}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick15
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: ths}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /ths}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick16}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick16
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: sy}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /sy}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick17}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick17
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: sx}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: sx}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick18}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick18
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: thy}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /thy}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick19}
+            children: []
+            connections: []
+            name: MotorSpinBoxBrick19
+            properties:
+            - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
+              type: integer, value: 2}
+            - {comment: '', default_value: 180 90 45 30 10, hidden: false, name: defaultSteps,
+              old_value: 180 90 45 30 10, type: string, value: 180 90 45 30 10}
+            - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
+              type: string, value: ''}
+            - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+              name: fixedHeight, old_value: -1, type: integer, value: -1}
+            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
+              name: fixedWidth, old_value: -1, type: integer, value: -1}
+            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+              type: string, value: '9'}
+            - {comment: '', default_value: +##.##, format_string: '%+2.2f', format_string_length: 5,
+              hidden: false, name: formatString, old_value: +##.##, type: formatString,
+              value: +##.##}
+            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+              name: frame, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: helpDecrease,
+              old_value: '', type: string, value: ''}
+            - {comment: '', default_value: '', hidden: false, name: helpIncrease,
+              old_value: '', type: string, value: ''}
+            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: hideInUser, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: icons, old_value: '',
+              type: string, value: ''}
+            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 0, hidden: false, name: invertButtons,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+              type: string, value: sz}
+            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+              type: string, value: /sz}
+            - {comment: '', default_value: 0, hidden: false, name: oneClickPressButton,
+              old_value: 0, type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showLabel, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showMoveButtons,
+              old_value: 1, type: boolean, value: 1}
+            - {comment: '', default_value: 1, hidden: false, name: showPosition, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
+              type: boolean, value: 1}
+            - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
+              type: boolean, value: 1}
+            type: MotorSpinBoxBrick
+          connections: []
+          name: vbox12
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+            type: color, value: null}
+          - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+            type: integer, value: -1}
+          - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+            type: integer, value: -1}
+          - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: frameshape
+            old_value: default
+            type: combo
+            value: default
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: hsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+            type: string, value: ''}
+          - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+            type: integer, value: 2}
+          - choices: [plain, raised, sunken, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: shadowstyle
+            old_value: default
+            type: combo
+            value: default
+          - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+            type: integer, value: 2}
+          - choices: [fixed, expanding, default]
+            comment: ''
+            default_value: default
+            hidden: false
+            name: vsizepolicy
+            old_value: default
+            type: combo
+            value: default
+          type: vbox
+        - children: []
+          connections: []
+          name: hspacer4
+          properties:
+          - choices: [none, top center, top left, top right, bottom center, bottom
+                left, bottom right, center, hcenter, vcenter, left, right]
+            comment: ''
+            default_value: none
+            hidden: false
+            name: alignment
+            old_value: none
+            type: combo
+            value: none
+          - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: 0,
+            type: boolean, value: 0}
+          - {comment: '', default_value: 100, hidden: false, name: size, old_value: 100,
+            type: integer, value: 100}
+          type: hspacer
+        connections: []
+        name: hbox4
+        properties:
+        - choices: [none, top center, top left, top right, bottom center, bottom left,
+            bottom right, center, hcenter, vcenter, left, right]
+          comment: ''
+          default_value: none
+          hidden: false
+          name: alignment
+          old_value: none
+          type: combo
+          value: none
+        - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+          type: color, value: null}
+        - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+          type: integer, value: -1}
+        - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+          type: integer, value: -1}
+        - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: frameshape
+          old_value: default
+          type: combo
+          value: default
+        - choices: [fixed, expanding, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: hsizepolicy
+          old_value: default
+          type: combo
+          value: default
+        - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+          type: string, value: ''}
+        - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+          type: string, value: Centering}
+        - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+          type: integer, value: 2}
+        - choices: [plain, raised, sunken, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: shadowstyle
+          old_value: default
+          type: combo
+          value: default
+        - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+          type: integer, value: 2}
+        - choices: [fixed, expanding, default]
+          comment: ''
+          default_value: default
+          hidden: false
+          name: vsizepolicy
+          old_value: default
+          type: combo
+          value: default
+        type: hbox
+      connections: []
+      name: tab1
+      properties:
+      - choices: [none, top center, top left, top right, bottom center, bottom left,
+          bottom right, center, hcenter, vcenter, left, right]
+        comment: ''
+        default_value: none
+        hidden: false
+        name: alignment
+        old_value: none
+        type: combo
+        value: none
+      - {comment: '', default_value: 0, hidden: false, name: closable_Centering, old_value: null,
+        type: boolean, value: 0}
+      - {comment: '', default_value: 0, hidden: false, name: closable_Motors, old_value: null,
+        type: boolean, value: 0}
+      - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+        type: color, value: null}
+      - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+        type: integer, value: -1}
+      - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+        type: integer, value: -1}
+      - {comment: '', default_value: 0, hidden: false, name: fontSize, old_value: 0,
+        type: integer, value: 9}
+      - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: frameshape
+        old_value: default
+        type: combo
+        value: default
+      - choices: [fixed, expanding, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: hsizepolicy
+        old_value: default
+        type: combo
+        value: default
+      - {comment: '', default_value: '', hidden: false, name: icon, old_value: '',
+        type: string, value: ''}
+      - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+        type: string, value: ''}
+      - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2,
+        type: integer, value: 2}
+      - {comment: '', default_value: 0, hidden: false, name: newdialog_Centering,
+        old_value: null, type: boolean, value: 0}
+      - {comment: '', default_value: 0, hidden: false, name: newdialog_Motors, old_value: null,
+        type: boolean, value: 0}
+      - choices: [plain, raised, sunken, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: shadowstyle
+        old_value: default
+        type: combo
+        value: default
+      - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+        type: integer, value: 2}
+      - choices: [fixed, expanding, default]
+        comment: ''
+        default_value: default
+        hidden: false
+        name: vsizepolicy
+        old_value: default
+        type: combo
+        value: default
+      type: tab
+    connections: []
+    name: vsplitter0
+    properties:
+    - choices: [none, top center, top left, top right, bottom center, bottom left,
+        bottom right, center, hcenter, vcenter, left, right]
+      comment: ''
+      default_value: none
+      hidden: false
+      name: alignment
+      old_value: none
+      type: combo
+      value: none
+    - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+      type: color, value: null}
+    - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+      type: integer, value: -1}
+    - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+      type: integer, value: -1}
+    - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+      comment: ''
+      default_value: default
+      hidden: false
+      name: frameshape
+      old_value: default
+      type: combo
+      value: default
+    - choices: [fixed, expanding, default]
+      comment: ''
+      default_value: default
+      hidden: false
+      name: hsizepolicy
+      old_value: default
+      type: combo
+      value: default
+    - {comment: '', default_value: '', hidden: false, name: icon, old_value: '', type: string,
+      value: ''}
+    - {comment: '', default_value: '', hidden: false, name: label, old_value: '',
+      type: string, value: ''}
+    - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2, type: integer,
+      value: 2}
+    - choices: [plain, raised, sunken, default]
+      comment: ''
+      default_value: default
+      hidden: false
+      name: shadowstyle
+      old_value: default
+      type: combo
+      value: default
+    - {comment: '', default_value: '[]', hidden: true, name: sizes, old_value: '[]',
+      type: string, value: '[]'}
+    - {comment: '', default_value: '[]', hidden: true, name: sizes_16777272, old_value: '[]',
+      type: string, value: '[]'}
+    - {comment: '', default_value: '[]', hidden: true, name: sizes_16777273, old_value: '[]',
+      type: string, value: '[]'}
+    - {comment: '', default_value: '[]', hidden: true, name: sizes_16777274, old_value: '[]',
+      type: string, value: '[]'}
+    - {comment: '', default_value: '[]', hidden: true, name: sizes_16777275, old_value: '[]',
+      type: string, value: '[]'}
+    - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2,
+      type: integer, value: 2}
+    - choices: [fixed, expanding, default]
+      comment: ''
+      default_value: default
+      hidden: false
+      name: vsizepolicy
+      old_value: default
+      type: combo
+      value: default
+    type: vsplitter
+  connections: []
+  name: window0
+  properties:
+  - choices: [none, top center, top left, top right, bottom center, bottom left, bottom
+        right, center, hcenter, vcenter, left, right]
+    comment: ''
+    default_value: none
+    hidden: false
+    name: alignment
+    old_value: none
+    type: combo
+    value: none
+  - {comment: '', default_value: '', hidden: false, name: caption, old_value: '',
+    type: string, value: ''}
+  - {comment: '', default_value: 1, hidden: false, name: closeOnExit, old_value: 1,
+    type: boolean, value: 1}
+  - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
+    type: color, value: null}
+  - {comment: '', default_value: tonic, hidden: false, name: expertPwd, old_value: tonic,
+    type: string, value: tonic}
+  - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: -1,
+    type: integer, value: -1}
+  - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+    type: integer, value: -1}
+  - {comment: '', default_value: 12, hidden: false, name: fontSize, old_value: 12,
+    type: integer, value: 12}
+  - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
+    comment: ''
+    default_value: default
+    hidden: false
+    name: frameshape
+    old_value: default
+    type: combo
+    value: default
+  - choices: [fixed, expanding, default]
+    comment: ''
+    default_value: default
+    hidden: false
+    name: hsizepolicy
+    old_value: default
+    type: combo
+    value: default
+  - {comment: '', default_value: '', hidden: false, name: icon, old_value: '', type: string,
+    value: ''}
+  - {comment: '', default_value: 0, hidden: false, name: keepOpen, old_value: 0, type: boolean,
+    value: 0}
+  - {comment: '', default_value: '', hidden: false, name: label, old_value: '', type: string,
+    value: ''}
+  - {comment: '', default_value: 2, hidden: false, name: margin, old_value: 2, type: integer,
+    value: 2}
+  - {comment: '', default_value: 0, hidden: false, name: menubar, old_value: 0, type: boolean,
+    value: 0}
+  - comment: ''
+    default_value: {}
+    hidden: true
+    name: menudata
+    old_value: null
+    type: undefined
+    value: {}
+  - choices: [plain, raised, sunken, default]
+    comment: ''
+    default_value: default
+    hidden: false
+    name: shadowstyle
+    old_value: default
+    type: combo
+    value: default
+  - {comment: '', default_value: 1, hidden: false, name: show, old_value: 1, type: boolean,
+    value: 1}
+  - {comment: '', default_value: 2, hidden: false, name: spacing, old_value: 2, type: integer,
+    value: 2}
+  - {comment: '', default_value: 0, hidden: false, name: statusbar, old_value: 0,
+    type: boolean, value: 0}
+  - choices: [fixed, expanding, default]
+    comment: ''
+    default_value: default
+    hidden: false
+    name: vsizepolicy
+    old_value: default
+    type: combo
+    value: default
+  #signals:
+  #  enableExpertMode: !!python/tuple []
+  #  isHidden: !!python/tuple []
+  #  isShown: !!python/tuple []
+  #  quit: !!python/tuple []
+  type: window
