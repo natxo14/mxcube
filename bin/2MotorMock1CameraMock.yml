@@ -221,28 +221,28 @@
       connections: []
       name: GraphicsToolsBrick0
       properties:
-      - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: null,
+      - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: 0,
         type: boolean, value: 0}
       - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
-        old_value: null, type: integer, value: -1}
+        old_value: -1, type: integer, value: -1}
       - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-        old_value: null, type: integer, value: -1}
-      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: null,
+        old_value: -1, type: integer, value: -1}
+      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
         type: string, value: '9'}
       - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
-        name: frame, old_value: null, type: boolean, value: 0}
-      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: null,
+        name: frame, old_value: 0, type: boolean, value: 0}
+      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
         type: boolean, value: 0}
       - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
-        name: instanceAllowAlways, old_value: null, type: boolean, value: 0}
+        name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
       - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
-        name: instanceAllowConnected, old_value: null, type: boolean, value: 0}
+        name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
       - choices: [menuBar, toolBar, both]
         comment: ''
         default_value: menuBar
         hidden: false
         name: targetMenu
-        old_value: null
+        old_value: menuBar
         type: combo
         value: menuBar
       type: GraphicsToolsBrick
@@ -252,6 +252,28 @@
       name: GraphicsManagerBrick0
       properties:
       - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
+        old_value: -1, type: integer, value: -1}
+      - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
+        old_value: -1, type: integer, value: -1}
+      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+        type: string, value: '9'}
+      - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+        name: frame, old_value: 0, type: boolean, value: 0}
+      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
+        type: boolean, value: 0}
+      - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+        name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+      - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+        name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+      type: GraphicsManagerBrick
+    - brick: {class: ESRFCenteringBrick, name: ESRFCenteringBrick0}
+      children: []
+      connections: []
+      name: ESRFCenteringBrick0
+      properties:
+      - {comment: '', default_value: 0, hidden: false, name: clockwise, old_value: null,
+        type: boolean, value: 0}
+      - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
         old_value: null, type: integer, value: -1}
       - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
         old_value: null, type: integer, value: -1}
@@ -265,7 +287,13 @@
         name: instanceAllowAlways, old_value: null, type: boolean, value: 0}
       - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
         name: instanceAllowConnected, old_value: null, type: boolean, value: 0}
-      type: GraphicsManagerBrick
+      - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: null,
+        type: string, value: ''}
+      - {comment: '', default_value: 0, hidden: false, name: table_y_inverted, old_value: null,
+        type: boolean, value: 0}
+      - {comment: '', default_value: 0, hidden: false, name: table_z_inverted, old_value: null,
+        type: boolean, value: 0}
+      type: ESRFCenteringBrick
     connections: []
     name: vbox0
     properties:

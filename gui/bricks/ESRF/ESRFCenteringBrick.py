@@ -149,7 +149,7 @@ class ESRFCenteringBrick(BaseWidget):
         Adapt
         """
         self.points_for_aligment = self.manager_widget.number_points_spinbox.value()
-        self.manager_widget.aligment_table.setNumRows(self.points_for_aligment)
+        self.manager_widget.aligment_table.setRowCount(self.points_for_aligment)
 
     def clear_table(self):
         """
@@ -159,6 +159,6 @@ class ESRFCenteringBrick(BaseWidget):
         # mport.QTableWidget, "aligment_table")
         table = self.manager_widget.aligment_table
         self.points_for_aligment = self.manager_widget.number_points_spinbox.value()
-        table.setNumRows(self.points_for_aligment)
+        table.setRowCount(self.points_for_aligment)
         table.clearContents()
             
