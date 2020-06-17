@@ -146,7 +146,8 @@ class MultipleMotorsBrick(BaseWidget):
                 self.main_groupbox_hlayout.addWidget(self.disable_motors_buttons)
             if len(self.motor_widget_labels):
                 for index, label in enumerate(self.motor_widget_labels):
-                    self.motor_widget_list[index].setLabel(label)
+                    print(f"#####MULTIPLEPOS LABELS - for 0 {label}")
+                    self.motor_widget_list[index].set_label(label)
         elif property_name == "moveButtonIcons":
             icon_list = new_value.split()
             for index in range(len(icon_list) - 1):
@@ -159,9 +160,11 @@ class MultipleMotorsBrick(BaseWidget):
                     )
         elif property_name == "labels":
             self.motor_widget_labels = new_value.split()
+            print(f"#####MULTIPLEPOS LABELS {self.motor_widget_labels}")
             if len(self.motor_widget_list):
                 for index, label in enumerate(self.motor_widget_labels):
-                    self.motor_widget_list[index].setLabel(label)
+                    print(f"#####MULTIPLEPOS LABELS - for {label}")
+                    self.motor_widget_list[index].set_label(label)
         elif property_name == "predefinedPositions":
             self.predefined_positions_list = new_value.split()
             for predefined_position in self.predefined_positions_list:
