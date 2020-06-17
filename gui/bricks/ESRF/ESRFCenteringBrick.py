@@ -72,6 +72,7 @@ class ESRFCenteringBrick(BaseWidget):
         self.demand_move = 0
         self.in_expert_mode = None
         self.position_history = []
+        self.points_for_aligment = 0
 
         # Properties ----------------------------------------------------------
         self.add_property("mnemonic", "string", "")
@@ -122,6 +123,25 @@ class ESRFCenteringBrick(BaseWidget):
         self.manager_widget.number_points_spinbox.valueChanged.connect(
             self.change_point_number
         )
+
+        self.manager_widget.start_alignment_button.clicked.connect(
+            self.start_aligment
+        )
+
+        self.manager_widget.cancel_alignment_button.clicked.connect(
+            self.cancel_aligment
+        )
+
+    def property_changed(self, property_name, old_value, new_value):
+        if property_name == "mnemonic":
+            self.set_motor(self.motor_hwobj, new_value)
+        if property_name == "clockwise":
+            pass
+        if property_name == "table_y_inverted":
+            pass
+        if property_name == "table_z_inverted":
+            pass
+
 
     def show_center(self, checkbox_state):
         """
