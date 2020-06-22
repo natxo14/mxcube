@@ -153,14 +153,43 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         )
 
     def property_changed(self, property_name, old_value, new_value):
-        if property_name == "mnemonic":
-            self.set_motor(self.motor_hwobj, new_value)
         if property_name == "zoom":
-            pass
+            
+            if self.zoom_motor_hwobj is not None:
+            self.disconnect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
+            self.disconnect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
+            self.disconnect(self.zoom_motor_hwobj, "stateChanged", self.zoom_state_changed)
+
+                if new_value is not None:
+                    self.zoom_motor_hwobj = self.get_hardware_object(new_value)
+                    
+                if self.zoom_motor_hwobj is None:
+                    # first time motor is set
+                    try:
+                        step = float(self.default_step)
+                    except BaseException:
+                        try:
+                            step = self.zoom_motor_hwobj.GUIstep
+                        except BaseException:
+                            step = 1.0
+                    self.set_line_step(step)
+
+                if self.zoom_motor_hwobj is not None:
+                    self.connect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
+                    self.connect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
+                    self.connect(self.zoom_motor_hwobj, "stateChanged", self.state_changed)
+
         if property_name == "vertical motor":
-            pass
+            self.v_motor_hwobj = self.get_hardware_object(new_value)
+            name = self.h_motor_hwobj.name()
+            #TODO : set label on GUI with motor name
+            # self.relZLabel.setText("Delta on \"%s\" "%mne)
+            # self.vmotUnit = self.vmot.getProperty("unit")
+            # if self.vmotUnit is None:
+            #     self.vmotUnit = 1e-3
         if property_name == "horizontal motor":
-            pass
+            self.h_motor_hwobj = self.get_hardware_object(new_value)
+            #TODO : set label on GUI
 
     def save_calibration(self):
         """
