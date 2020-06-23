@@ -96,7 +96,7 @@ class MultiplePositionsBrick(BaseWidget):
         self.button_group.buttonClicked.connect(self.position_clicked)
 
     def run(self):
-        print(f"$$$$$$$$$$$$$$$ run")
+        print(f"$$$$$$$$$$$$$$$ run self.multipos_hwrobj {self.multipos_hwrobj}")
         self.hardware_object_change(self.multipos_hwrobj)
         self.__brickStarted = True
 
@@ -105,14 +105,16 @@ class MultiplePositionsBrick(BaseWidget):
         self.connect_hardware_object()
         
         if self.multipos_hwrobj is not None:
-            title = "<B>"+self.multipos_hwrobj.username.replace(" ", "&nbsp;")+"<B>"                             
+            title = self.multipos_hwrobj.username                             
             self.main_group_box.setTitle(title)
 
-            for index, key in enumerate(self.multipos_hwrobj.positionsIndex, start=1):              
+            for index, key in enumerate(self.multipos_hwrobj.positionsIndex, start=1): 
+                print(f"$$$$$$$$$$$$$$$ hardware_object_change {index} {str(key)}")
+                     
                 radio_button = QtImport.QRadioButton(str(key))
                 self.radio_group_layout.addWidget(radio_button)
                 self.button_group.addButton(radio_button, index)
-                self.positionList.insertItem(str(key))
+                #self.positionList.insertItem(str(key))
         else:
             self.main_group_box.setTitle("<B>Unknown<B>")
         
@@ -127,11 +129,11 @@ class MultiplePositionsBrick(BaseWidget):
             #    self.radioGroup.clearRadioList()
             #self.__lastPosition = None
 
-            print(f"property_changed {new_value}")
-            
+            print(f"@@@@@@@@@@@@ property_changed {new_value}")
             if self.multipos_hwrobj is None:
                 self.multipos_hwrobj = self.get_hardware_object(new_value)
                 print(f"property_changed self.multipos_hwrobj {self.multipos_hwrobj}")
+                print(f"@@@@@@@@@@@@ self.multipos_hwrobj.positions {self.multipos_hwrobj.positions}")
                 if self.__brickStarted:
                     self.hardware_object_change(self.multipos_hwrobj)
             else:
