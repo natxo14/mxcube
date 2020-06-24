@@ -118,16 +118,16 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Pixel Size Calibration", self)
-        self.manager_widget = QtImport.load_ui_file("camera_calibration.ui")
+        self.ui_widgets_manager = QtImport.load_ui_file("camera_calibration.ui")
 
         #validator for input values for delta phi: min/max/decimals
-        # self.manager_widget.delta_phi_textbox.setValidator(
+        # self.ui_widgets_manager.delta_phi_textbox.setValidator(
         #     QtImport.QDoubleValidator(0, 180, 2)
         # )
 
         # Layout --------------------------------------------------------------
         _groupbox_vlayout = QtImport.QVBoxLayout(self)
-        _groupbox_vlayout.addWidget(self.manager_widget)
+        _groupbox_vlayout.addWidget(self.ui_widgets_manager)
         _groupbox_vlayout.setSpacing(0)
         _groupbox_vlayout.setContentsMargins(0, 0, 0, 0)
         self.main_groupbox.setLayout(_groupbox_vlayout)
@@ -140,48 +140,47 @@ class ESRFCameraCalibrationBrick(BaseWidget):
 
         # Qt signal/slot connections ------------------------------------------
        
-        self.manager_widget.save_calibration_pushbutton.clicked.connect(
+        self.ui_widgets_manager.save_calibration_pushbutton.clicked.connect(
             self.save_calibration
         )
 
-        self.manager_widget.start_new_calibration_pushbutton.clicked.connect(
+        self.ui_widgets_manager.start_new_calibration_pushbutton.clicked.connect(
             self.start_new_calibration
         )
 
-        self.manager_widget.number_points_spinbox.valueChanged.connect(
-            self.change_point_number
-        )
-
     def property_changed(self, property_name, old_value, new_value):
+        print(f"cameraCalibBrick property_changed {new_value}")
         if property_name == "zoom":
             
             if self.zoom_motor_hwobj is not None:
-            self.disconnect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
-            self.disconnect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
-            self.disconnect(self.zoom_motor_hwobj, "stateChanged", self.zoom_state_changed)
+                self.disconnect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
+                self.disconnect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
+                self.disconnect(self.zoom_motor_hwobj, "stateChanged", self.zoom_state_changed)
 
-                if new_value is not None:
-                    self.zoom_motor_hwobj = self.get_hardware_object(new_value)
-                    
-                if self.zoom_motor_hwobj is None:
-                    # first time motor is set
-                    try:
-                        step = float(self.default_step)
-                    except BaseException:
-                        try:
-                            step = self.zoom_motor_hwobj.GUIstep
-                        except BaseException:
-                            step = 1.0
-                    self.set_line_step(step)
+            if new_value is not None:
+                self.zoom_motor_hwobj = self.get_hardware_object(new_value)
+                
+            # if self.zoom_motor_hwobj is None:
+            #     # first time motor is set
+            #     try:
+            #         step = float(self.default_step)
+            #     except BaseException:
+            #         try:
+            #             step = self.zoom_motor_hwobj.GUIstep
+            #         except BaseException:
+            #             step = 1.0
+            #     self.set_line_step(step)
 
-                if self.zoom_motor_hwobj is not None:
-                    self.connect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
-                    self.connect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
-                    self.connect(self.zoom_motor_hwobj, "stateChanged", self.state_changed)
+            if self.zoom_motor_hwobj is not None:
+                self.connect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
+                self.connect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
+                            
+            self.update_gui()
 
         if property_name == "vertical motor":
             self.v_motor_hwobj = self.get_hardware_object(new_value)
-            name = self.h_motor_hwobj.name()
+            name = self.v_motor_hwobj.name()
+            self.ui_widgets_manager.delta_z_label.setText(f"Delta on {name}:")
             #TODO : set label on GUI with motor name
             # self.relZLabel.setText("Delta on \"%s\" "%mne)
             # self.vmotUnit = self.vmot.getProperty("unit")
@@ -189,16 +188,111 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             #     self.vmotUnit = 1e-3
         if property_name == "horizontal motor":
             self.h_motor_hwobj = self.get_hardware_object(new_value)
+            name = self.h_motor_hwobj.name()
+            self.ui_widgets_manager.delta_y_label.setText(f"Delta on {name}:")
             #TODO : set label on GUI
+    
+    def update_gui(self):
+        if self.zoom_motor_hwobj is not None:
+            positions = self.zoom_motor_hwobj.get_positions_names_list()
+            self.ui_widgets_manager.calibration_table.setRowCount(len(positions))
+            for i, position in enumerate(positions):
+            # for i,  in range(pos):
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "resox")
+                if aux is None:
+                    aux = "1"
+                resoy = int(aux * 1e9)
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "resoy")
+                if aux is None:
+                    aux = "1"
+                resoz = int(aux * 1e9)
+                
+
+                if resoy is None:
+                    resoy = "Not defined"
+                if resoz is None:
+                    resoz = "Not defined"
+
+                """
+                resolution are displayed in nanometer and saved in merter
+                """
+
+                zoom_column_item = QtImport.QTableWidgetItem(str(position))
+                y_column_item = QtImport.QTableWidgetItem(str(resoy))
+                z_column_item = QtImport.QTableWidgetItem(str(resoz))
+
+                self.ui_widgets_manager.calibration_table.setItem(i, 0, zoom_column_item)
+                self.ui_widgets_manager.calibration_table.setItem(i, 1, y_column_item)
+                self.ui_widgets_manager.calibration_table.setItem(i, 2, z_column_item)
+
+    def get_zoom_index(self, position_to_find):
+        if self.zoom_motor_hwobj is not None:
+            positions = self.zoom_motor_hwobj.get_positions_names_list()
+            for i, position in enumerate(positions):
+                if position_to_find == position:
+                    return(i)
+            return(-1)
+
+    def zoom_changed(self):
+        if self.zoom_motor_hwobj is not None:
+            current_pos = self.zoom_motor_hwobj.get_value()
+            self.curr_idx = self.get_zoom_index(current_pos)
+            
+            if self.ui_widgets_manager.calibration_table.selectedItems().size() != 0:
+                self.ui_widgets_manager.calibration_table.selectionMode().clearSelection()
+                
+            if self.curr_idx != -1:
+                aux = self.zoom_motor_hwobj.get_position_key_value(current_pos, "resox")
+                if aux is None:
+                    aux = "1"
+                resoy = float(aux)
+                aux = self.zoom_motor_hwobj.get_position_key_value(current_pos, "resoy")
+                if aux is None:
+                    aux = "1"
+                resoz = float(aux)
+
+                if resoy is None:
+                    self.y_calib = None
+                    resoy = "Not defined"
+                else:
+                    self.y_calib = resoy
+                    resoy = str(int(resoy * 1e9))
+                
+                if resoz is None:
+                    self.z_calib = None
+                    resoz = "Not defined"
+                else:
+                    self.z_calib = resoz
+                    resoz = str(int(resoz * 1e9))
+                
+                zoom_column_item = QtImport.QTableWidgetItem(str(current_pos))
+                y_column_item = QtImport.QTableWidgetItem(resoy)
+                z_column_item = QtImport.QTableWidgetItem(resoz)
+
+                self.ui_widgets_manager.beam_positions_table.setItem(self.curr_idx, 0, zoom_column_item)
+                self.ui_widgets_manager.beam_positions_table.setItem(self.curr_idx, 1, y_column_item)
+                self.ui_widgets_manager.beam_positions_table.setItem(self.curr_idx, 2, z_column_item)
+                
+            else:
+                self.y_calib = None
+                self.z_calib = None
+        else:
+            self.y_calib = None
+            self.z_calib = None
+
+        self.emit(qt.PYSIGNAL("ChangePixelCalibration"),
+                  (self.y_calib, self.z_calib))
+    
+    def zoom_state_changed(self):
+        pass
 
     def save_calibration(self):
         """
-        Doc
         """
         if self.zoom_motor_hwobj is not None:
             currentPos = self.zoom_motor_hwobj.getPosition()
-            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resox", str(self.YCalib))
-            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resoy", str(self.ZCalib))
+            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resox", str(self.y_calib))
+            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resoy", str(self.z_calib))
         else:
             print(f"CameraCalibrationBrick--ARG--zoom_motor_hwobj is None")
                 
@@ -206,47 +300,38 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         Doc
         """
-        if self.calibration == 0:
+        # if self.calibration == 0:
 
-            if self.drawingMgr is not None:
-                self.calibration = 1
-                self.calibButton.setText("Cancel Calibration")
+        #     if self.drawingMgr is not None:
+        #         self.calibration = 1
+        #         self.calibButton.setText("Cancel Calibration")
 
-                self.drawingMgr.startDrawing()
+        #         self.drawingMgr.startDrawing()
 
-        elif self.calibration == 1:
-            self.calibration = 0
-            self.calibButton.setText("Start New Calibration")
-            self.drawingMgr.stopDrawing()
-            self.drawingMgr.hide()
+        # elif self.calibration == 1:
+        #     self.calibration = 0
+        #     self.calibButton.setText("Start New Calibration")
+        #     self.drawingMgr.stopDrawing()
+        #     self.drawingMgr.hide()
 
-        elif self.calibration == 2:
-            self.disconnect(self.vmot, qt.PYSIGNAL("moveDone"),
-                            self.moveFinished)
-            self.disconnect(self.hmot, qt.PYSIGNAL("moveDone"),
-                            self.moveFinished)
-            self.hmot.stop()
-            self.vmot.stop()
-            self.calibration = 0
-            self.calibButton.setText("Start New Calibration")
-            self.drawingMgr.stopDrawing()
-            self.drawingMgr.hide()
-    
-    def change_point_number(self, new_point_number):
-        """
-        Adapt
-        """
-        self.points_for_aligment = self.manager_widget.number_points_spinbox.value()
-        self.manager_widget.aligment_table.setRowCount(self.points_for_aligment)
+        # elif self.calibration == 2:
+        #     self.disconnect(self.vmot, qt.PYSIGNAL("moveDone"),
+        #                     self.moveFinished)
+        #     self.disconnect(self.hmot, qt.PYSIGNAL("moveDone"),
+        #                     self.moveFinished)
+        #     self.hmot.stop()
+        #     self.vmot.stop()
+        #     self.calibration = 0
+        #     self.calibButton.setText("Start New Calibration")
+        #     self.drawingMgr.stopDrawing()
+        #     self.drawingMgr.hide()
 
     def clear_table(self):
         """
         Adapt
         """
-        #table = self.manager_widget.findChild(QtI
+        #table = self.ui_widgets_manager.findChild(QtI
         # mport.QTableWidget, "aligment_table")
-        table = self.manager_widget.aligment_table
-        self.points_for_aligment = self.manager_widget.number_points_spinbox.value()
-        table.setRowCount(self.points_for_aligment)
+        table = self.ui_widgets_manager.aligment_table
         table.clearContents()
             

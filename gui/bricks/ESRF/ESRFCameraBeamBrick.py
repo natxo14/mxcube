@@ -82,9 +82,7 @@ class ESRFCameraBeamBrick(BaseWidget):
 
         # Hardware objects ----------------------------------------------------
         self.zoom_motor_hwobj = None
-        self.h_motor_hwobj = None
-        self.v_motor_hwobj = None
-
+        
         # Internal values -----------------------------------------------------
         self.step_editor = None
         self.move_step = 1
@@ -94,8 +92,6 @@ class ESRFCameraBeamBrick(BaseWidget):
 
         # Properties ----------------------------------------------------------
         self.add_property("zoom", "string", "")
-        self.add_property("vertical motor", "string", "")
-        self.add_property("horizontal motor", "string", "")
         
         # Signals ------------------------------------------------------------
         self.define_signal("ChangeBeamPosition", ())
@@ -107,16 +103,16 @@ class ESRFCameraBeamBrick(BaseWidget):
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Beam Position", self)
-        self.manager_widget = QtImport.load_ui_file("camera_beam_brick.ui")
+        self.ui_widgets_manager = QtImport.load_ui_file("camera_beam_brick.ui")
 
         #validator for input values for delta phi: min/max/decimals
-        # self.manager_widget.delta_phi_textbox.setValidator(
+        # self.ui_widgets_manager.delta_phi_textbox.setValidator(
         #     QtImport.QDoubleValidator(0, 180, 2)
         # )
 
         # Layout --------------------------------------------------------------
         _groupbox_vlayout = QtImport.QVBoxLayout(self)
-        _groupbox_vlayout.addWidget(self.manager_widget)
+        _groupbox_vlayout.addWidget(self.ui_widgets_manager)
         _groupbox_vlayout.setSpacing(0)
         _groupbox_vlayout.setContentsMargins(0, 0, 0, 0)
         self.main_groupbox.setLayout(_groupbox_vlayout)
@@ -129,28 +125,68 @@ class ESRFCameraBeamBrick(BaseWidget):
 
         # Qt signal/slot connections ------------------------------------------
        
-        self.manager_widget.save_current_beam_pos_pushbutton.clicked.connect(
+        self.ui_widgets_manager.save_current_beam_pos_pushbutton.clicked.connect(
             self.save_beam_position
         )
 
     def property_changed(self, property_name, old_value, new_value):
-        if property_name == "mnemonic":
-            self.set_motor(self.motor_hwobj, new_value)
         if property_name == "zoom":
-            pass
-        if property_name == "vertical motor":
-            pass
-        if property_name == "horizontal motor":
-            pass
+            if self.zoom_motor_hwobj is not None:
+                self.disconnect(self.zoom_motor_hwobj, "positionReached",
+                                self.zoom_changed)
+                self.disconnect(self.zoom_motor_hwobj, "noPosition",
+                                self.zoom_changed)
 
+            self.zoom_motor_hwobj = self.get_hardware_object(new_value)
+
+            if self.zoom_motor_hwobj is not None:
+                self.connect(self.zoom_motor_hwobj, "positionReached",
+                                self.zoom_changed)
+                self.connect(self.zoom_motor_hwobj, "noPosition",
+                                self.zoom_changed)
+
+                self.init_interface()
+                self.zoom_changed()
+           
+    def init_interface(self):
+        if self.zoom_motor_hwobj is not None:
+            positions = self.zoom_motor_hwobj.get_positions_names_list()
+            self.ui_widgets_manager.beam_positions_table.setRowCount(len(positions))
+
+            for i, position in enumerate(positions):
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "beamx")
+                if aux is None:
+                    aux = "0"
+                beamy = int(aux)
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "beamy")
+                if aux is None:
+                    aux = "0"
+                beamz = int(aux)
+
+                if beamy is None:
+                    beamy = "Not defined"
+                if beamz is None:
+                    beamz = "Not defined"
+
+                zoom_column_item = QtImport.QTableWidgetItem(str(position))
+                y_column_item = QtImport.QTableWidgetItem(str(beamy))
+                z_column_item = QtImport.QTableWidgetItem(str(beamz))
+                
+                self.ui_widgets_manager.beam_positions_table.setItem(i, 0, zoom_column_item)
+                self.ui_widgets_manager.beam_positions_table.setItem(i, 1, y_column_item)
+                self.ui_widgets_manager.beam_positions_table.setItem(i, 2, z_column_item)
+ 
+    def zoom_changed(self):
+        pass
+        
     def save_beam_position(self):
         """
         Doc
         """
         if self.zoom_motor_hwobj is not None:
-            currentPos = self.zoom_motor_hwobj.getPosition()
-            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resox", str(self.YCalib))
-            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resoy", str(self.ZCalib))
+            current_pos = self.zoom_motor_hwobj.getPosition()
+            self.zoom_motor_hwobj.setPositionKeyValue(current_pos, "resox", str(self.YCalib))
+            self.zoom_motor_hwobj.setPositionKeyValue(current_pos, "resoy", str(self.ZCalib))
         else:
             print(f"CameraCalibrationBrick--ARG--zoom_motor_hwobj is None")
                
@@ -159,10 +195,7 @@ class ESRFCameraBeamBrick(BaseWidget):
         """
         Adapt
         """
-        #table = self.manager_widget.findChild(QtI
+        #table = self.ui_widgets_manager.findChild(QtI
         # mport.QTableWidget, "aligment_table")
-        table = self.manager_widget.aligment_table
-        self.points_for_aligment = self.manager_widget.number_points_spinbox.value()
-        table.setRowCount(self.points_for_aligment)
-        table.clearContents()
+        self.ui_widgets_manager.beam_positions_table.clearContents()
             

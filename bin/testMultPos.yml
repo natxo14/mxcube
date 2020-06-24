@@ -5,25 +5,73 @@
       connections: []
       name: MultiplePositionsBrick0
       properties:
-      - {comment: '', default_value: 0, hidden: false, name: check, old_value: null,
+      - {comment: '', default_value: 0, hidden: false, name: check, old_value: 0,
         type: boolean, value: 0}
       - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
-        old_value: null, type: integer, value: -1}
+        old_value: -1, type: integer, value: -1}
       - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-        old_value: null, type: integer, value: -1}
-      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: null,
+        old_value: -1, type: integer, value: -1}
+      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
         type: string, value: '9'}
       - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
-        name: frame, old_value: null, type: boolean, value: 0}
-      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: null,
+        name: frame, old_value: 0, type: boolean, value: 0}
+      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
         type: boolean, value: 0}
       - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
-        name: instanceAllowAlways, old_value: null, type: boolean, value: 0}
+        name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
       - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
-        name: instanceAllowConnected, old_value: null, type: boolean, value: 0}
+        name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
       - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
         type: string, value: /turret_test}
       type: MultiplePositionsBrick
+    - brick: {class: ESRFCameraBeamBrick, name: ESRFCameraBeamBrick0}
+      children: []
+      connections: []
+      name: ESRFCameraBeamBrick0
+      properties:
+      - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
+        old_value: -1, type: integer, value: -1}
+      - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
+        old_value: -1, type: integer, value: -1}
+      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+        type: string, value: '9'}
+      - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+        name: frame, old_value: 0, type: boolean, value: 0}
+      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
+        type: boolean, value: 0}
+      - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+        name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+      - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+        name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+      - {comment: '', default_value: '', hidden: false, name: zoom, old_value: '',
+        type: string, value: /turret_test}
+      type: ESRFCameraBeamBrick
+    - brick: {class: ESRFCameraCalibrationBrick, name: ESRFCameraCalibrationBrick0}
+      children: []
+      connections: []
+      name: ESRFCameraCalibrationBrick0
+      properties:
+      - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
+        old_value: -1, type: integer, value: -1}
+      - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
+        old_value: -1, type: integer, value: -1}
+      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+        type: string, value: '9'}
+      - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+        name: frame, old_value: 0, type: boolean, value: 0}
+      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
+        type: boolean, value: 0}
+      - {comment: '', default_value: '', hidden: false, name: horizontal motor, old_value: '',
+        type: string, value: /mockupMotM0}
+      - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+        name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+      - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+        name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+      - {comment: '', default_value: '', hidden: false, name: vertical motor, old_value: '',
+        type: string, value: /mockupMotRoby}
+      - {comment: '', default_value: '', hidden: false, name: zoom, old_value: '',
+        type: string, value: /turret_test}
+      type: ESRFCameraCalibrationBrick
     connections: []
     name: vbox0
     properties:
@@ -164,9 +212,5 @@
     old_value: null
     type: combo
     value: default
-  signals:
-  #  enableExpertMode: !!python/tuple []
-  #  isHidden: !!python/tuple []
-  #  isShown: !!python/tuple []
-  # quit: !!python/tuple []
+  signals: null
   type: window

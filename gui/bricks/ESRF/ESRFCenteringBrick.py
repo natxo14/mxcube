@@ -89,17 +89,17 @@ class ESRFCenteringBrick(BaseWidget):
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Graphics items", self)
-        self.manager_widget = QtImport.load_ui_file("centering.ui")
+        self.ui_widgets_manager = QtImport.load_ui_file("centering.ui")
 
         
         #validator for input values for delta phi: min/max/decimals
-        # self.manager_widget.delta_phi_textbox.setValidator(
+        # self.ui_widgets_manager.delta_phi_textbox.setValidator(
         #     QtImport.QDoubleValidator(0, 180, 2)
         # )
 
         # Layout --------------------------------------------------------------
         _groupbox_vlayout = QtImport.QVBoxLayout(self)
-        _groupbox_vlayout.addWidget(self.manager_widget)
+        _groupbox_vlayout.addWidget(self.ui_widgets_manager)
         _groupbox_vlayout.setSpacing(0)
         _groupbox_vlayout.setContentsMargins(0, 0, 0, 0)
         self.main_groupbox.setLayout(_groupbox_vlayout)
@@ -112,23 +112,23 @@ class ESRFCenteringBrick(BaseWidget):
 
         # Qt signal/slot connections ------------------------------------------
        
-        self.manager_widget.show_center_checkbox.stateChanged.connect(
+        self.ui_widgets_manager.show_center_checkbox.stateChanged.connect(
             self.show_center
         )
 
-        self.manager_widget.show_help_line_checkbox.stateChanged.connect(
+        self.ui_widgets_manager.show_help_line_checkbox.stateChanged.connect(
             self.show_help_lines
         )
 
-        self.manager_widget.number_points_spinbox.valueChanged.connect(
+        self.ui_widgets_manager.number_points_spinbox.valueChanged.connect(
             self.change_point_number
         )
 
-        self.manager_widget.start_alignment_button.clicked.connect(
+        self.ui_widgets_manager.start_alignment_button.clicked.connect(
             self.start_aligment
         )
 
-        self.manager_widget.cancel_alignment_button.clicked.connect(
+        self.ui_widgets_manager.cancel_alignment_button.clicked.connect(
             self.cancel_aligment
         )
 
@@ -168,17 +168,17 @@ class ESRFCenteringBrick(BaseWidget):
         """
         Adapt
         """
-        self.points_for_aligment = self.manager_widget.number_points_spinbox.value()
-        self.manager_widget.aligment_table.setRowCount(self.points_for_aligment)
+        self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
+        self.ui_widgets_manager.aligment_table.setRowCount(self.points_for_aligment)
 
     def clear_table(self):
         """
         Adapt
         """
-        #table = self.manager_widget.findChild(QtI
+        #table = self.ui_widgets_manager.findChild(QtI
         # mport.QTableWidget, "aligment_table")
-        table = self.manager_widget.aligment_table
-        self.points_for_aligment = self.manager_widget.number_points_spinbox.value()
+        table = self.ui_widgets_manager.aligment_table
+        self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
         table.setRowCount(self.points_for_aligment)
         table.clearContents()
             

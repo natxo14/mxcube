@@ -74,7 +74,7 @@ class MultiplePositionsBrick(BaseWidget):
         print(f"$$$$$$$$$$$$$$$ buildInterface")
         
         """
-        TODO: missing doc      
+        TODO: missing doc     
         """
 
         # graphical container for buttons
@@ -108,7 +108,7 @@ class MultiplePositionsBrick(BaseWidget):
             title = self.multipos_hwrobj.username                             
             self.main_group_box.setTitle(title)
 
-            for index, key in enumerate(self.multipos_hwrobj.positionsIndex, start=1): 
+            for index, key in enumerate(self.multipos_hwrobj.get_positions_names_list(), start=1): 
                 print(f"$$$$$$$$$$$$$$$ hardware_object_change {index} {str(key)}")
                      
                 radio_button = QtImport.QRadioButton(str(key))
@@ -184,17 +184,18 @@ class MultiplePositionsBrick(BaseWidget):
     def position_clicked(self):
         name = self.button_group.checkedButton().text()
         if self.multipos_hwrobj is not None:
+            print(f"MultiplePosBrick buttonClicked. id : {name} - {self.button_group.checkedId()}")
             if self.check_move:
                 msgstr = f"You will move {self.multipos_hwrobj.username} \
                     to position {name}"
                 ret = QtImport.QMessageBox.warning(None, "Move to position", msgstr,
                                     QtImport.QMessageBox.Ok,
                                     QtImport.QMessageBox.Cancel,
-                                    QtImport.QMessageBox.NoButton)       
+                                    QtImport.QMessageBox.NoButton)     
                 if ret == QtImport.QMessageBox.Ok:
                     self.multipos_hwrobj.moveToPosition(name)
                 else:
-                    self.multipos_hwrobj.checkPosition() 
+                    self.multipos_hwrobj.checkPosition()
             else:
                 self.multipos_hwrobj.moveToPosition(name)
 
@@ -232,8 +233,10 @@ class MultiplePositionsBrick(BaseWidget):
         #         self.valueWidget.setValue("Unknown")
         pass
 
-    def check_state(self):
+    def check_state(self, new_state):
+        
         state = self.multipos_hwrobj.get_state()
+        print(f"MultiplePosBrick check_state new state {new_state} - state {state}")
         
         # if state in MultiplePositionsBrick.nameState:
             # qcolor = QtImport.QColor(MultiplePositionsBrick.colorState[state])
