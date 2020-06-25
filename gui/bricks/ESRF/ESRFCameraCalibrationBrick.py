@@ -238,7 +238,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             current_pos = self.zoom_motor_hwobj.get_value()
             self.curr_idx = self.get_zoom_index(current_pos)
             
-            if self.ui_widgets_manager.calibration_table.selectedItems().size() != 0:
+            if len(self.ui_widgets_manager.calibration_table.selectedItems()) != 0:
                 self.ui_widgets_manager.calibration_table.selectionMode().clearSelection()
                 
             if self.curr_idx != -1:
@@ -280,8 +280,8 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             self.y_calib = None
             self.z_calib = None
 
-        self.emit(qt.PYSIGNAL("ChangePixelCalibration"),
-                  (self.y_calib, self.z_calib))
+        # self.emit(qt.PYSIGNAL("ChangePixelCalibration"),
+        #           (self.y_calib, self.z_calib))
     
     def zoom_state_changed(self):
         pass

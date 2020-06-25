@@ -199,6 +199,11 @@ class MultiplePositionsBrick(BaseWidget):
             else:
                 self.multipos_hwrobj.moveToPosition(name)
 
+    def state_changed(self, state):
+        """Enables/disables controls based on the state
+        """
+        pass 
+    
     def position_changed(self, name):
         # if self.appearance == "Move" or self.appearance == "Configure":
         #     self.radioGroup.setChecked(name, True)

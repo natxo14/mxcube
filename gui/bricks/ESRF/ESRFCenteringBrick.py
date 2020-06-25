@@ -134,14 +134,25 @@ class ESRFCenteringBrick(BaseWidget):
 
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "mnemonic":
-            self.set_motor(self.motor_hwobj, new_value)
-        if property_name == "clockwise":
-            pass
-        if property_name == "table_y_inverted":
-            pass
-        if property_name == "table_z_inverted":
-            pass
+            equipment = self.getHardwareObject(new_value)
+            if equipment is not None :
+                    xoryMotor = equipment.getDeviceByRole('horizontal')
+                    if xoryMotor is not None:
+                        self.__verticalPhi = True
+                    else:
+                        xoryMotor = equipment.getDeviceByRole('vertical')
+                        if xoryMotor is None:
+                            logging.getLogger().error('%s: could not find motors horizontal nor vertical motor in Hardware Objects %s',
+                                                      str(self.name()),equipment.name())
+                            return
+                        self.__verticalPhi = False
 
+                    zMotor = equipment.getDeviceByRole('inBeam')
+                    rMotor = equipment.getDeviceByRole('rotation')
+                    if zMotor is None or rMotor is None :
+                        logging.getLogger().error('%s: could not find motors inBeam or rotation motor in Hardware Objects %s',
+                                                  str(self.name()),equipment.name())
+                        return          
 
     def show_center(self, checkbox_state):
         """
