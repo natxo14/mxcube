@@ -68,7 +68,9 @@ def run(self) ?? still valable??
 in bricks
 def connectNotify(self) ?? What For ??
 
-+++++++++++++++++++++++++++++++++++++++++=
++++++++++++++++++++++++++++++++++++++++++
+On QtGraphicsManager:
+Is there any like 'movetopos' functionality ??
 
 
 
@@ -796,12 +798,60 @@ TreeBrick: ??
 GraphicsToolsBrick: targetMenu : combobox {menubar, toolbar, both} . not yet working
 GraphicsManagerBrick: Checkbox to show whole inteface: controls for points/measures/lines/grids
 
+###### ###############
+###### FRAMEWORK2 BRICKS  ###############
+###### ###############
+ID13RecordedSeriesBrick: no GUI
+reference to xml file with commands on it 
+Adds a button to view, and links action to a command on xml file
+
+    self.__addPoint = equipment.getCommandObject('lll')
+
+    self.__button = QubButtonAction(label='%s-----' % self.__prefix,name='ID13RecordedSeriesBrick_%s' % self.__prefix,
+                                            place='toolbar',
+                                            group='ID13',autoConnect = True)
+            qt.QObject.connect(self.__button,qt.PYSIGNAL('ButtonPressed'),self.__lllCBK)
+            view.addAction([self.__button])
+
+def __lllCBK(self) :
+        try:
+            self.__addPoint()
+
+CameraMotorToolsBrick: no GUI hmotor/vmotor
+
+This brick allows to add a "Move to " mode as action (toolbar or popup menu)
+of a camera brick. A soon as the calibration has been done and beam position
+has been set, user can click on the display of the associated camera brick and
+the point selected will move in the beam.
+
+CameraToolsBrick : no GUI 
+
+Thiss brick allows to define action to be done on a CameraBrick object.
+It does not deal with Camera associated motors as CameraMotorToolsBrick
+should do it.
+Available tools are the following:
+
+add a list in the tool bar or in the menu to selected camera from a Meteor2
+server
+
 #######################
 MULTIPLE POSITIONS
 #######################
 in bliss :
 
     dans bliss maintenant il y a MultiplePositions class, qui defini des positions et des etiquettes. Le HWO est le BlissNState, mais c`est mieux si on regarde ca ensemble.
+
+
+
+
+
+
+#######################
+BRICKS FUNCTIONALITY
+#######################
+
+
+
 
 
 
