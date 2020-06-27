@@ -64,7 +64,7 @@ class ESRFCenteringBrick(BaseWidget):
         BaseWidget.__init__(self, *args)
 
         # Hardware objects ----------------------------------------------------
-        self.motor_hwobj = None
+        self.diffractometer_hwobj = None
 
         # Internal values -----------------------------------------------------
         self.step_editor = None
@@ -134,7 +134,9 @@ class ESRFCenteringBrick(BaseWidget):
 
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "mnemonic":
-            equipment = self.getHardwareObject(new_value)
+            self.diffractometer_hwobj = self.get_hardware_object(new_value)
+            
+            equipment = self.get_hardware_object(new_value)
             if equipment is not None :
                     xoryMotor = equipment.getDeviceByRole('horizontal')
                     if xoryMotor is not None:

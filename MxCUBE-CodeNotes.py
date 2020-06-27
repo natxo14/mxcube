@@ -44,6 +44,44 @@ Ivars: HOW TO USE GraphicsToolsBrick ??
 Must convert to QMainWindow to use ToolBar and MainMenu ??
 BaseWidget._menubar and
 BaseWidget._toolbar never initialized ??
+
++++++++++++++++++++++++++++++++++++++++++++++
+in bricks
+def run(self) ?? still valable?? what for??
+
+On bricks:
+execution order
+ __init__ ()
+ property_changed() for all properties
+    properties executed in alphabetical order
+ run()
+
+in bricks
+def connectNotify(self) ?? What For ??
+
++++++++++++++++++++++++++++++++++++++++++++++
+if in xml file there's a tag like 
+<device class="BlissMotor">
+  <actuator_name>sy_cdi</actuator_name>
+  <GUIstep>0.05</GUIstep>
+</device>
+
+then it means that the HWRObject created from that xml file will have 'automatically' a member like:
+self.motor_hwobj.GUIstep ??
+
+@ https://github.com/mxcube/mxcube/blob/master/docs/source/how_to_create_hwobj.rst they say
+it has to be done like
+<propertyNameOne>0</propertyNameOne>
+self.internal_value = self.getProperty("propertyNameOne")
+
+But BlissMotor has nothing like that and although
+self.motor_hwobj.GUIstep works and it's not None
+
+
++++++++++++++++++++++++++++++++++++++++++
+On QtGraphicsManager:
+Is there any like 'movetopos' functionality ??
+
 +++++++++++++
 On xml files : differences between: device/equipment/object
 
@@ -61,18 +99,6 @@ On xml files : differences between: device/equipment/object
 </object>
 
 METTRE OBJECT PARTOUT!!
-+++++++++++++++++++++++++++++++++++++++++++++
-in bricks
-def run(self) ?? still valable??
-
-in bricks
-def connectNotify(self) ?? What For ??
-
-+++++++++++++++++++++++++++++++++++++++++
-On QtGraphicsManager:
-Is there any like 'movetopos' functionality ??
-
-
 
 ********************************************************************
 in cdiGUI when motor sx is moving,
@@ -251,10 +277,6 @@ In other side beamline_config.yml elements:
 TWO QtGraphicsManager objects are created, but the diffractometer created inside is SINGELTON:
 QtGraphicsMananger: self.diffractometer_hwobj = self.getObjectByRole("diffractometer")
 ESRFBeam : HWR.beamline.diffractometer 
-
-
-
-
 
 ****  WHAT IS NEEDED ****
 what beamline objects (described in beamline_configuration.yml file) are needed mxcube to work:
@@ -529,6 +551,17 @@ self.connect(
                 self.diffractometer_pixels_per_mm_changed,
             )
 in Diffractometer
+        def init()
+            elif motor_name == "zoom":
+                        self.connect(
+                            temp_motor_hwobj,
+                            "predefinedPositionChanged",
+                            self.zoom_motor_predefined_position_changed,
+                        )
+                        self.connect(
+                            temp_motor_hwobj, "stateChanged", self.zoom_motor_state_changed
+                        )
+
         def update_zoom_calibration(self):
             self.pixels_per_mm_x = 1.0 / self.channel_dict["CoaxCamScaleX"].getValue()
             self.pixels_per_mm_y = 1.0 / self.channel_dict["CoaxCamScaleY"].getValue()
@@ -537,6 +570,13 @@ in Diffractometer
         def motor_positions_to_screen(self, centred_positions_dict):
             if self.use_sample_centring:
                 self.update_zoom_calibration()
+
+        def zoom_motor_predefined_position_changed(self, position_name, offset):
+                """
+                """
+                self.update_zoom_calibration()
+                self.emit("zoomMotorPredefinedPositionChanged", (position_name, offset))
+
 
 in QtGraphicsManager
     def diffractometer_state_changed(self, *args):

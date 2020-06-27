@@ -35,9 +35,9 @@ class MotorSpinBoxBrick(BaseWidget):
     MAX_HISTORY = 20
 
     def __init__(self, *args):
-
+        
         BaseWidget.__init__(self, *args)
-
+        
         # Hardware objects ----------------------------------------------------
         self.motor_hwobj = None
 
@@ -67,7 +67,7 @@ class MotorSpinBoxBrick(BaseWidget):
         self.add_property("helpDecrease", "string", "")
         self.add_property("helpIncrease", "string", "")
         self.add_property("hideInUser", "boolean", False)
-        self.add_property("defaultSteps", "string", "180 90 45 30 10")
+        self.add_property("defaultSteps", "string", "1 0.5 0.1")
         self.add_property("enableSliderTracking", "boolean", False)
 
         # Signals ------------------------------------------------------------
@@ -520,8 +520,11 @@ class MotorSpinBoxBrick(BaseWidget):
 
         if motor_ho_name is not None:
             self.motor_hwobj = self.get_hardware_object(motor_ho_name)
+            print(f"######### MotorSpinBoxBrick : set_motor motor_ho_name is not None #########")
+            print(f"self.motor_hwobj.GUIstep {self.motor_hwobj.GUIstep}")
             
         if self.motor_hwobj is None:
+            print(f"######### MotorSpinBoxBrick : set_motor self.motor_hwobj is None #########")
             # first time motor is set
             try:
                 step = float(self.default_step)

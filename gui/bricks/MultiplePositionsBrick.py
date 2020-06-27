@@ -43,7 +43,7 @@ class MultiplePositionsBrick(BaseWidget):
             
         BaseWidget.__init__(self, parent, name)
 
-        print(f"$$$$$$$$$$$$$$$ LOADING BRICK")
+        #print(f"$$$$$$$$$$$$$$$ LOADING BRICK")
         # Hardware objects ----------------------------------------------------
         self.multipos_hwrobj = None
         
@@ -71,7 +71,7 @@ class MultiplePositionsBrick(BaseWidget):
         self.buildInterface()
             
     def buildInterface(self):  
-        print(f"$$$$$$$$$$$$$$$ buildInterface")
+        #print(f"$$$$$$$$$$$$$$$ buildInterface")
         
         """
         TODO: missing doc     
@@ -96,12 +96,12 @@ class MultiplePositionsBrick(BaseWidget):
         self.button_group.buttonClicked.connect(self.position_clicked)
 
     def run(self):
-        print(f"$$$$$$$$$$$$$$$ run self.multipos_hwrobj {self.multipos_hwrobj}")
-        self.hardware_object_change(self.multipos_hwrobj)
+        #print(f"$$$$$$$$$$$$$$$ run self.multipos_hwrobj {id(self.multipos_hwrobj)}")
+        #self.hardware_object_change(self.multipos_hwrobj)
         self.__brickStarted = True
 
-    def hardware_object_change(self, hwro):
-        print(f"$$$$$$$$$$$$$$$ hardware_object_change")
+    def hardware_object_change2(self, hwro):
+        #print(f"$$$$$$$$$$$$$$$ hardware_object_change")
         self.connect_hardware_object()
         
         if self.multipos_hwrobj is not None:
@@ -109,7 +109,7 @@ class MultiplePositionsBrick(BaseWidget):
             self.main_group_box.setTitle(title)
 
             for index, key in enumerate(self.multipos_hwrobj.get_positions_names_list(), start=1): 
-                print(f"$$$$$$$$$$$$$$$ hardware_object_change {index} {str(key)}")
+                #print(f"$$$$$$$$$$$$$$$ hardware_object_change {index} {str(key)}")
                      
                 radio_button = QtImport.QRadioButton(str(key))
                 self.radio_group_layout.addWidget(radio_button)
@@ -121,23 +121,68 @@ class MultiplePositionsBrick(BaseWidget):
         # self.configWindow.setHardwareObject(self.hwro)
         # self.appearanceChange(self.appearance)
 
+    def hardware_object_change(self, hwro_name=None):
+        #print(f"$$$$$$$$$$$$$$$MULTIPOSBRICK hardware_object_change2 hwro_name-  {hwro_name} ")
+        if self.multipos_hwrobj is not None:
+                self.disconnect_hardware_object()
+        
+        if hwro_name is not None:
+            self.multipos_hwrobj = self.get_hardware_object(hwro_name)
+
+        if self.multipos_hwrobj is not None:
+            title = self.multipos_hwrobj.username                             
+            self.main_group_box.setTitle(title)
+
+            #clean previous widgets
+            self.button_group.buttonClicked.disconnect(self.position_clicked)
+
+            old_buttons = self.button_group.buttons()
+            #print(f"$$$$$$$$$$$$$$$MULTIPOSBRICK type old_buttons {type(old_buttons)} - {len(old_buttons)}")
+
+            for index, radio_button in enumerate(self.button_group.buttons(), start=1):
+                radio_button.setParent(None)
+
+            for index, key in enumerate(self.multipos_hwrobj.get_positions_names_list(), start=1): 
+                #print(f"$$$$$$$$$$$$$$$MULTIPOSBRICK hardware_object_change {index} {str(key)}")
+                radio_button = QtImport.QRadioButton(str(key))
+                self.radio_group_layout.addWidget(radio_button)
+                self.button_group.addButton(radio_button, index)
+    
+            self.button_group.buttonClicked.connect(self.position_clicked)
+            self.connect_hardware_object()
+
+            #retrieve zoom position and set the corresponding checkbox
+            current_position_name = self.multipos_hwrobj.get_value()
+            #print(f"$$$$$$$$$$$$$$$MULTIPOSBRICK current_position_name {current_position_name}")
+            self.position_changed(current_position_name)
+        
+        else:
+            self.main_group_box.setTitle("<B>Unknown<B>")
+                
+
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "mnemonic":
+            #print(f"$$$$$$$$$$$$$$$MULTIPOSBRICK property_changed {new_value} ")
+            self.hardware_object_change(new_value)
             #self.configWindow.clearConfigurator()
             #self.disconnectHardwareObject()
             #if self.hwro is not None:
             #    self.radioGroup.clearRadioList()
             #self.__lastPosition = None
 
-            print(f"@@@@@@@@@@@@ property_changed {new_value}")
-            if self.multipos_hwrobj is None:
-                self.multipos_hwrobj = self.get_hardware_object(new_value)
-                print(f"property_changed self.multipos_hwrobj {self.multipos_hwrobj}")
-                print(f"@@@@@@@@@@@@ self.multipos_hwrobj.positions {self.multipos_hwrobj.positions}")
-                if self.__brickStarted:
-                    self.hardware_object_change(self.multipos_hwrobj)
-            else:
-                self.multipos_hwrobj = self.get_hardware_object(new_value)
+            # #print(f"@@@@@@@@@@@@ property_changed {new_value}")
+            # if self.multipos_hwrobj is not None:
+            #     self.disconnect_hardware_object()
+
+            # self.multipos_hwrobj = self.get_hardware_object(new_value)
+
+            # if self.multipos_hwrobj is not None:
+            #     self.connect_hardware_object()
+            # #print(f"property_changed self.multipos_hwrobj {self.multipos_hwrobj}")
+            # #print(f"@@@@@@@@@@@@ self.multipos_hwrobj.positions {self.multipos_hwrobj.positions}")
+            # if self.__brickStarted:
+            #     self.hardware_object_change(self.multipos_hwrobj)
+
         if property_name == "appearance":
             self.appearance = new_value
             if self.__brickStarted:
@@ -150,9 +195,9 @@ class MultiplePositionsBrick(BaseWidget):
 
     def connect_hardware_object(self):
         if self.multipos_hwrobj is not None:  
-            self.connect(self.multipos_hwrobj, "positionReached",
+            self.connect(self.multipos_hwrobj, "predefinedPositionChanged",
                              self.position_changed)
-            self.connect(self.multipos_hwrobj, "noPosition",
+            self.connect(self.multipos_hwrobj, "no_position",
                              self.no_position)
             self.connect(self.multipos_hwrobj, "stateChanged",
                              self.check_state)
@@ -170,10 +215,10 @@ class MultiplePositionsBrick(BaseWidget):
     def disconnect_hardware_object(self):
 
         if self.multipos_hwrobj is not None:
-            self.disconnect(self.multipos_hwrobj, "positionReached",
+            self.disconnect(self.multipos_hwrobj, "predefinedPositionChanged",
                              self.position_changed)
-            self.disconnect(self.multipos_hwrobj, "noPosition",
-                             self.noPosition)
+            self.disconnect(self.multipos_hwrobj, "no_position",
+                             self.no_position)
             self.disconnect(self.multipos_hwrobj, "stateChanged",
                              self.check_state)
             self.disconnect(self.multipos_hwrobj, "equipmentReady",
@@ -184,7 +229,7 @@ class MultiplePositionsBrick(BaseWidget):
     def position_clicked(self):
         name = self.button_group.checkedButton().text()
         if self.multipos_hwrobj is not None:
-            print(f"MultiplePosBrick buttonClicked. id : {name} - {self.button_group.checkedId()}")
+            #print(f"MultiplePosBrick buttonClicked. id : {name} - {self.button_group.checkedId()}")
             if self.check_move:
                 msgstr = f"You will move {self.multipos_hwrobj.username} \
                     to position {name}"
@@ -205,6 +250,18 @@ class MultiplePositionsBrick(BaseWidget):
         pass 
     
     def position_changed(self, name):
+
+        # retrieve id of qradiobutton with 'name' on it
+        button_id = None
+        for index, key in enumerate(self.multipos_hwrobj.get_positions_names_list(), start=1):
+            if name == key:
+                button_id = index
+        
+        if button_id is None:
+            return
+
+        radio_button = self.button_group.button(button_id)
+        radio_button.setChecked(True)
         # if self.appearance == "Move" or self.appearance == "Configure":
         #     self.radioGroup.setChecked(name, True)
         #     if self.appearance == "Configure":
@@ -217,9 +274,12 @@ class MultiplePositionsBrick(BaseWidget):
             
         # if self.appearance == "Incremental":
         #     self.valueWidget.setValue(name)
-        pass
-
+    
     def no_position(self):
+
+        self.button_group.setExclusive(False)
+        self.button_group.checkedButton().setChecked(False)
+        self.button_group.setExclusive(True)
         # if self.appearance == "Move" or self.appearance == "Configure":
         #     self.radioGroup.deselectAll()
             
@@ -241,7 +301,7 @@ class MultiplePositionsBrick(BaseWidget):
     def check_state(self, new_state):
         
         state = self.multipos_hwrobj.get_state()
-        print(f"MultiplePosBrick check_state new state {new_state} - state {state}")
+        #print(f"MultiplePosBrick check_state new state {new_state} - state {state}")
         
         # if state in MultiplePositionsBrick.nameState:
             # qcolor = QtImport.QColor(MultiplePositionsBrick.colorState[state])
@@ -264,6 +324,6 @@ class MultiplePositionsBrick(BaseWidget):
     #                 offset = mot.getOffset()
     #                 newoffset = offset + savedpos - motpos
     #                 mot.setOffset(newoffset)
-    def go_to_position(self):
-        if self.multipos_hwrobj is not None:
-            self.multipos_hwrobj.moveToPosition(str(self.positionList.currentText()))
+    # def go_to_position(self):
+    #     if self.multipos_hwrobj is not None:
+    #         self.multipos_hwrobj.moveToPosition(str(self.positionList.currentText()))
