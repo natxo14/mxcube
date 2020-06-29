@@ -250,13 +250,18 @@ yml file
 
 Used to feed the HardwareObject.beam object
 from HardwareRepository import HardwareRepository as HWR
-HWR.beam
+HWR.beamline.
 
 HardwareRepository.py
 beamline = None
 BEAMLINE_CONFIG_FILE = "beamline_config.yml"
 
 def load_from_yaml
+
+++++++++++++++++++++++++++
+/!\ ATTENTION /!\ OBJECTS CREATED IN APPARAITION ORDER !!!
+if HWR.beamline.XX needed in YY file, then XX BEFORE YY in yml file!!
+++++++++++++++++++++++++++
 
 If two HardwareObject are created on different ways, they`re the same:
     ` all HOs are singelton objects `
@@ -277,6 +282,8 @@ In other side beamline_config.yml elements:
 TWO QtGraphicsManager objects are created, but the diffractometer created inside is SINGELTON:
 QtGraphicsMananger: self.diffractometer_hwobj = self.getObjectByRole("diffractometer")
 ESRFBeam : HWR.beamline.diffractometer 
+
+/!\ DON'T USE " microscope" !! USE sample_view INSTEAD !!!
 
 ****  WHAT IS NEEDED ****
 what beamline objects (described in beamline_configuration.yml file) are needed mxcube to work:
@@ -610,8 +617,14 @@ def set_beam_info(self, beam_info):
         if not math.isnan(self.pixels_per_mm[1]):
             self.beam_size_pix[1] = int(self.beam_size_mm[1] * self.pixels_per_mm[1])
 
+####################################
+###### MOVETOBEAM  ###############
+####################################
 
+
+####################################
 #### CENTRING ########
+####################################
         HOW IT WORKS:
         input: delta rotation
 

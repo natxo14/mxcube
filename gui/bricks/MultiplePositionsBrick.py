@@ -278,7 +278,8 @@ class MultiplePositionsBrick(BaseWidget):
     def no_position(self):
 
         self.button_group.setExclusive(False)
-        self.button_group.checkedButton().setChecked(False)
+        if self.button_group.checkedButton() is not None:
+            self.button_group.checkedButton().setChecked(False)
         self.button_group.setExclusive(True)
         # if self.appearance == "Move" or self.appearance == "Configure":
         #     self.radioGroup.deselectAll()

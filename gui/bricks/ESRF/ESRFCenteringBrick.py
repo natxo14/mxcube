@@ -52,6 +52,7 @@ import logging
 
 from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
+from HardwareRepository import HardwareRepository as HWR
 
 
 __credits__ = ["MXCuBE collaboration"]
@@ -72,7 +73,10 @@ class ESRFCenteringBrick(BaseWidget):
         self.demand_move = 0
         self.in_expert_mode = None
         self.position_history = []
-        self.points_for_aligment = 0
+        
+        #match default values in .ui file
+        self.points_for_aligment = 3 
+        self.delta_phi = 0.3
 
         # Properties ----------------------------------------------------------
         self.add_property("mnemonic", "string", "")
@@ -83,6 +87,7 @@ class ESRFCenteringBrick(BaseWidget):
         # Signals ------------------------------------------------------------
         self.define_signal("getView", ())
         self.define_signal("getBeamPosition", ())
+        self.define_signal("centring_parameters_changed", ())
 
         # Slots ---------------------------------------------------------------
         self.define_slot("changePixelScale", ())
@@ -119,9 +124,13 @@ class ESRFCenteringBrick(BaseWidget):
         self.ui_widgets_manager.show_help_line_checkbox.stateChanged.connect(
             self.show_help_lines
         )
-
+        
         self.ui_widgets_manager.number_points_spinbox.valueChanged.connect(
             self.change_point_number
+        )
+
+        self.ui_widgets_manager.delta_phi_textbox.editingFinished.connect(
+            self.delta_phi_changed
         )
 
         self.ui_widgets_manager.start_alignment_button.clicked.connect(
@@ -177,13 +186,37 @@ class ESRFCenteringBrick(BaseWidget):
         """
         pass
 
-    def change_point_number(self, new_point_number):
+    def change_point_number(self, new_int_value):
         """
         Adapt
         """
-        self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
+        self.points_for_aligment = new_int_value
         self.ui_widgets_manager.aligment_table.setRowCount(self.points_for_aligment)
+        
+        if HWR.beamline.diffractometer is not None:
+            HWR.beamline.diffractometer.set_centring_parameters(
+                self.points_for_aligment,
+                self.delta_phi
+            )
+        
 
+
+        #self.emit_centring_parameters_changed()
+
+    def delta_phi_changed(self):
+        self.delta_phi = float(self.ui_widgets_manager.delta_phi_textbox.text())
+        if HWR.beamline.diffractometer is not None:
+            HWR.beamline.diffractometer.set_centring_parameters(
+                self.points_for_aligment,
+                self.delta_phi
+            )
+        #self.emit_centring_parameters_changed()
+    
+    # def emit_centring_parameters_changed(self):
+    #     self.emit("centring_parameters_changed",
+    #     (self.points_for_aligment, self.delta_phi)
+    #     )
+        
     def clear_table(self):
         """
         Adapt

@@ -65,6 +65,9 @@
          <property name="inputMask">
           <string>00.00</string>
          </property>
+         <property name="text">
+          <string>0.3</string>
+         </property>
         </widget>
        </item>
        <item>
