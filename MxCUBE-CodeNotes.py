@@ -2,8 +2,6 @@ papa je t´aime.ainhoa :)
 :]
 papa je t`aime. signé ainhoa. :)
 
-
-
 ###### TODO #############
 
 P1 : CENTRING/CALIBRATION
@@ -30,8 +28,22 @@ list of centring_motors with same names as on the roles list:
 Deprecation in ABC
 
 -------------------
+Deprecation fromstring to frombuffer
+
+-------------------
 class DiffractometerState: make child of ENUM
 from def tostring(state): to use DiffractometerState.<state>.name
+
+-------------------
+MotorSpinBoxBrick: change behaviour
+How to set GUIStep ?? By xml ?? in yml file ??
+
+-------------------
+Volpi: set layout H or V.
+Hide 1 control or the other.
+Add tags to dial
+-------------------
+Turret : add tags to dial. Set position name in the middle of control
 
 
 #####
