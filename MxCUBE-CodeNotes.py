@@ -45,6 +45,10 @@ Add tags to dial
 -------------------
 Turret : add tags to dial. Set position name in the middle of control
 
+TurretBrick: GET RID OF self.turret_hwobj
+Pass everything through self.multiple_pos_hwobj : it has everything needed to interact with dial
+Everything is depending on the 'name' of the new position in Multiposition hwr_obj
+
 
 #####
 ASK!!
