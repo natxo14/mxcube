@@ -94,6 +94,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         self.y2 = 0
         self.z2 = 0
         self.drawing_mgr = None
+        self.current_calibration_procedure = None
 
         # Hardware objects ----------------------------------------------------
         self.zoom_motor_hwobj = None
@@ -149,6 +150,13 @@ class ESRFCameraCalibrationBrick(BaseWidget):
 
         self.ui_widgets_manager.start_new_calibration_pushbutton.clicked.connect(
             self.start_new_calibration
+        )
+
+        # Other hardware object connections --------------------------
+        self.connect(
+            HWR.beamline.diffractometer,
+            "new_calibration_done",
+            self.diffractometer_manual_calibration_done,
         )
 
     def property_changed(self, property_name, old_value, new_value):
@@ -303,26 +311,23 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         Doc
         """
+
         hor_motor_delta = float(self.ui_widgets_manager.delta_y_textbox.text())
         ver_motor_delta = float(self.ui_widgets_manager.delta_z_textbox.text())
-
-
+        
+        print(f"CameraCalibrationBrick--start_new_calibration")
         if HWR.beamline.sample_view is not None:
             HWR.beamline.sample_view.start_calibration()
+            if HWR.beamline.diffractometer is not None:
+                HWR.beamline.diffractometer.set_calibration_parameters(
+                    hor_motor_delta,
+                    ver_motor_delta
+                )
+                print(f"CameraCalibrationBrick--HWR.beamline.diffractometer is not None {hor_motor_delta} - {ver_motor_delta} ")
 
-            motor_dict = { 
-                "horizontal": self.h_motor_hwobj,
-                "vertical": self.v_motor_hwobj
-            }
-            self.current_calibration_procedure = sample_centring.calibrate(
-                motor_dict,
-                hor_motor_delta,
-                ver_motor_delta,
-            )
-
-            self.current_calibration_procedure.link(self.calibration_done)
-
-            HWR.beamline.sample_view.stop_calibration()
+                HWR.beamline.diffractometer.start_manual_calibration()
+            
+            
                 
         # if self.calibration == 0:
 
@@ -350,8 +355,17 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         #     self.drawingMgr.stopDrawing()
         #     self.drawingMgr.hide()
 
-    def calibration_done(self):
+    def diffractometer_manual_calibration_done(self, two_calibration_points):
+        """
+        Descript. :
+        """
+        HWR.beamline.sample_view.stop_calibration()
         
+        msgstr = f"Calibration : {two_calibration_points}"
+        ret = QtImport.QMessageBox.warning(None, "Calibration done", msgstr,
+                                    QtImport.QMessageBox.Ok,
+                                    QtImport.QMessageBox.Cancel,
+                                    QtImport.QMessageBox.NoButton)     
     def clear_table(self):
         """
         Adapt

@@ -7,6 +7,8 @@ papa je t`aime. signé ainhoa. :)
 @HOME: SAVE CALIBRATION/BEAM POSITION DATA TO XML!!
 BeamPosBrick/CalibrationBrick : highlight current pos data
 
+ADD CALIBRATION CLICK MARKS LIKE 
+
 P1 : CENTRING/CALIBRATION
 ------------------
 
@@ -725,12 +727,6 @@ def create_centring_point(self, centring_state, centring_status, emit=True):
             )
     return point
 
-Diffractometer
-def start_move_to_beam(self, coord_x=None, coord_y=None, omega=None):          
-    self.accept_centring()
-def accept_centring(self):
-    self.emit("centringAccepted", (True, centring_status))
-
 
 ###### OLD FRAMEWORK #########
 @id13 : lid131 machine ~/local_old
@@ -915,8 +911,19 @@ in bliss :
 
 
 
+#######################
+BLISSS MOTORS
+#######################
+sync_hard():
+    takes the position from the motor controller and assigns it as the dial position of the BLISS axis
+.offset=0
+    just puts no difference between dial pos and user pos
 
+dial pos and user pos are legacy from spec
 
+formula: user pos = sign * dial pos + offset
+ dial_pos is the position from the controller ; in case the dial and the controller have different positions
+ (like, if the motor moves from somewhere else than BLISS), 
 
 #######################
 BRICKS FUNCTIONALITY
@@ -925,6 +932,53 @@ BRICKS FUNCTIONALITY
 
 
 
+
+#######################
+    GEVENT
+#######################
+
+To get the return value of the function
+Greenlet.get() is used.
+To be sure that the function has ended, we call it on the function used with 'link()'
+
+In GenericDiffractomenter
+def start_manual_centring(self, sample_info=None, wait_result=None):
+        """
+        """
+        self.emit_progress_message("Manual 3 click centring...")
+        self.current_centring_procedure = sample_centring.start(list_of_vars)
+        self.current_centring_procedure.link(self.centring_done)
+
+def centring_done(self, centring_procedure):
+        """
+        check return value: if it's an exception or not and so
+        """
+        try:
+            motor_pos = centring_procedure.get()
+            if isinstance(motor_pos, gevent.GreenletExit):
+                raise motor_pos
+        except BaseException:
+            logging.exception("Could not complete centring")
+            self.emit_centring_failed()
+        else:
+            self.emit_progress_message("Moving sample to centred position...")
+            self.emit_centring_moving()
+
+in sample_centring:
+def start(vars):
+    '''
+    RETURNS A Greenlet!!!!
+     Create a new Greenlet object and schedule it to run function(*args, **kwargs).
+     This can be used as gevent.spawn or Greenlet.spawn
+    '''
+    global CURRENT_CENTRING
+
+    phi, phiy, phiz, sampx, sampy = prepare(centring_motors_dict)
+
+    CURRENT_CENTRING = gevent.spawn(center,list_of_vars)
+    return CURRENT_CENTRING
+
+To get 
 
 
 ###### TEMP ###############

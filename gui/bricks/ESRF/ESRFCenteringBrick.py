@@ -198,8 +198,6 @@ class ESRFCenteringBrick(BaseWidget):
                 self.points_for_aligment,
                 self.delta_phi
             )
-        
-
 
         #self.emit_centring_parameters_changed()
 

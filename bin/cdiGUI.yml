@@ -1123,7 +1123,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1184,7 +1184,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1245,7 +1245,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1306,7 +1306,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1367,7 +1367,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1506,7 +1506,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1567,7 +1567,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1628,7 +1628,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1689,7 +1689,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1750,7 +1750,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1889,7 +1889,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -1950,7 +1950,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2011,7 +2011,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2072,7 +2072,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2133,7 +2133,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2570,7 +2570,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2631,7 +2631,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2692,7 +2692,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2753,7 +2753,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
@@ -2814,7 +2814,7 @@
             - {comment: '', default_value: 2, hidden: false, name: decimals, old_value: 2,
               type: integer, value: 2}
             - {comment: '', default_value: 1 0.5 0.1, hidden: false, name: defaultSteps,
-              old_value: 1 0.5 0.1, type: string, value: 180 90 45 30 10}
+              old_value: 1 0.5 0.1, type: string, value: 1 0.5 0.1}
             - {comment: '', default_value: '', hidden: false, name: delta, old_value: '',
               type: string, value: ''}
             - {comment: '', default_value: 0, hidden: false, name: enableSliderTracking,
