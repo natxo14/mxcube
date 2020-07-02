@@ -31,7 +31,7 @@ __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
 __category__ = "ESRF"
 
-class DialWithTags(QtImport.QWidget):
+class DialWithTags(QWidget):
     """
     A QDial with tags in notches
     """
@@ -49,9 +49,9 @@ class DialWithTags(QtImport.QWidget):
 
         #print(f"######### DialWithTags: {tag_dict}")
         self.tags = dict(tag_dict)
-        self.layout = QtImport.QVBoxLayout()
+        self.layout = QVBoxLayout()
         self.layout.setContentsMargins(32, 32, 32, 32)
-        self.dial = QtImport.QDial()
+        self.dial = QDial()
         self.dial.setMinimum(1)
         self.dial.setMaximum(len(self.tags))
         self.dial.setSingleStep(1)
@@ -66,17 +66,79 @@ class DialWithTags(QtImport.QWidget):
         self.dial.setMaximum(len(self.tags))
         #print(f"######### DialWithTags: {self.dial.value()} - {self.dial.minimum()} - {self.dial.maximum()}")
 
-    # def paintEvent(self, event):
-    #     painter = QtImport.QPainter()
-    #     painter.begin(self)
-    #     self.draw_tags()
-    #     painter.end()
+    def paintEvent(self, event):
+        h_main = self.height()
+        w_main = self.width()
+
+        h_dial = self.dial.height()
+        w_dial = self.dial.width()
+        # print(f"h_main - w_main : {h_main} - {w_main}")
+        # print(f"h_dial - w_dial : {h_dial} - {w_dial}")
+
+        painter = QPainter(self)
+
+        fm = painter.fontMetrics()
+        for i, (tag, value) in enumerate(self.tags.items()):
+            text_rect = fm.boundingRect(tag)
+            text_width = text_rect.width()
+            text_height = text_rect.height()
+            if i == 0:
+                print(f"h_main - w_main : {h_main} - {w_main}")
+                print(f"h_dial - w_dial : {h_dial} - {w_dial}")
+                painter.drawText(
+                    w_main / 2 - w_dial / 4 - text_width,
+                    h_main / 2 + h_dial / 2,
+                    tag
+                )
+            if i == 1:
+                painter.drawText(
+                    w_main / 2 - w_dial / 2 - text_width,
+                    h_main / 2,
+                    tag
+                )
+                # painter.drawRect(
+                #     w_main / 2 - w_dial / 2 - text_width,
+                #     h_main / 2 - text_height / 2,
+                #     text_width,
+                #     text_height
+                #     )
+            if i == 2:
+                painter.drawText(
+                    w_main / 2 - w_dial / 4 - text_width,
+                    h_main / 2 - h_dial / 2 - text_height / 2,
+                    tag
+                )
+            if i == 3:
+                painter.drawText(
+                    w_main / 2 + w_dial / 4,
+                    h_main / 2 - h_dial / 2 - text_height / 2,
+                    tag
+                )
+            if i == 4:
+                painter.drawText(
+                    w_main / 2 + w_dial / 2,
+                    h_main / 2,
+                    tag
+                )
+                # painter.drawRect(
+                #     w_main / 2 + w_dial / 2,
+                #     h_main / 2,
+                #     text_width,
+                #     text_height
+                # )
+            if i == 5:
+                painter.drawText(
+                    w_main / 2 + w_dial / 4,
+                    h_main / 2 + h_dial / 2,
+                    tag
+                )
+        #painter.end()
     
-    def draw_tags(self):
-        # p.drawText(10,10,"WORD");
-        # p.drawText(width()-40,10,"WORD2");
-        # p.drawRect(0,0,width()-1, height()-1);
-        pass
+    # def draw_tags(self):
+    #     p.drawText(10,10,"WORD");
+    #     p.drawText(width()-40,10,"WORD2");
+    #     p.drawRect(0,0,width()-1, height()-1);
+        
     def __getattr__(self, attr):
         # #print(f"######### __getattr__(self, attr): {attr}")
         return getattr(self.dial, attr)
