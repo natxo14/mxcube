@@ -145,25 +145,25 @@ class ESRFCenteringBrick(BaseWidget):
         if property_name == "mnemonic":
             self.diffractometer_hwobj = self.get_hardware_object(new_value)
             
-            equipment = self.get_hardware_object(new_value)
-            if equipment is not None :
-                    xoryMotor = equipment.getDeviceByRole('horizontal')
-                    if xoryMotor is not None:
-                        self.__verticalPhi = True
-                    else:
-                        xoryMotor = equipment.getDeviceByRole('vertical')
-                        if xoryMotor is None:
-                            logging.getLogger().error('%s: could not find motors horizontal nor vertical motor in Hardware Objects %s',
-                                                      str(self.name()),equipment.name())
-                            return
-                        self.__verticalPhi = False
+            # equipment = self.get_hardware_object(new_value)
+            # if equipment is not None :
+            #         xoryMotor = equipment.getDeviceByRole('horizontal')
+            #         if xoryMotor is not None:
+            #             self.__verticalPhi = True
+            #         else:
+            #             xoryMotor = equipment.getDeviceByRole('vertical')
+            #             if xoryMotor is None:
+            #                 logging.getLogger().error('%s: could not find motors horizontal nor vertical motor in Hardware Objects %s',
+            #                                           str(self.name()),equipment.name())
+            #                 return
+            #             self.__verticalPhi = False
 
-                    zMotor = equipment.getDeviceByRole('inBeam')
-                    rMotor = equipment.getDeviceByRole('rotation')
-                    if zMotor is None or rMotor is None :
-                        logging.getLogger().error('%s: could not find motors inBeam or rotation motor in Hardware Objects %s',
-                                                  str(self.name()),equipment.name())
-                        return          
+            #         zMotor = equipment.getDeviceByRole('inBeam')
+            #         rMotor = equipment.getDeviceByRole('rotation')
+            #         if zMotor is None or rMotor is None :
+            #             logging.getLogger().error('%s: could not find motors inBeam or rotation motor in Hardware Objects %s',
+            #                                       str(self.name()),equipment.name())
+            #             return          
 
     def show_center(self, checkbox_state):
         """

@@ -4,6 +4,9 @@ papa je t`aime. signé ainhoa. :)
 
 ###### TODO #############
 
+@HOME: SAVE CALIBRATION/BEAM POSITION DATA TO XML!!
+BeamPosBrick/CalibrationBrick : highlight current pos data
+
 P1 : CENTRING/CALIBRATION
 ------------------
 

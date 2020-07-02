@@ -69,6 +69,9 @@ import logging
 from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
 
+from HardwareRepository import HardwareRepository as HWR
+from HardwareRepository.HardwareObjects import sample_centring
+
 
 __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
@@ -300,6 +303,27 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         Doc
         """
+        hor_motor_delta = float(self.ui_widgets_manager.delta_y_textbox.text())
+        ver_motor_delta = float(self.ui_widgets_manager.delta_z_textbox.text())
+
+
+        if HWR.beamline.sample_view is not None:
+            HWR.beamline.sample_view.start_calibration()
+
+            motor_dict = { 
+                "horizontal": self.h_motor_hwobj,
+                "vertical": self.v_motor_hwobj
+            }
+            self.current_calibration_procedure = sample_centring.calibrate(
+                motor_dict,
+                hor_motor_delta,
+                ver_motor_delta,
+            )
+
+            self.current_calibration_procedure.link(self.calibration_done)
+
+            HWR.beamline.sample_view.stop_calibration()
+                
         # if self.calibration == 0:
 
         #     if self.drawingMgr is not None:
@@ -326,6 +350,8 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         #     self.drawingMgr.stopDrawing()
         #     self.drawingMgr.hide()
 
+    def calibration_done(self):
+        
     def clear_table(self):
         """
         Adapt
