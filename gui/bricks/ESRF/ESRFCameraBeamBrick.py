@@ -60,7 +60,7 @@ import logging
 
 from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
-
+from HardwareRepository import HardwareRepository as HWR
 
 __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
@@ -74,22 +74,16 @@ class ESRFCameraBeamBrick(BaseWidget):
         # variables -----------------------------------------------------------
 
         self.first_time = True
-        self.y_beam = None
-        self.z_beam = None
-        self.calibration = 0
-        self.drawing = None
-        self.drawing_mgr = None
+        self.current_beam_position = None
+        self.beam_position_dict = {} # { "position_name" : (pos_x, pos_y)} pixels
+        self.current_zoom_pos_name = None
+        self.current_zoom_idx = -1
 
         # Hardware objects ----------------------------------------------------
         self.zoom_motor_hwobj = None
         
         # Internal values -----------------------------------------------------
-        self.step_editor = None
-        self.move_step = 1
-        self.demand_move = 0
-        self.in_expert_mode = None
-        self.position_history = []
-
+        
         # Properties ----------------------------------------------------------
         self.add_property("zoom", "string", "")
         
@@ -129,6 +123,41 @@ class ESRFCameraBeamBrick(BaseWidget):
             self.save_beam_position
         )
 
+        # Other hardware object connections --------------------------
+        if HWR.beamline.beam is not None:
+            self.beam_position = HWR.beamline.beam.get_beam_position_on_screen()
+            self.connect(
+                HWR.beamline.beam, "beamPosChanged", self.beam_position_changed
+            )
+            #self.beam_position_changed(HWR.beamline.beam.get_beam_position_on_screen())
+        else:
+            logging.getLogger("HWR").error(
+                "GraphicsManager: BeamInfo hwobj not defined"
+            )
+
+        self.load_beam_position_dict()
+
+    def load_beam_position_dict(self):
+        """
+        # { "position_name" : (beam_pos_x, beam_pos_y)} meters/pixel
+        """
+        if self.zoom_motor_hwobj is not None:
+            positions = self.zoom_motor_hwobj.get_positions_names_list()
+            for i, position in enumerate(positions):
+            # for i,  in range(pos):
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "beamx")
+                if aux is None:
+                    aux = 0
+                beam_pos_x = abs(int(aux))
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "beamy")
+                if aux is None:
+                    aux = 0
+                beam_pos_y = abs(int(aux))
+                
+                self.beam_position_dict[position] = (beam_pos_x, beam_pos_y)   
+        print(f"################ cameraCalibBrick beam_position_dict {self.beam_position_dict}")
+    
+
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "zoom":
             if self.zoom_motor_hwobj is not None:
@@ -140,44 +169,57 @@ class ESRFCameraBeamBrick(BaseWidget):
             self.zoom_motor_hwobj = self.get_hardware_object(new_value)
 
             if self.zoom_motor_hwobj is not None:
+                self.load_beam_position_dict()
                 self.connect(self.zoom_motor_hwobj, "positionReached",
                                 self.zoom_changed)
                 self.connect(self.zoom_motor_hwobj, "noPosition",
                                 self.zoom_changed)
 
-                self.init_interface()
                 self.zoom_changed()
-           
+            self.init_interface()
+                
     def init_interface(self):
         if self.zoom_motor_hwobj is not None:
-            positions = self.zoom_motor_hwobj.get_positions_names_list()
-            self.ui_widgets_manager.beam_positions_table.setRowCount(len(positions))
+            self.ui_widgets_manager.beam_positions_table.setRowCount(len(self.beam_position_dict))
 
-            for i, position in enumerate(positions):
-                aux = self.zoom_motor_hwobj.get_position_key_value(position, "beamx")
-                if aux is None:
-                    aux = "0"
-                beamy = int(aux)
-                aux = self.zoom_motor_hwobj.get_position_key_value(position, "beamy")
-                if aux is None:
-                    aux = "0"
-                beamz = int(aux)
-
-                if beamy is None:
-                    beamy = "Not defined"
-                if beamz is None:
-                    beamz = "Not defined"
-
+            for i, (position, beam_pos_tuple) in enumerate (self.beam_position_dict.items()):
+                beam_pos_x = beam_pos_tuple[0]
+                beam_pos_y = beam_pos_tuple[1]
+             
                 zoom_column_item = QtImport.QTableWidgetItem(str(position))
-                y_column_item = QtImport.QTableWidgetItem(str(beamy))
-                z_column_item = QtImport.QTableWidgetItem(str(beamz))
+                y_column_item = QtImport.QTableWidgetItem(str(beam_pos_x))
+                z_column_item = QtImport.QTableWidgetItem(str(beam_pos_y))
                 
                 self.ui_widgets_manager.beam_positions_table.setItem(i, 0, zoom_column_item)
                 self.ui_widgets_manager.beam_positions_table.setItem(i, 1, y_column_item)
                 self.ui_widgets_manager.beam_positions_table.setItem(i, 2, z_column_item)
- 
+    
+    def get_zoom_index(self, position_to_find):
+        if self.zoom_motor_hwobj is not None:
+            positions = self.zoom_motor_hwobj.get_positions_names_list()
+            for i, position in enumerate(positions):
+                if position_to_find == position:
+                    return(i)
+            return(-1)
+
     def zoom_changed(self):
-        pass
+        if self.zoom_motor_hwobj is not None:
+            self.current_zoom_pos_name = self.zoom_motor_hwobj.get_value()
+            self.current_zoom_idx = self.get_zoom_index(self.current_zoom_pos_name)
+                
+            if self.current_zoom_idx != -1:
+                self.current_beam_position = self.beam_position_dict[self.current_zoom_pos_name]
+                print(f"################ cameraBeamBrick zoom_changed beampos : {self.current_beam_position} + zoom pos : {self.current_zoom_pos_name}")
+    
+    def beam_position_changed(self,beam_x_y):
+        """
+            beam_x_y (tuple): Position (x, y) [pixel]
+        """
+        print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name}")
+        self.current_beam_position = beam_x_y
+
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx,1).setText(str(beam_x_y[0]))
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx,2).setText(str(beam_x_y[1]))
         
     def save_beam_position(self):
         """

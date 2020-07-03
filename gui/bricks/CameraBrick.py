@@ -84,6 +84,11 @@ class CameraBrick(BaseWidget):
             "Centring points with one click",
             self.create_points_one_click_clicked,
         )
+        create_menu.addAction(
+            Icons.load_icon("movetopos"),
+            "Move point to image center",
+            self.move_center_to_clicked_point,
+        )
         temp_action = create_menu.addAction(
             Icons.load_icon("Line.png"), "Helical line", self.create_line_clicked
         )
@@ -356,6 +361,9 @@ class CameraBrick(BaseWidget):
 
     def create_points_one_click_clicked(self):
         self.graphics_manager_hwobj.start_one_click_centring()
+
+    def move_center_to_clicked_point(self):
+        self.graphics_manager_hwobj.start_move_center_to_point()
 
     def create_point_current_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=False)

@@ -85,28 +85,20 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         # variables -----------------------------------------------------------
 
         self.first_time = True
-        self.y_calib = None
-        self.z_calib = None
+        self.y_calib = None # metres/pixel
+        self.z_calib = None # metres/pixel
         self.calibration = 0
         self.drawing = None
-        self.y1 = 0
-        self.z1 = 0
-        self.y2 = 0
-        self.z2 = 0
         self.drawing_mgr = None
         self.current_calibration_procedure = None
+        self.calibration_dict = {} # { "position_name" : (resox, resoy)} metres/pixel
+        self.current_zoom_pos_name = None
+        self.current_zoom_idx = -1
 
         # Hardware objects ----------------------------------------------------
         self.zoom_motor_hwobj = None
         self.h_motor_hwobj = None
         self.v_motor_hwobj = None
-
-        # Internal values -----------------------------------------------------
-        self.step_editor = None
-        self.move_step = 1
-        self.demand_move = 0
-        self.in_expert_mode = None
-        self.position_history = []
 
         # Properties ----------------------------------------------------------
         self.add_property("zoom", "string", "")
@@ -114,11 +106,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         self.add_property("horizontal motor", "string", "")
         
         # Signals ------------------------------------------------------------
-        self.define_signal("getView", ())
         self.define_signal("getBeamPosition", ())
-
-        # Slots ---------------------------------------------------------------
-        self.define_slot("changePixelScale", ())
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Pixel Size Calibration", self)
@@ -159,14 +147,40 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             self.diffractometer_manual_calibration_done,
         )
 
+        self.load_calibration_dict()
+    
+    def load_calibration_dict(self):
+        """
+        # { "position_name" : (resox, resoy)} meters/pixel
+        """
+        if self.zoom_motor_hwobj is not None:
+            positions = self.zoom_motor_hwobj.get_positions_names_list()
+            for i, position in enumerate(positions):
+            # for i,  in range(pos):
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "resox")
+                if aux is None:
+                    aux = 1
+                resox = abs(float(aux))
+                aux = self.zoom_motor_hwobj.get_position_key_value(position, "resoy")
+                if aux is None:
+                    aux = 1
+                resoy = abs(float(aux))
+                
+                self.calibration_dict[position] = (resox, resoy)   
+        print(f"################ cameraCalibBrick load_calibration_dict {self.calibration_dict}")
+        
+
     def property_changed(self, property_name, old_value, new_value):
         print(f"cameraCalibBrick property_changed {new_value}")
         if property_name == "zoom":
             
             if self.zoom_motor_hwobj is not None:
-                self.disconnect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
-                self.disconnect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
-                self.disconnect(self.zoom_motor_hwobj, "stateChanged", self.zoom_state_changed)
+                self.disconnect(self.zoom_motor_hwobj, "positionReached",
+                                self.zoom_changed)
+                self.disconnect(self.zoom_motor_hwobj, "noPosition",
+                                self.zoom_changed)
+                self.disconnect(self.zoom_motor_hwobj, "stateChanged",
+                                self.zoom_state_changed)
 
             if new_value is not None:
                 self.zoom_motor_hwobj = self.get_hardware_object(new_value)
@@ -183,9 +197,13 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             #     self.set_line_step(step)
 
             if self.zoom_motor_hwobj is not None:
-                self.connect(self.zoom_motor_hwobj, "positionReached", self.zoom_changed)
-                self.connect(self.zoom_motor_hwobj, "noPosition", self.zoom_changed)
-                            
+                self.load_calibration_dict()
+                self.connect(self.zoom_motor_hwobj, "positionReached",
+                            self.zoom_changed)
+                self.connect(self.zoom_motor_hwobj, "noPosition",
+                            self.zoom_changed)
+                self.zoom_changed()
+
             self.update_gui()
 
         if property_name == "vertical motor":
@@ -204,37 +222,64 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             #TODO : set label on GUI
     
     def update_gui(self):
-        if self.zoom_motor_hwobj is not None:
-            positions = self.zoom_motor_hwobj.get_positions_names_list()
-            self.ui_widgets_manager.calibration_table.setRowCount(len(positions))
-            for i, position in enumerate(positions):
-            # for i,  in range(pos):
-                aux = self.zoom_motor_hwobj.get_position_key_value(position, "resox")
-                if aux is None:
-                    aux = "1"
-                resoy = abs(int(aux * 1e9))
-                aux = self.zoom_motor_hwobj.get_position_key_value(position, "resoy")
-                if aux is None:
-                    aux = "1"
-                resoz = abs(int(aux * 1e9))
-                
 
-                if resoy is None:
-                    resoy = "Not defined"
-                if resoz is None:
-                    resoz = "Not defined"
-
+        #print(f"################ cameraCalibBrick update_gui {self.calibration_dict}")
+        if self.calibration_dict:
+            self.ui_widgets_manager.calibration_table.setRowCount(len(self.calibration_dict))
+            for i, (position, calibration_tuple) in enumerate(self.calibration_dict.items()):
+                #print(f"################ cameraCalibBrick update_gui {position} + {calibration_tuple} + {i}")
+                if calibration_tuple[0] == 1:
+                    y_calib = "Not defined"
+                else:
+                    y_calib = str(int((calibration_tuple[0] * 1e9)))
+                if calibration_tuple[1] == 1:
+                    z_calib = "Not defined"
+                else:
+                    z_calib = str(int((calibration_tuple[1] * 1e9)))
                 """
-                resolution are displayed in nanometer and saved in merter
+                resolution are displayed in nanometer/pixel and saved in metre/pixel
                 """
-
                 zoom_column_item = QtImport.QTableWidgetItem(str(position))
-                y_column_item = QtImport.QTableWidgetItem(str(resoy))
-                z_column_item = QtImport.QTableWidgetItem(str(resoz))
-
+                y_column_item = QtImport.QTableWidgetItem(y_calib)
+                z_column_item = QtImport.QTableWidgetItem(z_calib)
+                #print(f"################ cameraCalibBrick update_gui {position} + {y_calib} + {z_calib}")
+                
                 self.ui_widgets_manager.calibration_table.setItem(i, 0, zoom_column_item)
                 self.ui_widgets_manager.calibration_table.setItem(i, 1, y_column_item)
                 self.ui_widgets_manager.calibration_table.setItem(i, 2, z_column_item)
+
+        # if self.zoom_motor_hwobj is not None:
+        #     positions = self.zoom_motor_hwobj.get_positions_names_list()
+        #     self.ui_widgets_manager.calibration_table.setRowCount(len(positions))
+        #     for i, position in enumerate(positions):
+        #     # for i,  in range(pos):
+        #         aux = self.zoom_motor_hwobj.get_position_key_value(position, "resox")
+        #         if aux is None:
+        #             aux = "1"
+        #         resox = abs(int(aux * 1e9))
+        #         aux = self.zoom_motor_hwobj.get_position_key_value(position, "resoy")
+        #         if aux is None:
+        #             aux = "1"
+        #         resoy = abs(int(aux * 1e9))
+                
+        #         self.calibration_dict[position] = (resox, resoy)
+
+        #         if resox is None:
+        #             resoy = "Not defined"
+        #         if resoy is None:
+        #             resoy = "Not defined"
+
+        #         """
+        #         resolution are displayed in nanometer and saved in merter
+        #         """
+                
+        #         zoom_column_item = QtImport.QTableWidgetItem(str(position))
+        #         y_column_item = QtImport.QTableWidgetItem(str(resox))
+        #         z_column_item = QtImport.QTableWidgetItem(str(resoy))
+
+        #         self.ui_widgets_manager.calibration_table.setItem(i, 0, zoom_column_item)
+        #         self.ui_widgets_manager.calibration_table.setItem(i, 1, y_column_item)
+        #         self.ui_widgets_manager.calibration_table.setItem(i, 2, z_column_item)
 
     def get_zoom_index(self, position_to_find):
         if self.zoom_motor_hwobj is not None:
@@ -245,44 +290,59 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             return(-1)
 
     def zoom_changed(self):
+        print(f"################ cameraCalibBrick zoom_changed {self.calibration_dict}")
         if self.zoom_motor_hwobj is not None:
             current_pos = self.zoom_motor_hwobj.get_value()
-            self.curr_idx = self.get_zoom_index(current_pos)
-            
+            self.current_zoom_idx = self.get_zoom_index(current_pos)
+            self.current_zoom_pos_name = current_pos
+
             if len(self.ui_widgets_manager.calibration_table.selectedItems()) != 0:
                 self.ui_widgets_manager.calibration_table.selectionMode().clearSelection()
                 
-            if self.curr_idx != -1:
-                aux = self.zoom_motor_hwobj.get_position_key_value(current_pos, "resox")
-                if aux is None:
-                    aux = "1"
-                resoy = float(aux)
-                aux = self.zoom_motor_hwobj.get_position_key_value(current_pos, "resoy")
-                if aux is None:
-                    aux = "1"
-                resoz = float(aux)
+            if self.current_zoom_idx != -1:
+                new_calibration = self.calibration_dict[current_pos]
+                print(f"################ cameraCalibBrick zoom_changed {new_calibration} + {current_pos}")
 
-                if resoy is None:
+                if new_calibration[0] == 1:
                     self.y_calib = None
-                    resoy = "Not defined"
                 else:
-                    self.y_calib = resoy
-                    resoy = str(int(resoy * 1e9))
-                
-                if resoz is None:
-                    self.z_calib = None
-                    resoz = "Not defined"
-                else:
-                    self.z_calib = resoz
-                    resoz = str(int(resoz * 1e9))
-                
-                zoom_column_item = QtImport.QTableWidgetItem(str(current_pos))
-                y_column_item = QtImport.QTableWidgetItem(resoy)
-                z_column_item = QtImport.QTableWidgetItem(resoz)
+                    self.y_calib = new_calibration[0]
 
-                self.ui_widgets_manager.beam_positions_table.setItem(self.curr_idx, 0, zoom_column_item)
-                self.ui_widgets_manager.beam_positions_table.setItem(self.curr_idx, 1, y_column_item)
-                self.ui_widgets_manager.beam_positions_table.setItem(self.curr_idx, 2, z_column_item)
+                if new_calibration[1] == 1:
+                    self.z_calib = None
+                else:
+                    self.z_calib = new_calibration[1]
+
+                # aux = self.zoom_motor_hwobj.get_position_key_value(current_pos, "resox")
+                # if aux is None:
+                #     aux = "1"
+                # resoy = float(aux)
+                # aux = self.zoom_motor_hwobj.get_position_key_value(current_pos, "resoy")
+                # if aux is None:
+                #     aux = "1"
+                # resoz = float(aux)
+
+                # if resoy is None:
+                #     self.y_calib = None
+                #     resoy = "Not defined"
+                # else:
+                #     self.y_calib = resoy
+                #     resoy = str(int(resoy * 1e9))
+                
+                # if resoz is None:
+                #     self.z_calib = None
+                #     resoz = "Not defined"
+                # else:
+                #     self.z_calib = resoz
+                #     resoz = str(int(resoz * 1e9))
+                
+                # zoom_column_item = QtImport.QTableWidgetItem(str(current_pos))
+                # y_column_item = QtImport.QTableWidgetItem(resoy)
+                # z_column_item = QtImport.QTableWidgetItem(resoz)
+
+                # self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 0, zoom_column_item)
+                # self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 1, y_column_item)
+                # self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 2, z_column_item)
                 
             else:
                 self.y_calib = None
@@ -290,6 +350,8 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         else:
             self.y_calib = None
             self.z_calib = None
+
+        print(f"################ cameraCalibBrick zoom_changed {self.y_calib} + {self.z_calib}")
 
         # self.emit(qt.PYSIGNAL("ChangePixelCalibration"),
         #           (self.y_calib, self.z_calib))
@@ -306,6 +368,14 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resoy", str(self.z_calib))
         else:
             print(f"CameraCalibrationBrick--ARG--zoom_motor_hwobj is None")
+
+    def set_new_calibration_value(self, new_calibration):
+        """
+        Doc
+        """
+        
+        self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 1, new_calibration[0])
+        self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 2, new_calibration[1])
                 
     def start_new_calibration(self):
         """
@@ -363,21 +433,34 @@ class ESRFCameraCalibrationBrick(BaseWidget):
 
         HWR.beamline.sample_view.stop_calibration()
         
-        msgstr = f"Calibration : {two_calibration_points}"
-
-        QtImport.QMessageBox.information(
-                    self,
-                    "Calibration ended",
-                    msgstr,
-                    QtImport.QMessageBox.Ok,
-                )
-
-        # msg = QtImport.QMessageBox.information()
         
-        # msg.setText(msgstr)
-        # msg.setWindowTitle("Calibration ended")
-        # msg.setStandardButtons(QMessageBox.Ok)
-        # retval = msg.exec_()
+
+        delta_x_pixels = abs(two_calibration_points[0][0] - two_calibration_points[1][0])
+        delta_y_pixels = abs(two_calibration_points[0][1] - two_calibration_points[1][1])
+
+        hor_motor_delta = float(self.ui_widgets_manager.delta_y_textbox.text())
+        ver_motor_delta = float(self.ui_widgets_manager.delta_z_textbox.text())
+
+        print(f"CameraCalibrationBrick--diffractometer_manual_calibration_done - {delta_x_pixels} - {delta_y_pixels} - {hor_motor_delta} - {ver_motor_delta}")
+        print(f"CameraCalibrationBrick--diffractometer_manual_calibration_done - {float(hor_motor_delta/delta_x_pixels)} - {float(ver_motor_delta/delta_y_pixels)}")
+
+        y_calib = float(hor_motor_delta/delta_x_pixels)
+        z_calib = float(ver_motor_delta/delta_y_pixels)
+        msgstr = f"Calculated new calibration : {y_calib} , {z_calib} ( nm/pixel ) \
+                    for zoom position {self.current_zoom_pos_name}"
+
+        save_new_calib = QtImport.QMessageBox.question(
+                    self,
+                    "Save new calibration ?",
+                    msgstr,
+                    QtImport.QMessageBox.Yes | 
+                    QtImport.QMessageBox.No,
+                )
+        if save_new_calib == QtImport.QMessageBox.Yes:
+            print(f" answer yes")
+        else:
+            print(f" answer no")
+        # return ( two_calibration_points[0] )
 
     def clear_table(self):
         """

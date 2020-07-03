@@ -2,12 +2,44 @@ papa je t´aime.ainhoa :)
 :]
 papa je t`aime. signé ainhoa. :)
 
+
+####################
+    DATA UNITS
+####################
+turret_positions
+<position>
+      <name>5x</name>
+      <zoom>5</zoom>
+      <light>700</light>
+      <resox>2.59067357513e-06</resox> meter/pixel => self.pixels_per_mm_x = abs(1.0/float(props["resox"]))/1000.0
+      <resoy>2.53164556962e-06</resoy> meter/pixel => self.pixels_per_mm_y = abs(1.0/float(props["resoy"]))/1000.0 
+      <beamx>394</beamx>
+      <beamy>202</beamy>
+</position>
+
+On calibration Brick:
+experimental values:
+CameraCalibrationBrick--diffractometer_manual_calibration_done - : deltaxpix , deltaypix = 60 - 56 - motor delta x, motor delta y = 0.2 - 0.2
+resox, resoy = 0.0033333333333333335 - 0.0035714285714285718 : UNIT : mm/pixel => motor delta unit~= mm
+
+For display in table : (nm) = > *1000
+For record in xml : (metres) = > /1000
+
+OnCalibratioBrickTable:
+                resolution are displayed in nanometer/pixel and saved in metre/pixel
+
+
+
+
 ###### TODO #############
 
 @HOME: SAVE CALIBRATION/BEAM POSITION DATA TO XML!!
 BeamPosBrick/CalibrationBrick : highlight current pos data
 
 ADD CALIBRATION CLICK MARKS LIKE 
+
+CALIBRATION BRICK : Consistent data: read at loading xml file, then work only with self.calibration_dict 
+Save changes when needed to xml file. 
 
 P1 : CENTRING/CALIBRATION
 ------------------
