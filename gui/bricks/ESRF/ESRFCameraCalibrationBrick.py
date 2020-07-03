@@ -212,11 +212,11 @@ class ESRFCameraCalibrationBrick(BaseWidget):
                 aux = self.zoom_motor_hwobj.get_position_key_value(position, "resox")
                 if aux is None:
                     aux = "1"
-                resoy = int(aux * 1e9)
+                resoy = abs(int(aux * 1e9))
                 aux = self.zoom_motor_hwobj.get_position_key_value(position, "resoy")
                 if aux is None:
                     aux = "1"
-                resoz = int(aux * 1e9)
+                resoz = abs(int(aux * 1e9))
                 
 
                 if resoy is None:
@@ -359,13 +359,26 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         Descript. :
         """
+        print(f"CameraCalibrationBrick--diffractometer_manual_calibration_done - {two_calibration_points}")
+
         HWR.beamline.sample_view.stop_calibration()
         
         msgstr = f"Calibration : {two_calibration_points}"
-        ret = QtImport.QMessageBox.warning(None, "Calibration done", msgstr,
-                                    QtImport.QMessageBox.Ok,
-                                    QtImport.QMessageBox.Cancel,
-                                    QtImport.QMessageBox.NoButton)     
+
+        QtImport.QMessageBox.information(
+                    self,
+                    "Calibration ended",
+                    msgstr,
+                    QtImport.QMessageBox.Ok,
+                )
+
+        # msg = QtImport.QMessageBox.information()
+        
+        # msg.setText(msgstr)
+        # msg.setWindowTitle("Calibration ended")
+        # msg.setStandardButtons(QMessageBox.Ok)
+        # retval = msg.exec_()
+
     def clear_table(self):
         """
         Adapt
