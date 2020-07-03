@@ -90,8 +90,18 @@ Everything is depending on the 'name' of the new position in Multiposition hwr_o
 #####
 ASK!!
 #####
+For Antonia:
+BlissMotor states:
+what we get from Bliss: a list of status.
+Allways in the same order ?? How to handle this to translate them to HWObjecStatus ??
+Big shit.
 
 For Ivars:
+How to write to xml files ?? It's done ??
+Once that the xml file has been edited, do applications reload it ??
+If I modify multiple-pos.xml and then we execute
+multiplePos_hwrobj.getProperty() : it reads again the xml file ??
+
 +++++++++++++    
 Ivars: HOW TO USE GraphicsToolsBrick ??
 Must convert to QMainWindow to use ToolBar and MainMenu ??
@@ -102,12 +112,13 @@ BaseWidget._toolbar never initialized ??
 in bricks
 def run(self) ?? still valable?? what for??
 
-On bricks:
-execution order
+On bricks: 
+execution order: experimental knowledge
  __init__ ()
  property_changed() for all properties
     properties executed in alphabetical order
  run()
+
 
 in bricks
 def connectNotify(self) ?? What For ??
@@ -154,6 +165,8 @@ On xml files : differences between: device/equipment/object
 METTRE OBJECT PARTOUT!!
 
 ********************************************************************
+$$$$$$$$$$$$ANSWERED$$$$$$$$$$$$$$$
+
 in cdiGUI when motor sx is moving,
 then motors cx and cy change their status ( to something like not available : yellow background color/stop button available)
 other interactions happen also:

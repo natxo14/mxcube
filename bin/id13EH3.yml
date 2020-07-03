@@ -34,7 +34,7 @@
           - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
             name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
           - {comment: '', default_value: /graphics, hidden: false, name: mnemonic,
-            old_value: /graphics, type: string, value: /graphics}
+            old_value: /graphics, type: string, value: /graphicsID13EH3}
           type: CameraBrick
         - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick1}
           children: []
@@ -165,7 +165,7 @@
             - {comment: '', default_value: '', hidden: false, name: defaultDeltas,
               old_value: '', type: string, value: ''}
             - {comment: '', default_value: '', hidden: false, name: defaultSteps,
-              old_value: '', type: string, value: 1 0.5 0.1 0.05}
+              old_value: '', type: string, value: 0.5 0.5 0.5 0.5 0.5 0.5 }
             - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
               name: fixedHeight, old_value: -1, type: integer, value: -1}
             - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
@@ -183,9 +183,9 @@
             - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
               name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
             - {comment: '', default_value: '', hidden: false, name: labels, old_value: '',
-              type: string, value: stry strz strx ceny cenx srotz}
+              type: string, value: nnx nny nnz nnu nnv nnw}
             - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
-              type: string, value: /ustry /ustrz /ustrx /umceny /umcenx /usrotz}
+              type: string, value: /nnx /nny /nnz /nnu /nnv /nnw}
             - {comment: '', default_value: '', hidden: false, name: moveButtonIcons,
               old_value: '', type: string, value: ''}
             - {comment: '', default_value: '', hidden: false, name: predefinedPositions,
@@ -223,7 +223,7 @@
                 hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                 value: 0}
               - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
-                type: string, value: ''}
+                type: string, value: /nvolpi}
               type: VolpiBrick
             connections: []
             name: vbox3
@@ -306,7 +306,7 @@
             - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
               name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
             - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
-              type: string, value: /multiple-positions}
+              type: string, value: /multiple-positionsID13EH3}
             type: MultiplePositionsBrick
           - brick: {class: TurretBrick, name: TurretBrick0}
             children: []
@@ -328,7 +328,7 @@
             - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
               name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
             - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
-              type: string, value: /multiple-positions}
+              type: string, value: /multiple-positionsID13EH3}
             type: TurretBrick
           - children:
             - children:
@@ -354,7 +354,7 @@
                   hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                   value: 0}
                 - {comment: '', default_value: '', hidden: false, name: zoom, old_value: '',
-                  type: string, value: /multiple-positions}
+                  type: string, value: /multiple-positionsID13EH3}
                 type: ESRFCameraBeamBrick
               - brick: {class: ESRFCameraCalibrationBrick, name: ESRFCameraCalibrationBrick1}
                 children: []
@@ -372,7 +372,7 @@
                 - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
                   old_value: 0, type: boolean, value: 0}
                 - {comment: '', default_value: '', hidden: false, name: horizontal
-                    motor, old_value: '', type: string, value: /ustry}
+                    motor, old_value: '', type: string, value: /nny}
                 - {comment: Allow to control brick in all modes, default_value: 0,
                   hidden: false, name: instanceAllowAlways, old_value: 0, type: boolean,
                   value: 0}
@@ -380,9 +380,9 @@
                   hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                   value: 0}
                 - {comment: '', default_value: '', hidden: false, name: vertical motor,
-                  old_value: '', type: string, value: /ustrz}
+                  old_value: '', type: string, value: /nnz}
                 - {comment: '', default_value: '', hidden: false, name: zoom, old_value: '',
-                  type: string, value: /multiple-positions}
+                  type: string, value: /multiple-positionsID13EH3}
                 type: ESRFCameraCalibrationBrick
               connections: []
               name: hbox8

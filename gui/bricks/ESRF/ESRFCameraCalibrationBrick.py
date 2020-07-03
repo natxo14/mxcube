@@ -363,9 +363,9 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         """
         if self.zoom_motor_hwobj is not None:
-            currentPos = self.zoom_motor_hwobj.getPosition()
-            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resox", str(self.y_calib))
-            self.zoom_motor_hwobj.setPositionKeyValue(currentPos, "resoy", str(self.z_calib))
+            current_pos = self.zoom_motor_hwobj.getPosition()
+            self.zoom_motor_hwobj.setPositionKeyValue(current_pos, "resox", str(self.y_calib))
+            self.zoom_motor_hwobj.setPositionKeyValue(current_pos, "resoy", str(self.z_calib))
         else:
             print(f"CameraCalibrationBrick--ARG--zoom_motor_hwobj is None")
 
@@ -373,10 +373,11 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         Doc
         """
-        
-        self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 1, new_calibration[0])
-        self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 2, new_calibration[1])
-                
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 1).setText(str(new_calibration[0]))
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setBackground(Colors.LIGHT_YELLOW)
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setText(str(new_calibration[1]))
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setBackground(Colors.LIGHT_YELLOW)
+
     def start_new_calibration(self):
         """
         Doc
@@ -433,8 +434,6 @@ class ESRFCameraCalibrationBrick(BaseWidget):
 
         HWR.beamline.sample_view.stop_calibration()
         
-        
-
         delta_x_pixels = abs(two_calibration_points[0][0] - two_calibration_points[1][0])
         delta_y_pixels = abs(two_calibration_points[0][1] - two_calibration_points[1][1])
 
@@ -446,20 +445,29 @@ class ESRFCameraCalibrationBrick(BaseWidget):
 
         y_calib = float(hor_motor_delta/delta_x_pixels)
         z_calib = float(ver_motor_delta/delta_y_pixels)
-        msgstr = f"Calculated new calibration : {y_calib} , {z_calib} ( nm/pixel ) \
-                    for zoom position {self.current_zoom_pos_name}"
 
-        save_new_calib = QtImport.QMessageBox.question(
+        self.y_calib = float(y_calib/1000.0) # metres/pixel
+        self.z_calib = float(z_calib/1000.0) # metres/pixel
+        
+
+        msgstr = f"Calculated new calibration : {y_calib} , {z_calib} ( nm/pixel )"
+        "for zoom position {self.current_zoom_pos_name}."
+        "Would you like to keep it??"
+        "To save data to xml file, click on 'Save Calibration' button"
+
+        keep_new_calib = QtImport.QMessageBox.question(
                     self,
-                    "Save new calibration ?",
+                    "Keep new calibration ?",
                     msgstr,
                     QtImport.QMessageBox.Yes | 
                     QtImport.QMessageBox.No,
                 )
-        if save_new_calib == QtImport.QMessageBox.Yes:
+        if keep_new_calib == QtImport.QMessageBox.Yes:
             print(f" answer yes")
+            self.set_new_calibration_value((y_calib,z_calib))
         else:
             print(f" answer no")
+            return
         # return ( two_calibration_points[0] )
 
     def clear_table(self):

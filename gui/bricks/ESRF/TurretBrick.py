@@ -31,7 +31,7 @@ __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
 __category__ = "ESRF"
 
-class DialWithTags(QWidget):
+class DialWithTags(QtImport.QWidget):
     """
     A QDial with tags in notches
     """
@@ -49,9 +49,9 @@ class DialWithTags(QWidget):
 
         #print(f"######### DialWithTags: {tag_dict}")
         self.tags = dict(tag_dict)
-        self.layout = QVBoxLayout()
+        self.layout = QtImport.QVBoxLayout()
         self.layout.setContentsMargins(32, 32, 32, 32)
-        self.dial = QDial()
+        self.dial = QtImport.QDial()
         self.dial.setMinimum(1)
         self.dial.setMaximum(len(self.tags))
         self.dial.setSingleStep(1)
@@ -75,7 +75,7 @@ class DialWithTags(QWidget):
         # print(f"h_main - w_main : {h_main} - {w_main}")
         # print(f"h_dial - w_dial : {h_dial} - {w_dial}")
 
-        painter = QPainter(self)
+        painter = QtImport.QPainter(self)
 
         fm = painter.fontMetrics()
         for i, (tag, value) in enumerate(self.tags.items()):
@@ -83,8 +83,8 @@ class DialWithTags(QWidget):
             text_width = text_rect.width()
             text_height = text_rect.height()
             if i == 0:
-                print(f"h_main - w_main : {h_main} - {w_main}")
-                print(f"h_dial - w_dial : {h_dial} - {w_dial}")
+                # print(f"h_main - w_main : {h_main} - {w_main}")
+                # print(f"h_dial - w_dial : {h_dial} - {w_dial}")
                 painter.drawText(
                     w_main / 2 - w_dial / 4 - text_width,
                     h_main / 2 + h_dial / 2,
@@ -207,8 +207,8 @@ class TurretBrick(BaseWidget):
         
         new_pos_props = self.zoom_position_dict.get(new_position, None)
         if new_pos_props is not None:
-            new_zoom_value = new_pos_props[0]
-            self.turret_hwobj.set_value(new_zoom_value)
+            print(f"######### TurretBrick:value_changed {new_position} new_pos_props {new_pos_props}")
+            self.multiple_pos_hwobj.moveToPosition(new_pos_props[0])
         
     def set_mnemonic(self, mne):
         """set mnemonic."""
@@ -241,7 +241,7 @@ class TurretBrick(BaseWidget):
                 self.update_zoom_position_dict()
                 # recover current position and set to volpi
                 #print(f"######### TurretBrick: set_turret_object current_value {self.turret_hwobj.get_value()}")
-                self.custom_dial.setValue(self.turret_hwobj.get_value())
+                self.slot_position(self.turret_hwobj.get_value())
                 
             # if self.turret_hwobj.is_ready():
             #     self.slot_position(self.turret_hwobj.get_position())
@@ -257,19 +257,20 @@ class TurretBrick(BaseWidget):
         print(f"######### TurretBrick: update_zoom_position_dict {self.zoom_position_dict}")
         zoom_dict = self.multiple_pos_hwobj.get_zoom_positions()
         for i, (key, value) in enumerate(zoom_dict.items(), start=1):
-            self.zoom_position_dict[i] = (value, key)
-        #print(f"########## TURRET BRICK update_zoom_position_dict {self.zoom_position_dict}")
+            self.zoom_position_dict[i] = (key, value)
+        print(f"########## TURRET BRICK update_zoom_position_dict {self.zoom_position_dict}")
         
 
-    def slot_position(self, new_zoom_value):
-        #print(f"########## TURRET BRICK slot_position input {new_zoom_value}")
+    def slot_position(self, new_zoom_motor_position):
+        print(f"########## TURRET BRICK slot_position input {new_zoom_motor_position}")
         
         #get new dial position 
-        for i, (key, value) in enumerate(self.zoom_position_dict.items(), start=1):
-            #print(f"########## TURRET BRICK slot_position iter {i} - {key} - {value}")
-            if new_zoom_value == value[0]:
-                self.custom_dial.setValue(i)
-        ##print(f"########## TURRET BRICK slot_position output {i}")
+        for key, value in self.zoom_position_dict.items():
+            print(f"########## TURRET BRICK slot_position iter {key} - {value}")
+            if new_zoom_motor_position == value[1]:
+                print(f"########## TURRET BRICK slot_position output {key}")
+                self.custom_dial.setValue(key)
+        
         
 
     def slot_mode(self,new_mode):
