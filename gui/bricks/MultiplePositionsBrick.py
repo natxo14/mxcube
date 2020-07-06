@@ -99,6 +99,9 @@ class MultiplePositionsBrick(BaseWidget):
         #print(f"$$$$$$$$$$$$$$$ run self.multipos_hwrobj {id(self.multipos_hwrobj)}")
         #self.hardware_object_change(self.multipos_hwrobj)
         self.__brickStarted = True
+        # make update_beam_position happen to use data from multiple_position xml file:
+        print(f"$$$$$$$$$$$$$$$MULTIPOS BRICK run self.multipos_hwrobj")
+        self.multipos_hwrobj.checkPosition()
 
     def hardware_object_change2(self, hwro):
         #print(f"$$$$$$$$$$$$$$$ hardware_object_change")
@@ -130,13 +133,13 @@ class MultiplePositionsBrick(BaseWidget):
             self.multipos_hwrobj = self.get_hardware_object(hwro_name)
 
         if self.multipos_hwrobj is not None:
-            title = self.multipos_hwrobj.username                             
+            title = self.multipos_hwrobj.username
             self.main_group_box.setTitle(title)
 
             #clean previous widgets
             self.button_group.buttonClicked.disconnect(self.position_clicked)
 
-            old_buttons = self.button_group.buttons()
+            #old_buttons = self.button_group.buttons()
             #print(f"$$$$$$$$$$$$$$$MULTIPOSBRICK type old_buttons {type(old_buttons)} - {len(old_buttons)}")
 
             for index, radio_button in enumerate(self.button_group.buttons(), start=1):

@@ -373,10 +373,10 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         Doc
         """
-        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 1).setText(str(new_calibration[0]))
-        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setBackground(Colors.LIGHT_YELLOW)
-        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setText(str(new_calibration[1]))
-        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setBackground(Colors.LIGHT_YELLOW)
+        self.ui_widgets_manager.calibration_table.item(self.current_zoom_idx, 1).setText(str(int(new_calibration[0] * 1e9)))
+        self.ui_widgets_manager.calibration_table.item(self.current_zoom_idx, 1).setBackground(Colors.LIGHT_YELLOW)
+        self.ui_widgets_manager.calibration_table.item(self.current_zoom_idx, 2).setText(str(int(new_calibration[1] * 1e9)))
+        self.ui_widgets_manager.calibration_table.item(self.current_zoom_idx, 2).setBackground(Colors.LIGHT_YELLOW)
 
     def start_new_calibration(self):
         """

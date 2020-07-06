@@ -109,6 +109,17 @@ BaseWidget._menubar and
 BaseWidget._toolbar never initialized ??
 
 +++++++++++++++++++++++++++++++++++++++++++++
+What is better:
+try:
+    self._beam_position_on_screen = HWR.beamline.diffractometer.get_beam_position()
+    except AttributeError:
+
+or
+if HWR.beamline.diffractometer is not None:
+    blahblah
+
+
++++++++++++++++++++++++++++++++++++++++++++++
 in bricks
 def run(self) ?? still valable?? what for??
 
