@@ -168,9 +168,9 @@ class ESRFCameraBeamBrick(BaseWidget):
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "zoom":
             if self.multipos_motor_hwobj is not None:
-                self.disconnect(self.multipos_motor_hwobj, "positionReached",
+                self.disconnect(self.multipos_motor_hwobj, "predefinedPositionChanged",
                                 self.zoom_changed)
-                self.disconnect(self.multipos_motor_hwobj, "noPosition",
+                self.disconnect(self.multipos_motor_hwobj, "no_position",
                                 self.zoom_changed)
 
             self.multipos_motor_hwobj = self.get_hardware_object(new_value)
@@ -186,12 +186,12 @@ class ESRFCameraBeamBrick(BaseWidget):
                 print(f"################ cameraCalibBrick property_changed - new full path {self.multipos_motor_hwobj_xml_path}")
 
                 self.load_beam_position_dict()
-                self.connect(self.multipos_motor_hwobj, "positionReached",
+                self.connect(self.multipos_motor_hwobj, "predefinedPositionChanged",
                                 self.zoom_changed)
-                self.connect(self.multipos_motor_hwobj, "noPosition",
+                self.connect(self.multipos_motor_hwobj, "no_position",
                                 self.zoom_changed)
 
-                self.zoom_changed()
+                self.zoom_changed(self.multipos_motor_hwobj.get_value())
             self.init_interface()
                 
     def init_interface(self):
@@ -218,13 +218,13 @@ class ESRFCameraBeamBrick(BaseWidget):
                     return(i)
             return(-1)
 
-    def zoom_changed(self):
+    def zoom_changed(self, name):
         if self.multipos_motor_hwobj is not None:
-            self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
-            self.current_zoom_idx = self.get_zoom_index(self.current_zoom_pos_name)
+            # self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
+            self.current_zoom_idx = self.get_zoom_index(name)
                 
             if self.current_zoom_idx != -1:
-                self.current_beam_position = self.beam_position_dict[self.current_zoom_pos_name]
+                self.current_beam_position = self.beam_position_dict[name]
                 print(f"################ cameraBeamBrick zoom_changed beampos : {self.current_beam_position} + zoom pos : {self.current_zoom_pos_name}")
     
     def beam_position_changed(self,beam_x_y):
@@ -234,19 +234,35 @@ class ESRFCameraBeamBrick(BaseWidget):
         print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name}")
         self.current_beam_position = beam_x_y
 
-        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 1).setText(str(beam_x_y[0]))
-        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setText(str(beam_x_y[1]))
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 1).setText(str(int(beam_x_y[0])))
+        self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setText(str(int(beam_x_y[1])))
         
     def save_beam_position(self):
         """
         Doc
         """
         if self.multipos_motor_hwobj is not None:
-            from PyQt5.QtCore import pyqtRemoveInputHook
-            pyqtRemoveInputHook()
-            import pdb
-            pdb.set_trace()
+            # TODO : change how data is handled in MultiposHwrObject
+            # I think best: to record on xml and reload data on hwr_obj 
+            # to reuse self["positions"]
             current_pos = self.multipos_motor_hwobj.get_value()
+            
+            self.multipos_motor_hwobj.set_position_key_value(
+                current_pos,
+                'beamx',
+                self.current_beam_position[0]
+                )
+
+            self.multipos_motor_hwobj.set_position_key_value(
+                current_pos,
+                'beamy',
+                self.current_beam_position[1]
+                )
+
+            # from PyQt5.QtCore import pyqtRemoveInputHook
+            # pyqtRemoveInputHook()
+            # import pdb
+            # pdb.set_trace()
             #self.multipos_motor_hwobj.save_xml_position_key_value(current_pos, "beamx", str(self.current_beam_position[0]))
             #self.multipos_motor_hwobj.save_xml_position_key_value(current_pos, "beamy", str(self.current_beam_position[1]))
 
@@ -257,7 +273,7 @@ class ESRFCameraBeamBrick(BaseWidget):
             positions = xml_tree.find("positions")
             
             pos_list = positions.findall("position")
-            pdb.set_trace()
+            # pdb.set_trace()
 
             for pos in pos_list:
                 if pos.find("name").text == current_pos:
