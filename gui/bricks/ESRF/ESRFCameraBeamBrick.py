@@ -198,7 +198,8 @@ class ESRFCameraBeamBrick(BaseWidget):
         if self.multipos_motor_hwobj is not None:
             self.ui_widgets_manager.beam_positions_table.setRowCount(len(self.beam_position_dict))
 
-            for i, (position, beam_pos_tuple) in enumerate (self.beam_position_dict.items()):
+            print(f"################ cameraBeamBrick init_interface - {len(self.beam_position_dict)} ")
+            for i, (position, beam_pos_tuple) in enumerate(self.beam_position_dict.items()):
                 beam_pos_x = beam_pos_tuple[0]
                 beam_pos_y = beam_pos_tuple[1]
              
@@ -223,17 +224,24 @@ class ESRFCameraBeamBrick(BaseWidget):
             logging.getLogger("HWR").error("Multiple Position motor in no_position state")
             return
         if self.multipos_motor_hwobj is not None:
-            self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
+            self.current_zoom_pos_name = name # self.multipos_motor_hwobj.get_value()
             self.current_zoom_idx = self.get_zoom_index(name)
-                
+            print(f"################ cameraBeamBrick zoom_changed current_zoom_pos_name : {self.current_zoom_pos_name} + current_zoom_idx : {self.current_zoom_idx}")        
             if self.current_zoom_idx != -1:
                 self.current_beam_position = self.beam_position_dict[name]
                 print(f"################ cameraBeamBrick zoom_changed beampos : {self.current_beam_position} + zoom pos : {self.current_zoom_pos_name}")
-    
+                if self.ui_widgets_manager.beam_positions_table.itemAt(self.current_zoom_idx, 1):
+                    self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 1).setText(str(int(self.current_beam_position[0])))
+                    self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 2).setText(str(int(self.current_beam_position[1])))
+                else:
+                    print(f"################ cameraBeamBrick zoom_changed TABLE NOT INITIALIZED")
+                
     def beam_position_changed(self,beam_x_y):
         """
             beam_x_y (tuple): Position (x, y) [pixel]
         """
+        #update current_zoom_idx
+        self.current_zoom_idx = self.get_zoom_index(self.multipos_motor_hwobj.get_value())
         print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name} - current_zoom_idx : {self.current_zoom_idx}")
         self.current_beam_position = beam_x_y
 

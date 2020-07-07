@@ -307,7 +307,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             logging.getLogger("HWR").error("Multiple Position motor in no_position state")
             return
             
-        print(f"################ cameraCalibBrick zoom_changed {self.calibration_dict}")
+        #print(f"################ cameraCalibBrick zoom_changed {self.calibration_dict}")
         if self.multipos_motor_hwobj is not None:
             # current_pos = self.multipos_motor_hwobj.get_value()
             self.current_zoom_idx = self.get_zoom_index(current_pos_name)
@@ -318,7 +318,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
                 
             if self.current_zoom_idx != -1:
                 new_calibration = self.calibration_dict[current_pos_name]
-                print(f"################ cameraCalibBrick zoom_changed {new_calibration} + {current_pos_name}")
+                #print(f"################ cameraCalibBrick zoom_changed {new_calibration} + {current_pos_name}")
 
                 if new_calibration[0] == 1:
                     self.y_calib = None
@@ -368,7 +368,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             self.y_calib = None
             self.z_calib = None
 
-        print(f"################ cameraCalibBrick zoom_changed {self.y_calib} + {self.z_calib}")
+        #print(f"################ cameraCalibBrick zoom_changed {self.y_calib} + {self.z_calib}")
 
         # self.emit(qt.PYSIGNAL("ChangePixelCalibration"),
         #           (self.y_calib, self.z_calib))
@@ -449,34 +449,6 @@ class ESRFCameraCalibrationBrick(BaseWidget):
                 print(f"CameraCalibrationBrick--HWR.beamline.diffractometer is not None {hor_motor_delta} - {ver_motor_delta} ")
 
                 HWR.beamline.diffractometer.start_manual_calibration()
-            
-            
-                
-        # if self.calibration == 0:
-
-        #     if self.drawingMgr is not None:
-        #         self.calibration = 1
-        #         self.calibButton.setText("Cancel Calibration")
-
-        #         self.drawingMgr.startDrawing()
-
-        # elif self.calibration == 1:
-        #     self.calibration = 0
-        #     self.calibButton.setText("Start New Calibration")
-        #     self.drawingMgr.stopDrawing()
-        #     self.drawingMgr.hide()
-
-        # elif self.calibration == 2:
-        #     self.disconnect(self.vmot, qt.PYSIGNAL("moveDone"),
-        #                     self.moveFinished)
-        #     self.disconnect(self.hmot, qt.PYSIGNAL("moveDone"),
-        #                     self.moveFinished)
-        #     self.hmot.stop()
-        #     self.vmot.stop()
-        #     self.calibration = 0
-        #     self.calibButton.setText("Start New Calibration")
-        #     self.drawingMgr.stopDrawing()
-        #     self.drawingMgr.hide()
 
     def diffractometer_manual_calibration_done(self, two_calibration_points):
         """
