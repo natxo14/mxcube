@@ -366,7 +366,7 @@ class CameraBrick(BaseWidget):
         self.graphics_manager_hwobj.start_one_click_centring()
 
     def move_center_to_clicked_point(self):
-        self.graphics_manager_hwobj.start_move_center_to_point()
+        self.graphics_manager_hwobj.start_move_to_clicked_point()
 
     def create_point_current_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=False)
@@ -399,7 +399,7 @@ class CameraBrick(BaseWidget):
         self.graphics_manager_hwobj.de_select_all()
 
     def clear_all_items_clicked(self):
-        self.graphics_manager_hwobj.clear_all()
+        self.graphics_manager_hwobj.clear_all_shapes()
 
     def zoom_window_clicked(self):
         self.zoom_dialog.set_camera_frame(

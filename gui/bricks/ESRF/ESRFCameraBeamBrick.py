@@ -219,8 +219,11 @@ class ESRFCameraBeamBrick(BaseWidget):
             return(-1)
 
     def zoom_changed(self, name):
+        if name is None:
+            logging.getLogger("HWR").error("Multiple Position motor in no_position state")
+            return
         if self.multipos_motor_hwobj is not None:
-            # self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
+            self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
             self.current_zoom_idx = self.get_zoom_index(name)
                 
             if self.current_zoom_idx != -1:
@@ -231,7 +234,7 @@ class ESRFCameraBeamBrick(BaseWidget):
         """
             beam_x_y (tuple): Position (x, y) [pixel]
         """
-        print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name}")
+        print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name} - current_zoom_idx : {self.current_zoom_idx}")
         self.current_beam_position = beam_x_y
 
         self.ui_widgets_manager.beam_positions_table.item(self.current_zoom_idx, 1).setText(str(int(beam_x_y[0])))

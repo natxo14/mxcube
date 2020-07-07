@@ -278,7 +278,7 @@ class MultiplePositionsBrick(BaseWidget):
         # if self.appearance == "Incremental":
         #     self.valueWidget.setValue(name)
     
-    def no_position(self):
+    def no_position(self, useless):
 
         self.button_group.setExclusive(False)
         if self.button_group.checkedButton() is not None:
@@ -300,7 +300,7 @@ class MultiplePositionsBrick(BaseWidget):
         #         self.valueWidget.setValue("Moving")
         #     else :
         #         self.valueWidget.setValue("Unknown")
-        pass
+        
 
     def check_state(self, new_state):
         
