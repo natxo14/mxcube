@@ -106,6 +106,12 @@ class ESRFCameraBeamBrick(BaseWidget):
         self.main_groupbox = QtImport.QGroupBox("Beam Position", self)
         self.ui_widgets_manager = QtImport.load_ui_file("camera_beam_brick.ui")
 
+        # Size policy --------------------------------
+        self.ui_widgets_manager.beam_positions_table.setSizePolicy(
+            QtImport.QSizePolicy.Minimum,
+            QtImport.QSizePolicy.Minimum,
+        )
+     
         #validator for input values for delta phi: min/max/decimals
         # self.ui_widgets_manager.delta_phi_textbox.setValidator(
         #     QtImport.QDoubleValidator(0, 180, 2)
@@ -193,6 +199,9 @@ class ESRFCameraBeamBrick(BaseWidget):
 
                 self.zoom_changed(self.multipos_motor_hwobj.get_value())
             self.init_interface()
+        
+        else:
+            BaseWidget.property_changed(self, property_name, old_value, new_value)
                 
     def init_interface(self):
         if self.multipos_motor_hwobj is not None:

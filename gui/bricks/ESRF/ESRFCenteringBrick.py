@@ -73,9 +73,10 @@ class ESRFCenteringBrick(BaseWidget):
         self.demand_move = 0
         self.in_expert_mode = None
         self.position_history = []
+        self.num_clicked_centring_pos = 0
         
         #match default values in .ui file
-        self.points_for_aligment = 3 
+        self.points_for_aligment = 3
         self.delta_phi = 0.3
 
         # Properties ----------------------------------------------------------
@@ -85,7 +86,6 @@ class ESRFCenteringBrick(BaseWidget):
         self.add_property("table_z_inverted", "boolean", False)
 
         # Signals ------------------------------------------------------------
-        self.define_signal("getView", ())
         self.define_signal("getBeamPosition", ())
         self.define_signal("centring_parameters_changed", ())
 
@@ -97,6 +97,12 @@ class ESRFCenteringBrick(BaseWidget):
         self.ui_widgets_manager = QtImport.load_ui_file("centering.ui")
 
         
+        # Size policy --------------------------------
+        self.ui_widgets_manager.aligment_table.setSizePolicy(
+            QtImport.QSizePolicy.Minimum,
+            QtImport.QSizePolicy.Minimum,
+        )
+
         #validator for input values for delta phi: min/max/decimals
         # self.ui_widgets_manager.delta_phi_textbox.setValidator(
         #     QtImport.QDoubleValidator(0, 180, 2)
@@ -141,9 +147,52 @@ class ESRFCenteringBrick(BaseWidget):
             self.cancel_aligment
         )
 
-    def property_changed(self, property_name, old_value, new_value):
-        if property_name == "mnemonic":
-            self.diffractometer_hwobj = self.get_hardware_object(new_value)
+        # TODO : add show center and show help line functionalities
+        self.ui_widgets_manager.show_center_checkbox.hide()
+        self.ui_widgets_manager.show_help_line_checkbox.hide()
+        
+        # TODO : integrate centering brick with GraphicsManagerBrick : which is best and why
+        self.ui_widgets_manager.start_alignment_button.hide()
+        self.ui_widgets_manager.cancel_alignment_button.hide()
+        
+        # Other ---------------------------------------------------------------
+
+        self.connect(HWR.beamline.sample_view, "centringStarted", self.centring_started)
+        self.connect(HWR.beamline.sample_view, "centringFailed", self.centring_failed)
+        self.connect(
+            HWR.beamline.sample_view, "centringSuccessful", self.centring_successful
+        )
+        self.connect(HWR.beamline.diffractometer, "diff_image_clicked", self.image_clicked)
+        
+        self.change_point_number(self.points_for_aligment)
+
+    def centring_started(self):
+        #clean point table
+        self.clean_table()
+        self.num_clicked_centring_pos = 0
+        self.ui_widgets_manager.number_points_spinbox.setEnabled(False)
+
+    def centring_failed(self):
+        #background cell color to red
+        table = self.ui_widgets_manager.aligment_table
+        table.setRowCount(self.points_for_aligment)
+        for row in range(table.rowCount()):
+            for column in range(table.columnCount()):
+                table.item(row, column).setBackground(QtImport.QColor(QtImport.Qt.red))
+        self.ui_widgets_manager.number_points_spinbox.setEnabled(True)
+
+    def centring_successful(self):
+        #background cell color to green
+        table = self.ui_widgets_manager.aligment_table
+        table.setRowCount(self.points_for_aligment)
+        for row in range(table.rowCount()):
+            for column in range(table.columnCount()):
+                table.item(row, column).setBackground(QtImport.QColor(QtImport.Qt.green))
+        self.ui_widgets_manager.number_points_spinbox.setEnabled(True)
+
+    # def property_changed(self, property_name, old_value, new_value):
+    #     if property_name == "mnemonic":
+    #         self.diffractometer_hwobj = self.get_hardware_object(new_value)
             
             # equipment = self.get_hardware_object(new_value)
             # if equipment is not None :
@@ -164,6 +213,16 @@ class ESRFCenteringBrick(BaseWidget):
             #             logging.getLogger().error('%s: could not find motors inBeam or rotation motor in Hardware Objects %s',
             #                                       str(self.name()),equipment.name())
             #             return          
+
+    def image_clicked(self, x, y):
+        print(f"CenteringBrick - image_clicked {x},{y} - num click {self.num_clicked_centring_pos}")
+        table = self.ui_widgets_manager.aligment_table
+        print(f"CenteringBrick - image_clicked table rows, cols : {table.rowCount()} {table.columnCount()}")
+        table.item(self.num_clicked_centring_pos, 1).setText(str(x))
+        table.item(self.num_clicked_centring_pos, 2).setText(str(y))
+        table.item(self.num_clicked_centring_pos, 0).setText(str(self.delta_phi * self.num_clicked_centring_pos))
+
+        self.num_clicked_centring_pos += 1
 
     def show_center(self, checkbox_state):
         """
@@ -191,7 +250,16 @@ class ESRFCenteringBrick(BaseWidget):
         Adapt
         """
         self.points_for_aligment = new_int_value
-        self.ui_widgets_manager.aligment_table.setRowCount(self.points_for_aligment)
+
+        # restart the table and populate with items
+        table = self.ui_widgets_manager.aligment_table
+        table.clearContents()
+        table.setRowCount(self.points_for_aligment)
+
+        for row in range(table.rowCount()):
+            table.setItem(row, 0, QtImport.QTableWidgetItem(""))
+            table.setItem(row, 1, QtImport.QTableWidgetItem(""))
+            table.setItem(row, 2, QtImport.QTableWidgetItem(""))
         
         if HWR.beamline.diffractometer is not None:
             HWR.beamline.diffractometer.set_centring_parameters(
@@ -202,7 +270,9 @@ class ESRFCenteringBrick(BaseWidget):
         #self.emit_centring_parameters_changed()
 
     def delta_phi_changed(self):
-        self.delta_phi = float(self.ui_widgets_manager.delta_phi_textbox.text())
+        delta_phi_str = self.ui_widgets_manager.delta_phi_textbox.text()
+        self.delta_phi = float(delta_phi_str.replace(" ", ""))
+        self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
         if HWR.beamline.diffractometer is not None:
             HWR.beamline.diffractometer.set_centring_parameters(
                 self.points_for_aligment,
@@ -215,14 +285,14 @@ class ESRFCenteringBrick(BaseWidget):
     #     (self.points_for_aligment, self.delta_phi)
     #     )
         
-    def clear_table(self):
+    def clean_table(self):
         """
         Adapt
         """
-        #table = self.ui_widgets_manager.findChild(QtI
-        # mport.QTableWidget, "aligment_table")
         table = self.ui_widgets_manager.aligment_table
         self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
         table.setRowCount(self.points_for_aligment)
-        table.clearContents()
+        for row in range(table.rowCount()):
+            for column in range(table.columnCount()):
+                table.item(row, column).setText("")
             

@@ -119,6 +119,12 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         self.main_groupbox = QtImport.QGroupBox("Pixel Size Calibration", self)
         self.ui_widgets_manager = QtImport.load_ui_file("camera_calibration.ui")
 
+        # Size policy --------------------------------
+        self.ui_widgets_manager.calibration_table.setSizePolicy(
+            QtImport.QSizePolicy.Minimum,
+            QtImport.QSizePolicy.Minimum,
+        )
+
         #validator for input values for delta phi: min/max/decimals
         # self.ui_widgets_manager.delta_phi_textbox.setValidator(
         #     QtImport.QDoubleValidator(0, 180, 2)
@@ -233,6 +239,9 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             name = self.h_motor_hwobj.name()
             self.ui_widgets_manager.delta_y_label.setText(f"Delta on {name}:")
             #TODO : set label on GUI
+        
+        else:
+            BaseWidget.property_changed(self, property_name, old_value, new_value)
     
     def update_gui(self):
 

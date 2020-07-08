@@ -75,7 +75,7 @@ class CameraBrick(BaseWidget):
 
         temp_action = create_menu.addAction(
             Icons.load_icon("VCRPlay2"),
-            "Centring point with 3 clicks",
+            "Centring point with N clicks",
             self.create_point_click_clicked,
         )
         temp_action.setShortcut("Ctrl+1")
