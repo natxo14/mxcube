@@ -439,6 +439,11 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         
         xml_file_tree.write(self.multipos_motor_hwobj_xml_path)
 
+    def cancel_calibration(self):
+        """
+        Doc
+        """
+
     def start_new_calibration(self):
         """
         Doc
@@ -470,15 +475,15 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         delta_x_pixels = abs(two_calibration_points[0][0] - two_calibration_points[1][0])
         delta_y_pixels = abs(two_calibration_points[0][1] - two_calibration_points[1][1])
 
-        hor_motor_delta = float(self.ui_widgets_manager.delta_y_textbox.text())
+        hor_motor_delta = float(self.ui_widgets_manager.delta_y_textbox.text()) # milimeters
         ver_motor_delta = float(self.ui_widgets_manager.delta_z_textbox.text())
 
         print(f"CameraCalibrationBrick--diffractometer_manual_calibration_done - {delta_x_pixels} - {delta_y_pixels} - {hor_motor_delta} - {ver_motor_delta}")
         print(f"CameraCalibrationBrick--diffractometer_manual_calibration_done - {float(hor_motor_delta/delta_x_pixels)} - {float(ver_motor_delta/delta_y_pixels)}")
 
 
-        self.y_calib = float(hor_motor_delta/delta_x_pixels) # metres/pixel
-        self.z_calib = float(ver_motor_delta/delta_y_pixels)
+        self.y_calib = float(hor_motor_delta/delta_x_pixels) * 1e-3 # metres/pixel
+        self.z_calib = float(ver_motor_delta/delta_y_pixels) * 1e-3
 
         #display data in table
         self.ui_widgets_manager.calibration_table.item(self.current_zoom_idx, 1).setText(str(int(self.y_calib * 1e9)))
