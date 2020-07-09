@@ -6,88 +6,112 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>872</width>
-    <height>585</height>
+    <width>529</width>
+    <height>287</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QHBoxLayout" name="horizontalLayout_4">
    <item>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QCheckBox" name="show_center_checkbox">
-         <property name="text">
-          <string>Show center</string>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="nbPointsLabel">
+             <property name="text">
+              <string>Number of Points</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="number_points_spinbox">
+             <property name="minimum">
+              <number>3</number>
+             </property>
+             <property name="value">
+              <number>3</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="deltaPhiLabel">
+             <property name="text">
+              <string>Delta Phi</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="delta_phi_textbox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="inputMask">
+              <string>00.00</string>
+             </property>
+             <property name="text">
+              <string>0.3</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QPushButton" name="start_alignment_button">
+             <property name="text">
+              <string>Start Aligment</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="cancel_alignment_button">
+             <property name="text">
+              <string>Cancel Aligment</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="show_help_line_checkbox">
-         <property name="text">
-          <string>Show Help Line</string>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QCheckBox" name="show_center_checkbox">
+           <property name="text">
+            <string>Show center</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="show_help_line_checkbox">
+           <property name="text">
+            <string>Show Help Line</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
-     <item row="0" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="nbPointsLabel">
-         <property name="text">
-          <string>Number of Points</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="number_points_spinbox">
-         <property name="minimum">
-          <number>3</number>
-         </property>
-         <property name="value">
-          <number>3</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="deltaPhiLabel">
-         <property name="text">
-          <string>Delta Phi</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="delta_phi_textbox">
-         <property name="inputMask">
-          <string>00.00</string>
-         </property>
-         <property name="text">
-          <string>0.3</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="start_alignment_button">
-         <property name="text">
-          <string>Start Aligment</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="cancel_alignment_button">
-         <property name="text">
-          <string>Cancel Aligment</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="0" colspan="2">
+     <item>
       <widget class="QTableWidget" name="aligment_table">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="rowCount">
         <number>3</number>
        </property>

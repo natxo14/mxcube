@@ -208,7 +208,7 @@ class TurretBrick(BaseWidget):
         new_pos_props = self.zoom_position_dict.get(new_position, None)
         if new_pos_props is not None:
             print(f"######### TurretBrick:value_changed {new_position} new_pos_props {new_pos_props}")
-            self.multiple_pos_hwobj.moveToPosition(new_pos_props[0])
+            self.multiple_pos_hwobj.move_to_position(new_pos_props[0])
         
     def set_mnemonic(self, mne):
         """set mnemonic."""

@@ -162,7 +162,7 @@ class ESRFCenteringBrick(BaseWidget):
         self.connect(
             HWR.beamline.sample_view, "centringSuccessful", self.centring_successful
         )
-        self.connect(HWR.beamline.diffractometer, "diff_image_clicked", self.image_clicked)
+        self.connect(HWR.beamline.diffractometer, "centring_image_clicked", self.image_clicked)
         
         self.change_point_number(self.points_for_aligment)
 

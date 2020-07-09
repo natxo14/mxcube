@@ -153,6 +153,10 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             self.start_new_calibration
         )
 
+        self.ui_widgets_manager.cancel_calibration_pushbutton.clicked.connect(
+            self.cancel_calibration
+        )
+
         # Other hardware object connections --------------------------
         self.connect(
             HWR.beamline.diffractometer,
@@ -443,6 +447,8 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         """
         Doc
         """
+        print(f"CameraCalibrationBrick--cancel calibration")
+        HWR.beamline.diffractometer.cancel_manual_calibration()
 
     def start_new_calibration(self):
         """

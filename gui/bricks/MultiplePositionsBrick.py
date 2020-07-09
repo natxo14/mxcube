@@ -241,11 +241,11 @@ class MultiplePositionsBrick(BaseWidget):
                                     QtImport.QMessageBox.Cancel,
                                     QtImport.QMessageBox.NoButton)     
                 if ret == QtImport.QMessageBox.Ok:
-                    self.multipos_hwrobj.moveToPosition(name)
+                    self.multipos_hwrobj.move_to_position(name)
                 else:
                     self.multipos_hwrobj.checkPosition()
             else:
-                self.multipos_hwrobj.moveToPosition(name)
+                self.multipos_hwrobj.move_to_position(name)
 
     def state_changed(self, state):
         """Enables/disables controls based on the state
@@ -330,4 +330,4 @@ class MultiplePositionsBrick(BaseWidget):
     #                 mot.setOffset(newoffset)
     # def go_to_position(self):
     #     if self.multipos_hwrobj is not None:
-    #         self.multipos_hwrobj.moveToPosition(str(self.positionList.currentText()))
+    #         self.multipos_hwrobj.move_to_position(str(self.positionList.currentText()))
