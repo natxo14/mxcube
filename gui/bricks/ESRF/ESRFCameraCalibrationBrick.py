@@ -327,7 +327,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
             self.current_zoom_pos_name = current_pos_name
 
             if len(self.ui_widgets_manager.calibration_table.selectedItems()) != 0:
-                self.ui_widgets_manager.calibration_table.selectionMode().clearSelection()
+                self.ui_widgets_manager.calibration_table.clearSelection()
                 
             if self.current_zoom_idx != -1:
                 new_calibration = self.calibration_dict[current_pos_name]
