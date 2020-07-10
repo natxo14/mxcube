@@ -1037,6 +1037,17 @@ def start(vars):
 To get 
 
 
+#######################
+    CONDA ENV
+#######################
+
+Clone a bliss_dev conda env
+
+        then install opencv with pip
+$ pip install opencv-python
+
+     
+        
 ###### TEMP ###############
 
 ---------------------- gui/bricks/CameraBrick.py --------------------------
