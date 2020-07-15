@@ -968,7 +968,7 @@ in bliss :
 
 
 #######################
-BLISSS MOTORS
+BLISS MOTORS
 #######################
 sync_hard():
     takes the position from the motor controller and assigns it as the dial position of the BLISS axis
@@ -1046,7 +1046,54 @@ Clone a bliss_dev conda env
         then install opencv with pip
 $ pip install opencv-python
 
-     
+
+ ###################################################
+        BLISS DATA POLICY <=> BILSS AS LIBRARY
+ ###################################################
+from https://bliss.gitlab-pages.esrf.fr/bliss/master/data_policy.html
+from https://bliss.gitlab-pages.esrf.fr/bliss/master/bliss_as_library.html
+from https://bliss.gitlab-pages.esrf.fr/bliss/master/dev_data_policy_basic.html#scan_saving
+
+>>> import bliss
+>>> from bliss.config import static
+
+>>> config = static.get_config()
+>>> session =  config.get('test_session')
+>>> session.setup()
+
+>>> session.scan_saving
+<bliss.config.settings.BasicScanSaving object at 0x7f4223bc6d40>
+
+>>> session.scan_saving.__info__()
+"Parameters (default) - \n\n  .base_path            = '/tmp/scans'\n  .data_filename        = 'data'\n  .user_name            = 'vergaral'\n  .template             = '{session}/'\n  .images_path_relative = True\n  .images_path_template = 'scan{scan_number}'\n  .images_prefix        = '{img_acq_device}_'\n  .date_format          = '%Y%m%d'\n  .scan_number_format   = '%04d'\n  .session              = 'test_session'\n  .date                 = '20200715'\n  .scan_name            = '{scan_name}'\n  .scan_number          = '{scan_number}'\n  .img_acq_device       = '<images_* only> acquisition device name'\n  .writer               = 'hdf5'\n  .data_policy          = 'None'\n  .creation_date        = '2019-12-05-07:49'\n  .last_accessed        = '2020-07-15-14:14'\n--------------  ---------  -------------------------------\ndoes not exist  filename   /tmp/scans/test_session/data.h5\ndoes not exist  directory  /tmp/scans/test_session\n--------------  ---------  -------------------------------"
+>>> print(session.scan_saving.__info__())
+Parameters (default) -
+
+  .base_path            = '/tmp/scans'
+  .data_filename        = 'data'
+  .user_name            = 'vergaral'
+  .template             = '{session}/'
+  .images_path_relative = True
+  .images_path_template = 'scan{scan_number}'
+  .images_prefix        = '{img_acq_device}_'
+  .date_format          = '%Y%m%d'
+  .scan_number_format   = '%04d'
+  .session              = 'test_session'
+  .date                 = '20200715'
+  .scan_name            = '{scan_name}'
+  .scan_number          = '{scan_number}'
+  .img_acq_device       = '<images_* only> acquisition device name'
+  .writer               = 'hdf5'
+  .data_policy          = 'None'
+  .creation_date        = '2019-12-05-07:49'
+  .last_accessed        = '2020-07-15-14:14'
+--------------  ---------  -------------------------------
+does not exist  filename   /tmp/scans/test_session/data.h5
+does not exist  directory  /tmp/scans/test_session
+--------------  ---------  -------------------------------
+
+
+
         
 ###### TEMP ###############
 

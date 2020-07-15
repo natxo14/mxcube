@@ -172,7 +172,7 @@ class ESRFCenteringBrick(BaseWidget):
         self.num_clicked_centring_pos = 0
         self.ui_widgets_manager.number_points_spinbox.setEnabled(False)
 
-    def centring_failed(self):
+    def centring_failed(self, method, centring_status):
         #background cell color to red
         table = self.ui_widgets_manager.aligment_table
         table.setRowCount(self.points_for_aligment)

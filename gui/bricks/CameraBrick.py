@@ -67,12 +67,6 @@ class CameraBrick(BaseWidget):
         create_menu = self.popup_menu.addMenu("Create")
         create_menu.menuAction().setIconVisibleInMenu(True)
 
-        temp_action = self.popup_menu.addAction(
-            Icons.load_icon("movetopos"),
-            "Move point to image center",
-            self.move_center_to_clicked_point,
-        )
-
         temp_action = create_menu.addAction(
             Icons.load_icon("VCRPlay2"),
             "Centring point with N clicks",
@@ -107,6 +101,12 @@ class CameraBrick(BaseWidget):
         temp_action.setShortcut("Ctrl+4")
         temp_action = create_menu.addAction(
             Icons.load_icon("AutoGrid"), "Auto Grid", self.create_auto_grid
+        )
+
+        temp_action = self.popup_menu.addAction(
+            Icons.load_icon("movetopos"),
+            "Move point to image center",
+            self.move_center_to_clicked_point,
         )
 
         measure_menu = self.popup_menu.addMenu("Measure")
@@ -330,6 +330,7 @@ class CameraBrick(BaseWidget):
                 self.image_scale_action_group.addAction(action_temp)
             for action in self.image_scale_menu.actions():
                 action.setCheckable(True)
+            
             self.image_scaled(self.graphics_manager_hwobj.get_image_scale())
 
     def not_used_function(self, *arg):
@@ -366,7 +367,7 @@ class CameraBrick(BaseWidget):
         self.graphics_manager_hwobj.start_one_click_centring()
 
     def move_center_to_clicked_point(self):
-        self.graphics_manager_hwobj.start_move_to_clicked_point()
+        self.graphics_manager_hwobj.start_move_beam_to_clicked_point()
 
     def create_point_current_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=False)
