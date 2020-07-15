@@ -259,7 +259,7 @@ class GraphicsManagerBrick(BaseWidget):
             treewidget_item.setData(3, QtImport.Qt.DisplayRole, "False")
 
     def clear_all_button_clicked(self):
-        HWR.beamline.sample_view.clear_all()
+        HWR.beamline.sample_view.clear_all_shapes()
 
     def create_point_start_button_clicked(self):
         HWR.beamline.sample_view.start_centring(tree_click=True)
