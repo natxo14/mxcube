@@ -1058,7 +1058,7 @@ from https://bliss.gitlab-pages.esrf.fr/bliss/master/dev_data_policy_basic.html#
 >>> from bliss.config import static
 
 >>> config = static.get_config()
->>> session =  config.get('test_session')
+>>> session = config.get('test_session')
 >>> session.setup()
 
 >>> session.scan_saving

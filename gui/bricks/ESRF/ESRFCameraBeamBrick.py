@@ -79,7 +79,6 @@ class ESRFCameraBeamBrick(BaseWidget):
 
         # variables -----------------------------------------------------------
 
-        self.first_time = True
         self.current_beam_position = None
         self.beam_position_dict = {} # { "position_name" : (pos_x, pos_y)} pixels
         self.current_zoom_pos_name = None
@@ -148,7 +147,7 @@ class ESRFCameraBeamBrick(BaseWidget):
                 "GraphicsManager: BeamInfo hwobj not defined"
             )
 
-        self.load_beam_position_dict()
+        #self.load_beam_position_dict()
 
     def load_beam_position_dict(self):
         """

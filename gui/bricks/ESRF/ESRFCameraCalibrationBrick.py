@@ -90,7 +90,6 @@ class ESRFCameraCalibrationBrick(BaseWidget):
 
         # variables -----------------------------------------------------------
 
-        self.first_time = True
         self.y_calib = None # metres/pixel
         self.z_calib = None # metres/pixel
         self.calibration = 0
