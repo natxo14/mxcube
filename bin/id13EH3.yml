@@ -74,7 +74,7 @@
           - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
             name: fixedHeight, old_value: -1, type: integer, value: -1}
           - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
-            name: fixedWidth, old_value: -1, type: integer, value: -1}
+            name: fixedWidth, old_value: -1, type: integer, value: 80}
           - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
             type: string, value: '9'}
           - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
@@ -165,11 +165,11 @@
             - {comment: '', default_value: '', hidden: false, name: defaultDeltas,
               old_value: '', type: string, value: ''}
             - {comment: '', default_value: '', hidden: false, name: defaultSteps,
-              old_value: '', type: string, value: 0.5 0.5 0.5 0.5 0.5 0.5 }
+              old_value: '', type: string, value: 0.5 0.5 0.5 0.5 0.5 0.5}
             - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
               name: fixedHeight, old_value: -1, type: integer, value: -1}
             - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
-              name: fixedWidth, old_value: -1, type: integer, value: -1}
+              name: fixedWidth, old_value: -1, type: integer, value: 350}
             - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
               type: string, value: '9'}
             - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
@@ -210,7 +210,7 @@
               - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
                 name: fixedHeight, old_value: -1, type: integer, value: -1}
               - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
-                name: fixedWidth, old_value: -1, type: integer, value: -1}
+                name: fixedWidth, old_value: -1, type: integer, value: 200}
               - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
                 type: string, value: '9'}
               - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
@@ -241,8 +241,8 @@
               type: color, value: null}
             - {comment: '', default_value: -1, hidden: false, name: fixedheight, old_value: null,
               type: integer, value: -1}
-            - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: null,
-              type: integer, value: -1}
+            - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: -1,
+              type: integer, value: 200}
             - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
               comment: ''
               default_value: default
@@ -284,30 +284,6 @@
               type: combo
               value: default
             type: vbox
-          - brick: {class: MultiplePositionsBrick, name: MultiplePositionsBrick0}
-            children: []
-            connections: []
-            name: MultiplePositionsBrick0
-            properties:
-            - {comment: '', default_value: 0, hidden: false, name: check, old_value: 0,
-              type: boolean, value: 0}
-            - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
-              name: fixedHeight, old_value: -1, type: integer, value: -1}
-            - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
-              name: fixedWidth, old_value: -1, type: integer, value: -1}
-            - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
-              type: string, value: '9'}
-            - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
-              name: frame, old_value: 0, type: boolean, value: 0}
-            - {comment: Hide widget, default_value: 0, hidden: false, name: hide,
-              old_value: 0, type: boolean, value: 0}
-            - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
-              name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
-            - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
-              name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
-            - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
-              type: string, value: /multiple-positionsID13EH3}
-            type: MultiplePositionsBrick
           - brick: {class: TurretBrick, name: TurretBrick0}
             children: []
             connections: []
@@ -316,7 +292,7 @@
             - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
               name: fixedHeight, old_value: -1, type: integer, value: -1}
             - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
-              name: fixedWidth, old_value: -1, type: integer, value: -1}
+              name: fixedWidth, old_value: -1, type: integer, value: 200}
             - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
               type: string, value: '9'}
             - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
@@ -982,13 +958,13 @@
         value: default
       type: vsplitter
     - children:
-      - brick: {class: GraphicsToolsBrick, name: GraphicsToolsBrick0}
+      - brick: {class: ESRFID13ConfigurationTabBrick, name: ESRFID13ConfigurationTabBrick0}
         children: []
         connections: []
-        name: GraphicsToolsBrick0
+        name: ESRFID13ConfigurationTabBrick0
         properties:
-        - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: 0,
-          type: boolean, value: 0}
+        - {comment: '', default_value: /multiple-positions, hidden: false, name: configfile,
+          old_value: /multiple-positions, type: string, value: /multiple-positionsID13EH3}
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
           name: fixedHeight, old_value: -1, type: integer, value: -1}
         - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
@@ -1003,35 +979,7 @@
           name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
         - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
           name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
-        - choices: [menuBar, toolBar, both]
-          comment: ''
-          default_value: menuBar
-          hidden: false
-          name: targetMenu
-          old_value: menuBar
-          type: combo
-          value: menuBar
-        type: GraphicsToolsBrick
-      - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick0}
-        children: []
-        connections: []
-        name: GraphicsManagerBrick0
-        properties:
-        - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
-          name: fixedHeight, old_value: -1, type: integer, value: -1}
-        - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-          old_value: -1, type: integer, value: -1}
-        - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
-          type: string, value: '9'}
-        - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
-          name: frame, old_value: 0, type: boolean, value: 0}
-        - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
-          type: boolean, value: 0}
-        - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
-          name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
-        - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
-          name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
-        type: GraphicsManagerBrick
+        type: ESRFID13ConfigurationTabBrick
       connections: []
       name: vsplitter1
       properties:
@@ -1068,8 +1016,8 @@
         value: default
       - {comment: '', default_value: '', hidden: false, name: icon, old_value: null,
         type: string, value: ''}
-      - {comment: '', default_value: Off line, hidden: false, name: label, old_value: null,
-        type: string, value: Off line}
+      - {comment: '', default_value: Configuration, hidden: false, name: label, old_value: null,
+        type: string, value: Configuration}
       - {comment: '', default_value: 2, hidden: false, name: margin, old_value: null,
         type: integer, value: 2}
       - choices: [plain, raised, sunken, default]
@@ -1113,9 +1061,9 @@
       old_value: null
       type: combo
       value: none
+    - {comment: '', default_value: 0, hidden: false, name: closable_Configuration,
+      old_value: null, type: boolean, value: 0}
     - {comment: '', default_value: 0, hidden: false, name: closable_Live, old_value: null,
-      type: boolean, value: 0}
-    - {comment: '', default_value: 0, hidden: false, name: closable_Off_line, old_value: null,
       type: boolean, value: 0}
     - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
       type: color, value: null}
@@ -1147,9 +1095,9 @@
       type: string, value: ''}
     - {comment: '', default_value: 2, hidden: false, name: margin, old_value: null,
       type: integer, value: 2}
+    - {comment: '', default_value: 0, hidden: false, name: newdialog_Configuration,
+      old_value: null, type: boolean, value: 0}
     - {comment: '', default_value: 0, hidden: false, name: newdialog_Live, old_value: null,
-      type: boolean, value: 0}
-    - {comment: '', default_value: 0, hidden: false, name: newdialog_Off_line, old_value: null,
       type: boolean, value: 0}
     - choices: [plain, raised, sunken, default]
       comment: ''
