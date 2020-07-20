@@ -93,7 +93,7 @@ class ESRFCenteringBrick(BaseWidget):
         self.define_slot("changePixelScale", ())
         
         # Graphic elements ----------------------------------------------------
-        self.main_groupbox = QtImport.QGroupBox("Graphics items", self)
+        self.main_groupbox = QtImport.QGroupBox("Sample centering", self)
         self.ui_widgets_manager = QtImport.load_ui_file("centering.ui")
 
         

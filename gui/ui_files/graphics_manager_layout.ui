@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>407</height>
+    <width>601</width>
+    <height>737</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -26,7 +26,16 @@
    <string>Graphics manager</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <property name="spacing">
@@ -34,6 +43,12 @@
    </property>
    <item row="0" column="0">
     <widget class="QToolBox" name="shapes_toolbox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -47,15 +62,24 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>540</width>
-        <height>270</height>
+        <width>597</width>
+        <height>583</height>
        </rect>
       </property>
       <attribute name="label">
        <string>All shapes</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -94,6 +118,13 @@
           <widget class="QCheckBox" name="display_grids_cbox">
            <property name="text">
             <string>Grids</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="display_square_roi_cbox">
+           <property name="text">
+            <string>Square</string>
            </property>
           </widget>
          </item>
@@ -252,8 +283,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>517</width>
-        <height>283</height>
+        <width>597</width>
+        <height>583</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -264,7 +295,16 @@
        <string>Points</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -335,8 +375,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>517</width>
-        <height>283</height>
+        <width>597</width>
+        <height>583</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -347,7 +387,16 @@
        <string>Lines</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -418,8 +467,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>517</width>
-        <height>283</height>
+        <width>597</width>
+        <height>583</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -430,7 +479,16 @@
        <string>Grids</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -664,7 +722,7 @@
        <item row="1" column="0">
         <widget class="QTreeWidget" name="grid_treewidget">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -785,6 +843,60 @@
             <string>Remove</string>
            </property>
           </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="square_page">
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../icons/square.png</normaloff>../icons/square.png</iconset>
+      </attribute>
+      <attribute name="label">
+       <string>Square ROI</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QTreeWidget" name="square_treewidget">
+         <column>
+          <property name="text">
+           <string>Index</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Init point</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>End point</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="create_square_button">
+           <property name="text">
+            <string>Create square</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </item>

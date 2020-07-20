@@ -33,6 +33,17 @@ OnCalibratioBrickTable:
 
 ###### TODO #############
 
+---------------------
+USER EXPERIENCE: 
+How/when to use new data : example , new beam position/calibration:
+warn user with colors in table.
+When this changes apply?? when created?? when saved ??
+
+If a change is created but not explicity saved, use new data ??
+show message to warn user ??
+Apply / save button like in 'normal' applications ??
+---------------------------------------
+
 @HOME: SAVE CALIBRATION/BEAM POSITION DATA TO XML!!
 BeamPosBrick/CalibrationBrick : highlight current pos data
 
@@ -157,6 +168,20 @@ self.motor_hwobj.GUIstep works and it's not None
 On QtGraphicsManager:
 Is there any like 'movetopos' functionality ??
 
+
+
+********************************************************************
+$$$$$$$$$$$$ANSWERED$$$$$$$$$$$$$$$
+
+in cdiGUI when motor sx is moving,
+then motors cx and cy change their status ( to something like not available : yellow background color/stop button available)
+other interactions happen also:
+sy moving -> cx cy disabled
+cx moving -> cy and sy disabled
+cy moving -> cx disabled
+
+THOSE ARE CALCULATION MOTORS : their position depends on the position of other motors =>
+when the 'origin' motors move, they 'move' also
 +++++++++++++
 On xml files : differences between: device/equipment/object
 
@@ -174,20 +199,6 @@ On xml files : differences between: device/equipment/object
 </object>
 
 METTRE OBJECT PARTOUT!!
-
-********************************************************************
-$$$$$$$$$$$$ANSWERED$$$$$$$$$$$$$$$
-
-in cdiGUI when motor sx is moving,
-then motors cx and cy change their status ( to something like not available : yellow background color/stop button available)
-other interactions happen also:
-sy moving -> cx cy disabled
-cx moving -> cy and sy disabled
-cy moving -> cx disabled
-
-THOSE ARE CALCULATION MOTORS : their position depends on the position of other motors =>
-when the 'origin' motors move, they 'move' also
-
 
 ##############################################
     Adding Bricks to GUI Builder
@@ -255,6 +266,27 @@ Debug + PyQt
 -        #           object : {obj}
 -        #           obj._objectsByRole : {obj._objectsByRole}
 -        #           role : {role}""")
+
+
+##########################
+MXCuBE <=> BLISS SIGNAL/SLOTS
+##########################
+
+Ex: BlissVolpi(HardwareObject):
+
+cfg = static.get_config()
+self.volpi = cfg.get(self.volpi_name)
+self.connect(self.volpi, "intensity", self.intensity_changed)
+
+This works because:
+class HardwareObjectMixin(CommandContainer):
+    def connect(self, sender, signal, slot=None):
+        ...
+        dispatcher.connect(slot, signal, sender)
+        ...
+
+And dispatcher is part of 'Louie', that is also part of Bliss
+MXCuBE and BLISS Share the same signal/slot system
 
 #############
 MXCuBE IDE SIGNAL/SLOTS

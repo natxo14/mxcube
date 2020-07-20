@@ -38,7 +38,8 @@ class GraphicsManagerBrick(BaseWidget):
         self.__point_map = {}
         self.__line_map = {}
         self.__grid_map = {}
-        self.__original_height = 300
+        self.__square_map = {}
+        self.__original_height = 600
 
         # Properties ----------------------------------------------------------
 
@@ -182,6 +183,16 @@ class GraphicsManagerBrick(BaseWidget):
             )
             grid_treewidget_item.setSelected(True)
             self.__grid_map[shape] = grid_treewidget_item
+        elif shape_type == "Square":
+            (start_index, end_index) = shape.get_points_index()
+            info_str_list.append("Square %d" % start_index)
+            info_str_list.append("Square %d" % end_index)
+            self.manager_widget.square_treewidget.clearSelection()
+            square_treewidget_item = QtImport.QTreeWidgetItem(
+                self.manager_widget.square_treewidget, info_str_list
+            )
+            square_treewidget_item.setSelected(True)
+            self.__square_map[shape] = square_treewidget_item
 
     def shape_deleted(self, shape, shape_type):
         if self.__shape_map.get(shape):
@@ -208,6 +219,12 @@ class GraphicsManagerBrick(BaseWidget):
                 )
                 self.__grid_map.pop(shape)
                 self.manager_widget.grid_treewidget.takeTopLevelItem(item_index)
+            elif shape_type == "Square":
+                item_index = self.manager_widget.square_treewidget.indexOfTopLevelItem(
+                    self.__square_map[shape]
+                )
+                self.__square_map.pop(shape)
+                self.manager_widget.square_treewidget.takeTopLevelItem(item_index)
         self.toggle_buttons_enabled()
 
     def shape_selected(self, shape, selected_state):
@@ -222,6 +239,8 @@ class GraphicsManagerBrick(BaseWidget):
                 self.__line_map[shape].setSelected(selected_state)
             if self.__grid_map.get(shape):
                 self.__grid_map[shape].setSelected(selected_state)
+            if self.__square_map.get(shape):
+                self.__square_map[shape].setSelected(selected_state)
             self.manager_widget.change_color_button.setEnabled(
                 bool(HWR.beamline.sample_view.get_selected_shapes())
             )
@@ -289,6 +308,7 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.display_points_cbox.setEnabled(len(self.__shape_map) > 0)
         self.manager_widget.display_lines_cbox.setEnabled(len(self.__shape_map) > 0)
         self.manager_widget.display_grids_cbox.setEnabled(len(self.__shape_map) > 0)
+        self.manager_widget.display_square_roi_cbox.setEnabled(len(self.__shape_map) > 0)
 
         self.manager_widget.display_all_button.setEnabled(len(self.__shape_map) > 0)
         self.manager_widget.hide_all_button.setEnabled(len(self.__shape_map) > 0)
