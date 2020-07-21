@@ -118,6 +118,10 @@ class GraphicsManagerBrick(BaseWidget):
             self.grid_move_down_clicked
         )
 
+        self.manager_widget.create_square_button.clicked.connect(
+            self.create_square_clicked
+        )
+
         # SizePolicies --------------------------------------------------------
 
         # Other ---------------------------------------------------------------
@@ -184,9 +188,6 @@ class GraphicsManagerBrick(BaseWidget):
             grid_treewidget_item.setSelected(True)
             self.__grid_map[shape] = grid_treewidget_item
         elif shape_type == "Square":
-            (start_index, end_index) = shape.get_points_index()
-            info_str_list.append("Square %d" % start_index)
-            info_str_list.append("Square %d" % end_index)
             self.manager_widget.square_treewidget.clearSelection()
             square_treewidget_item = QtImport.QTreeWidgetItem(
                 self.manager_widget.square_treewidget, info_str_list
@@ -291,6 +292,9 @@ class GraphicsManagerBrick(BaseWidget):
 
     def draw_grid_button_clicked(self):
         HWR.beamline.sample_view.create_grid(self.get_spacing())
+    
+    def create_square_clicked(self):
+        HWR.beamline.sample_view.create_square_roi()
 
     def show_shape_treewidget_popup(self, item, point, col):
         QtImport.QMenu(self.manager_widget.shapes_treewidget)
