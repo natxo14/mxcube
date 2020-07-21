@@ -221,7 +221,8 @@ if (qt_variant == "PyQt5") or (qt_variant is None and not qt_imported):
             QPixmap,
             QPolygon,
             QRegExpValidator,
-            QValidator
+            QValidator,
+            QImageWriter
         )
         from PyQt5.uic import loadUi
 

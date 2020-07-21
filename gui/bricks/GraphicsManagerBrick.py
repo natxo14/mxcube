@@ -127,8 +127,8 @@ class GraphicsManagerBrick(BaseWidget):
         # Other ---------------------------------------------------------------
         # by default manager is closed
         self.main_groupbox.setCheckable(True)
-        self.main_groupbox.setChecked(False)
-        self.main_groupbox_toggled(False)
+        self.main_groupbox.setChecked(True)
+        self.main_groupbox_toggled(True)
         self.main_groupbox.setToolTip("Click to open/close item manager")
 
         self.connect(HWR.beamline.sample_view, "shapeCreated", self.shape_created)
@@ -229,7 +229,9 @@ class GraphicsManagerBrick(BaseWidget):
         self.toggle_buttons_enabled()
 
     def shape_selected(self, shape, selected_state):
+        print(f"GRPHICMANAGERBRICK shape_selected type(shape) {type(shape)} selected_state {selected_state}")
         if shape in self.__shape_map:
+            print(f"GRPHICMANAGERBRICK shape_selected shape in self.__shape_map:")
             self.__shape_map[shape].setData(
                 4, QtImport.Qt.DisplayRole, str(selected_state)
             )

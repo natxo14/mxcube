@@ -18,6 +18,7 @@
 #  along with MXCuBE.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+from os.path import expanduser
 from gui.utils import Icons, QtImport
 from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
@@ -44,6 +45,8 @@ class CameraBrick(BaseWidget):
         self.display_beam = None
         self.display_scale = None
         self.image_scale_list = []
+        self.snapshot_file_prefix = "snapshot"
+        self.snapshot_file_index = 0
 
         # Properties ----------------------------------------------------------
         self.add_property("mnemonic", "string", "/graphics")
@@ -55,12 +58,17 @@ class CameraBrick(BaseWidget):
         self.add_property("cameraControls", "boolean", False)
 
         # Graphic elements-----------------------------------------------------
+        self.toolbar = QtImport.QToolBar(self)
         self.info_widget = QtImport.QWidget(self)
         self.display_beam_size_cbox = QtImport.QCheckBox("Display beam size", self)
         self.display_beam_size_cbox.setHidden(False)
         self.coord_label = QtImport.QLabel(":", self)
         self.info_label = QtImport.QLabel(self)
         self.camera_control_dialog = CameraControlDialog(self)
+
+        # populate QMenu and QToolBar
+        tmp_menu = QtImport.QMenu(self.toolbar)
+        tmp_menu.setIcon(Icons.load_icon("Draw"))
 
         self.popup_menu = QtImport.QMenu(self)
         self.popup_menu.menuAction().setIconVisibleInMenu(True)
@@ -69,23 +77,32 @@ class CameraBrick(BaseWidget):
 
         temp_action = create_menu.addAction(
             Icons.load_icon("VCRPlay2"),
-            "Centring point with N clicks",
+            "Centring with N points",
             self.create_point_click_clicked,
         )
         temp_action.setShortcut("Ctrl+1")
+
+        tmp_menu.addAction(temp_action)
+
         temp_action = create_menu.addAction(
             Icons.load_icon("ThumbUp"),
-            "Centring point on current position",
+            "Centring point on beam position",
             self.create_point_current_clicked,
         )
         temp_action.setShortcut("Ctrl+2")
-        temp_action.setIcon(Icons.load_icon("ThumbUp"))
-        create_menu.addAction(
+
+        tmp_menu.addAction(temp_action)
+        
+        # in double temp_action.setIcon(Icons.load_icon("ThumbUp"))
+
+        temp_action = create_menu.addAction(
             Icons.load_icon("ThumbUp"),
             "Centring points with one click",
             self.create_points_one_click_clicked,
         )
 
+        tmp_menu.addAction(temp_action)
+        
         temp_action = create_menu.addAction(
             Icons.load_icon("Line.png"), "Helical line", self.create_line_clicked
         )
@@ -103,11 +120,23 @@ class CameraBrick(BaseWidget):
             Icons.load_icon("AutoGrid"), "Auto Grid", self.create_auto_grid
         )
 
+        temp_action = QtImport.QAction(
+            Icons.load_icon("square"), "Square ROI", tmp_menu
+        )
+        temp_action.triggered.connect(self.create_square_roi)
+
+        tmp_menu.addAction(temp_action)
+
+        self.toolbar.addAction(tmp_menu.menuAction())
+
         temp_action = self.popup_menu.addAction(
             Icons.load_icon("movetopos"),
-            "Move point to image center",
+            "Move point to beam",
             self.move_center_to_clicked_point,
         )
+        temp_action.setCheckable(True)
+        
+        self.toolbar.addAction(temp_action)
 
         measure_menu = self.popup_menu.addMenu("Measure")
         self.measure_distance_action = measure_menu.addAction(
@@ -122,6 +151,8 @@ class CameraBrick(BaseWidget):
             Icons.load_icon("measure_area"), "Area", self.measure_area_clicked
         )
 
+        self.toolbar.addAction(measure_menu.menuAction())
+
         beam_mark_menu = self.popup_menu.addMenu("Beam mark")
         self.move_beam_mark_manual_action = beam_mark_menu.addAction(
             "Set position manually", self.move_beam_mark_manual
@@ -135,6 +166,8 @@ class CameraBrick(BaseWidget):
             "Display size", self.display_beam_size_toggled
         )
         self.display_beam_size_action.setCheckable(True)
+
+        self.toolbar.addAction(beam_mark_menu.menuAction())
 
         self.define_beam_action = self.popup_menu.addAction(
             Icons.load_icon("Draw"),
@@ -174,6 +207,9 @@ class CameraBrick(BaseWidget):
             "Magnification tool",
             self.start_magnification_tool,
         )
+
+        self.toolbar.addAction(tools_menu.menuAction())
+
         # self.magnification_action.setCheckable(True)
 
         # self.display_histogram_action = self.popup_menu.addAction(\
@@ -189,6 +225,44 @@ class CameraBrick(BaseWidget):
         )
         self.image_scale_menu.setEnabled(False)
         self.image_scale_menu.triggered.connect(self.image_scale_triggered)
+        
+        self.toolbar.addAction(self.image_scale_menu.menuAction())
+
+        temp_action = QtImport.QAction(
+            Icons.load_icon("Camera"), "Snapshot", self.toolbar
+        )
+        temp_action.triggered.connect(self.save_snapshot_clicked)
+
+        self.toolbar.addAction(temp_action)
+
+        self.toolbar.addSeparator()
+
+        set_visible_mode_action = QtImport.QAction(
+            "Visible", self.toolbar
+        )
+        set_visible_mode_action.setCheckable(True)
+        set_visible_mode_action.triggered.connect(self.set_visible_mode)
+        self.toolbar.addAction(set_visible_mode_action)
+
+        set_signal_mode_action = QtImport.QAction(
+            "Signal", self.toolbar
+        )
+        set_signal_mode_action.setCheckable(True)
+        set_signal_mode_action.triggered.connect(self.set_signal_mode)
+        self.toolbar.addAction(set_signal_mode_action)
+
+        set_bkg_mode_action = QtImport.QAction(
+            "Background", self.toolbar
+        )
+        set_bkg_mode_action.setCheckable(True)
+        set_bkg_mode_action.triggered.connect(self.set_background_mode)
+        self.toolbar.addAction(set_bkg_mode_action)
+
+        mode_action_group = QtImport.QActionGroup(self.toolbar)
+        mode_action_group.addAction(set_visible_mode_action)
+        mode_action_group.addAction(set_signal_mode_action)
+        mode_action_group.addAction(set_bkg_mode_action)
+
         self.camera_control_action = self.popup_menu.addAction(
             "Camera control", self.open_camera_control_dialog
         )
@@ -205,8 +279,8 @@ class CameraBrick(BaseWidget):
         self.info_widget.setLayout(_info_widget_hlayout)
 
         self.main_layout = QtImport.QVBoxLayout(self)
-        self.main_layout.setSpacing(0)
-        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        #self.main_layout.setSpacing(0)
+        #self.main_layout.setContentsMargins(0, 0, 0, 0)
 
         # Qt signal/slot connections -----------------------------------------
         self.display_beam_size_cbox.stateChanged.connect(self.display_beam_size_toggled)
@@ -218,6 +292,8 @@ class CameraBrick(BaseWidget):
 
         # Scene elements ------------------------------------------------------
         self.setMouseTracking(True)
+        self.main_layout.addWidget(self.toolbar)
+                
 
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "mnemonic":
@@ -383,6 +459,9 @@ class CameraBrick(BaseWidget):
 
     def create_auto_grid(self):
         self.graphics_manager_hwobj.create_auto_grid()
+    
+    def create_square_roi(self):
+        self.graphics_manager_hwobj.create_square_roi()
 
     def move_beam_mark_manual(self):
         self.graphics_manager_hwobj.start_move_beam_mark()
@@ -422,6 +501,42 @@ class CameraBrick(BaseWidget):
         self.graphics_manager_hwobj.display_radiation_damage(
             self.display_radiation_damage_action.isChecked()
         )
+    
+    def save_snapshot_clicked(self):
+        formats = [
+            "*.%s" % str(image_format).lower()
+            for image_format in QtImport.QImageWriter.supportedImageFormats()
+        ]
+
+        current_file_name = "%s/%s_%d.%s" % (
+            expanduser("~"),
+            self.snapshot_file_prefix,
+            self.snapshot_file_index,
+            "png",
+        )
+        filename, _filter = QtImport.QFileDialog.getSaveFileName(
+                self,
+                "Choose a filename to save under",
+                current_file_name,
+                "Image files (%s)" % " ".join(formats),
+            )
+        
+        if filename:
+            try:
+                self.graphics_manager_hwobj.save_scene_snapshot(filename)
+                self.snapshot_file_index += 1
+            except BaseException:
+                logging.getLogger().exception("CameraBrick: error saving snapshot!")
+
+    def set_visible_mode(self, checked=False):
+        
+        pass
+
+    def set_signal_mode(self, checked=False):
+        pass
+
+    def set_background_mode(self, checked=False):
+        pass
 
 
 class CameraControlDialog(QtImport.QDialog):
@@ -712,3 +827,67 @@ class CameraControlDialog(QtImport.QDialog):
         value = self.graphics_manager_hwobj.camera.get_exposure_time()
         self.exposure_time_slider.setValue(value)
         self.exposure_time_doublespinbox.setValue(value)
+
+
+# TODO : import from HutchMenuBrick ??
+class MonoStateButton(QtImport.QToolButton):
+    def __init__(self, parent, caption=None, icon=None):
+
+        QtImport.QToolButton.__init__(self, parent)
+        self.setSizePolicy(QtImport.QSizePolicy.Expanding, QtImport.QSizePolicy.Fixed)
+        self.setToolButtonStyle(QtImport.Qt.ToolButtonTextUnderIcon)
+        if caption:
+            self.setText(caption)
+            self.setWindowIconText(caption)
+        if icon:
+            self.setIcon(Icons.load_icon(icon))
+
+
+class DuoStateButton(QtImport.QToolButton):
+
+    commandExecuteSignal = QtImport.pyqtSignal(bool)
+
+    def __init__(self, parent, caption):
+        QtImport.QToolButton.__init__(self, parent)
+
+        self.setToolButtonStyle(QtImport.Qt.ToolButtonTextUnderIcon)
+        self.executing = False
+        self.run_icon = None
+        self.stop_icon = None
+        self.standard_color = self.palette().color(QtImport.QPalette.Window)
+        self.setText(caption)
+        self.setSizePolicy(QtImport.QSizePolicy.Expanding, QtImport.QSizePolicy.Fixed)
+        self.clicked.connect(self.button_clicked)
+
+    def set_icons(self, icon_run, icon_stop):
+        self.run_icon = Icons.load_icon(icon_run)
+        self.stop_icon = Icons.load_icon(icon_stop)
+        if self.executing:
+            self.setIcon(self.stop_icon)
+        else:
+            self.setIcon(self.run_icon)
+
+    def button_clicked(self):
+        self.commandExecuteSignal.emit(not self.executing)
+        # if not self.executing:
+        #    self.setEnabled(False)
+
+    def command_started(self):
+        Colors.set_widget_color(self, Colors.LIGHT_YELLOW, QtImport.QPalette.Button)
+        if self.stop_icon is not None:
+            self.setIcon(self.stop_icon)
+        self.executing = True
+        self.setEnabled(True)
+
+    def is_executing(self):
+        return self.executing
+
+    def command_done(self):
+        self.executing = False
+        Colors.set_widget_color(self, self.standard_color, QtImport.QPalette.Button)
+        if self.run_icon is not None:
+            self.setIcon(self.run_icon)
+        self.setEnabled(True)
+
+    def command_failed(self):
+        self.command_done()

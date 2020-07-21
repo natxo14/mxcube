@@ -731,6 +731,38 @@ def set_beam_info(self, beam_info):
 ####################################
 
 
+############################################
+#### COORDINATES <=> MOTORS POSITIONS ######
+############################################
+
+
+def get_centred_point_from_coord(self, x, y, return_by_names=None):
+"""
+Input: point to be 'centered', to be moved to beam_pos
+Output: dict with motors (name/pos) with motors positions to move
+input point to beam_pos
+
+It is expected in start_move_to_beam and move_to_beam methods in
+GenericDIffractometer HwObj.
+"""
+
+def motor_positions_to_screen(self, centred_positions_dict):
+"""
+Convert motor positions contained in a dictionary to screen (canvas) positions.
+@centered_positions_dict: dictionary to be converted
+
+centered_positions_dict is different from current motor's positions
+It uses beam_position to recalculate x,y point
+
+used by QtGraphicsManager
+def create_centring_point() : centring_status/centred_positions_dict coming from get_centred_point_from_coord()
+
+def diffractometer_state_changed() to redraw
+points and lines when motors moved
+@return: position
+"""
+
+
 ####################################
 #### CENTRING ########
 ####################################

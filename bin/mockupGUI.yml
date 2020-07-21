@@ -9,7 +9,7 @@
         - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: 0,
           type: boolean, value: 0}
         - {comment: '', default_value: 0, hidden: false, name: cameraControls, old_value: 0,
-          type: boolean, value: 0}
+          type: boolean, value: 1}
         - {comment: '', default_value: 1, hidden: false, name: displayBeam, old_value: 1,
           type: boolean, value: 1}
         - {comment: '', default_value: 1, hidden: false, name: displayOmegaAxis, old_value: 1,
@@ -102,30 +102,30 @@
         connections: []
         name: HutchMenuBrick0
         properties:
-        - {comment: '', default_value: 1, hidden: false, name: enableAutoCenter, old_value: null,
+        - {comment: '', default_value: 1, hidden: false, name: enableAutoCenter, old_value: 1,
           type: boolean, value: 1}
-        - {comment: '', default_value: 1, hidden: false, name: enableAutoFocus, old_value: null,
+        - {comment: '', default_value: 1, hidden: false, name: enableAutoFocus, old_value: 1,
           type: boolean, value: 1}
         - {comment: '', default_value: 0, hidden: false, name: enableRealignBeam,
-          old_value: null, type: boolean, value: 0}
+          old_value: 0, type: boolean, value: 0}
         - {comment: '', default_value: 0, hidden: false, name: enableRefreshCamera,
-          old_value: null, type: boolean, value: 0}
+          old_value: 0, type: boolean, value: 0}
         - {comment: '', default_value: 1, hidden: false, name: enableVisualAlign,
-          old_value: null, type: boolean, value: 1}
+          old_value: 1, type: boolean, value: 1}
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
-          name: fixedHeight, old_value: null, type: integer, value: -1}
+          name: fixedHeight, old_value: -1, type: integer, value: -1}
         - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-          old_value: null, type: integer, value: -1}
-        - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: null,
+          old_value: -1, type: integer, value: -1}
+        - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
           type: string, value: '9'}
         - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
-          name: frame, old_value: null, type: boolean, value: 0}
-        - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: null,
+          name: frame, old_value: 0, type: boolean, value: 0}
+        - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
           type: boolean, value: 0}
         - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
-          name: instanceAllowAlways, old_value: null, type: boolean, value: 0}
+          name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
         - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
-          name: instanceAllowConnected, old_value: null, type: boolean, value: 0}
+          name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
         type: HutchMenuBrick
       connections: []
       name: hsplitter0
