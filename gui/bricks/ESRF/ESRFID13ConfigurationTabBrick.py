@@ -21,13 +21,16 @@ ESRF ID13 ConfigurationTab
 
 [Description]
 
-This brick displays configuation information related to ID13 EH2 beamline at ESRF.
+This brick displays configuation information related to ID13 EH2/EH3 beamlines at ESRF.
 It displays information from:
-* xml file ( at origin, called multiple-positions ).
-    For each zoom motor position, user can see and edit:
+* xml file ( at origin, called multiple-positions )
+
+    * For each zoom motor position, user can see and edit:
         * Beam position values
         * Camera calibration ( nm / pixel )
         * ligth emiting device value
+    * A list of editable 'tags' of different 'operation mode' (ex: signal, background, empty)
+        this operation mode will be lately used by ESRFDataExportBrick to tag exported data
 
 * Bliss/ESRF data policy : data saving paths of current experiment
 
@@ -37,24 +40,27 @@ xml file
 
 [Signals]
 
-data_edited - emitted when any of the data has been edited (not yet saved)
+graphic_data_edited - emitted when any of the data has been edited (not yet saved)
+params : freshly edited graphic data as dict
 
 TODO: maybe split in beam_position_changed / calibration_changed ??
 
-data_saved - emitted when data is saved in xml file
+graphic_data_saved - emitted when data is saved in xml file
+
+operation_modes_edited - emitted when operation mode list edited (not yet saved)
+
+operation_modes_saved - emitted when operation mode list is saved in xml file
 
 [Slots]
 
-getBeamPosition - position["ybeam"] - When a client want to know the current
-                  position["zbeam"]   beam position, it can connect a signal
-                                      to this slot. At return of its emit call
-                                      the dictionnary passed as argument will
-                                      be filled with the current beam position
-
-beamPositionChanged - ybeam, zbeam - slot which should be connected to all
+beamPositionChanged - y_beam, z_beam, zoom_pos 
+                                    - slot which should be connected to all
                                      client able to change beam position.
-                                     Display numerically and save the new
-                                     beam positions.
+                                     
+calibration_changed - y_res, z_res, zoom_pos 
+                                    - slot which should be connected to all
+                                     client able to change calibration.
+                                     
 
 setBrickEnabled - isEnabled - slot to call to disable the brick (expert mode for example).
 
@@ -85,6 +91,12 @@ __license__ = "LGPLv3+"
 __category__ = "ESRF"
 
 class ESRFID13ConfigurationTabBrick(BaseWidget):
+ 
+    graphic_data_edited = QtImport.pyqtSignal(dict)
+    graphic_data_saved = QtImport.pyqtSignal()
+    operation_modes_edited = QtImport.pyqtSignal(list)
+    operation_modes_saved = QtImport.pyqtSignal()
+    
     def __init__(self, *args):
 
         BaseWidget.__init__(self, *args)
@@ -99,6 +111,8 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         #                      "ligth" : val,
         #                     },
         #}
+
+        self.list_of_operational_modes = []
 
         self.current_beam_position = None
         self.current_zoom_pos_name = None
@@ -115,8 +129,11 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         self.add_property("configfile", "string", "/multiple-positions")
         
         # Signals ------------------------------------------------------------
-        self.define_signal("data_edited", ())
-        self.define_signal("data_saved", ())
+        self.define_signal("graphic_data_edited", ())
+        self.define_signal("graphic_data_saved", ())
+
+        self.define_signal("operation_modes_edited", ())
+        self.define_signal("operation_modes_saved", ())
         
         # Slots ---------------------------------------------------------------
         self.define_slot("getBeamPosition", ())
@@ -172,6 +189,23 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         self.ui_widgets_manager.configuration_table.itemChanged.connect(
             self.configuration_table_item_changed
         )
+
+        self.ui_widgets_manager.add_label_button.clicked.connect(
+            self.add_op_mode_to_list
+        )
+
+        self.ui_widgets_manager.delete_label_button.clicked.connect(
+            self.delete_op_mode_from_list
+        )
+
+        self.ui_widgets_manager.save_labels_button.clicked.connect(
+            self.save_op_mode_list
+        )
+
+        self.ui_widgets_manager.label_list.currentRowChanged.connect(
+            self.label_list_selection_changed
+        )
+
 
         # Other hardware object connections --------------------------
         if HWR.beamline.beam is not None:
@@ -229,16 +263,39 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             else:
                 cal_y = 0
             
+            if pos.find("light") is not None:
+                light_val = self.from_text_to_int(pos.find("light").text, 1e9)
+            else:
+                light_val = 0
+            
             dict_elem = {"pos_x" : pos_x,
                         "pos_y" : pos_y,
                         "cal_x" : cal_x,
                         "cal_y" : cal_y,
-                        "light" : int(pos.find('light').text),
+                        "light" : light_val,
             }
             output_dict[pos.find('name').text] = dict_elem
             
         self.zoom_positions_dict = copy.deepcopy(output_dict)
-    
+
+    def load_list_of_operational_modes(self):
+        """
+        Parse xml file and load list of operational modes :
+
+        'tag0', 'tag1', ...
+        """
+        xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
+
+        xml_tree = xml_file_tree.getroot()
+        mode_list = []
+        if xml_tree.find("operational_modes") is not None:
+            #print(f"xml_tree.find(operational_modes) is not None:")
+            mode_list = xml_tree.find("operational_modes").text
+
+        #print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
+        self.list_of_operational_modes = eval(mode_list)
+        #print(f"list_of_operational_modes :mode_list {self.list_of_operational_modes} - {type(self.list_of_operational_modes)} - {type(self.list_of_operational_modes[0])}")
+        
     def from_text_to_int(self, input_str, factor=1):
         if input_str is None:
             return 0
@@ -255,11 +312,19 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 new_value + ".xml")
             print(f"################ CONFIGTABBRICK property_changed - new full path {self.multipos_file_xml_path}")
             self.load_zoom_positions_dict()
+            self.load_list_of_operational_modes()
             
             self.init_interface()
 
         else:
             BaseWidget.property_changed(self, property_name, old_value, new_value)
+
+    def fill_op_modes_list(self):
+        if self.list_of_operational_modes is not None:
+            self.ui_widgets_manager.label_list.clear()
+
+            for tag_text in self.list_of_operational_modes:
+                self.ui_widgets_manager.label_list.addItem(tag_text)
 
 
     def fill_config_table(self):
@@ -300,6 +365,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         Fill table and combobox and make them functional
         """
         self.fill_config_table()
+        self.fill_op_modes_list()
         self.load_sessions()
         self.display_data_policy()
 
@@ -369,19 +435,100 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             beam_x_y (tuple): Position (x, y) [pixel]
         """
         #update current_zoom_idx
-        self.current_zoom_idx = self.get_zoom_index(self.multipos_motor_hwobj.get_value())
-        print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name} - current_zoom_idx : {self.current_zoom_idx}")
-        self.current_beam_position = beam_x_y
+        self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
+        conf_table = self.ui_widgets_manager.configuration_table
 
+        self.current_zoom_idx = -1
+        for index in range (conf_table.rowCount()):
+            if self.current_zoom_pos_name == conf_table.item(index, 0).text():
+                self.current_zoom_idx = index
+
+        if self.current_zoom_idx == -1:
+            print(f"################ cameraBeamBrick beam_position_changed ERROR!!! ZOOM POSITION NAME NOT IDENTIFIED!!!")
+            return
+        
+        print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name} - {index}")
+        self.current_beam_position = beam_x_y
+        
         self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 1).setText(str(int(beam_x_y[0])))
         self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 2).setText(str(int(beam_x_y[1])))
+
+        self.zoom_positions_dict[self.current_zoom_pos_name]["pos_x"] = self.current_beam_position[0]
+        self.zoom_positions_dict[self.current_zoom_pos_name]["pos_y"] = self.current_beam_position[1]
+
+        self.graphic_data_edited.emit(self.zoom_positions_dict)
+   
+    def save_op_mode_list(self):
+        """
+        Save data to xml file
+        Clean cell background
+        """
+        xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
+        xml_tree = xml_file_tree.getroot()
+                
+        xml_tree.find("operational_modes").text = str(self.list_of_operational_modes)
+
+        xml_file_tree.write(self.multipos_file_xml_path)
+
+        self.operation_modes_saved.emit()
+    
+    def add_op_mode_to_list(self):
+        """
+        add lable to list
+        and to self.list_of_operational_modes
+        Data not saved yet
+        """
+        new_label = self.ui_widgets_manager.new_label_edit.text()
+        new_label = new_label.replace(" ", "")
+
+        if not new_label:
+            return
+        # check if label already exist
+        if new_label not in self.list_of_operational_modes:
+            self.list_of_operational_modes.append(new_label)
+            self.ui_widgets_manager.label_list.addItem(new_label)
+            #select newly added item
+            self.ui_widgets_manager.label_list.setCurrentRow(
+                self.ui_widgets_manager.label_list.count() - 1
+            )
+            self.operation_modes_edited.emit(self.list_of_operational_modes)
         
+    def delete_op_mode_from_list(self):
+        """
+        delete lable from list
+        detele from self.list_of_operational_modes
+        changes not saved yet
+        """
+        label_to_delete = self.ui_widgets_manager.new_label_edit.text()
+        label_to_delete = label_to_delete.replace(" ", "")
+
+        if not label_to_delete:
+            return
+
+        if label_to_delete not in self.list_of_operational_modes:
+            return
+        else:
+            index = self.list_of_operational_modes.index(label_to_delete)
+            self.ui_widgets_manager.label_list.takeItem(index)
+            self.list_of_operational_modes.remove(label_to_delete)
+            #select first item
+            if self.list_of_operational_modes:
+                self.ui_widgets_manager.label_list.setCurrentRow(0)
+            self.operation_modes_edited.emit(self.list_of_operational_modes)
+
+    def label_list_selection_changed(self, selected_row):
+        
+        if selected_row != -1:
+            selected_item = self.ui_widgets_manager.label_list.item(selected_row)
+            self.ui_widgets_manager.new_label_edit.setText(
+                selected_item.text()
+            )
+
     def save_table_changes(self):
         """
         Save data to xml file
         Clean cell background
         """
-
         table = self.ui_widgets_manager.configuration_table
 
         #open xml file
@@ -424,6 +571,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 self.configuration_table_item_changed
             )
 
+        self.graphic_data_saved.emit()
     
     def validate_cell_value(self, input_val):
         """
@@ -451,5 +599,4 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         """
         #table = self.ui_widgets_manager.findChild(QtI
         # mport.QTableWidget, "aligment_table")
-        self.ui_widgets_manager.configuration_table.clearContents()
-            
+        self.ui_widgets_manager.configuration_table.clearContents()        

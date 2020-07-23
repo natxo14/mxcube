@@ -269,6 +269,32 @@ Debug + PyQt
 
 
 ##########################
+SIGNAL/SLOTS BRICKS <=> HWROBJECTS
+##########################
+
+Ex: MotorSpinBoxBrick
+if self.motor_hwobj is not None:
+            self.connect(self.motor_hwobj, "limitsChanged", self.limits_changed)
+            self.connect(
+                self.motor_hwobj,
+                "valueChanged",
+                self.position_changed,
+                instance_filter=True,
+            )
+self.connect comes from
+
+class BaseWidget(Connectable.Connectable, QtImport.QFrame):
+
+def __init__(self, parent=None, widget_name=""):
+    self.connect = self.connect_hwobj
+    self.disconnect = self.disconnect_hwobj
+def connect_hwobj(
+        self, sender, signal, slot, instance_filter=False, should_cache=True
+    ):
+
+
+
+##########################
 MXCuBE <=> BLISS SIGNAL/SLOTS
 ##########################
 
@@ -288,9 +314,9 @@ class HardwareObjectMixin(CommandContainer):
 And dispatcher is part of 'Louie', that is also part of Bliss
 MXCuBE and BLISS Share the same signal/slot system
 
-#############
-MXCuBE IDE SIGNAL/SLOTS
-#############
+#######################################
+MXCuBE IDE SIGNAL/SLOTS : SIGNAL/SLOTS IN GUI CREATOR IDE
+#######################################
  in class Connectable
  def define_signal
  def define_slot
@@ -307,6 +333,11 @@ MXCuBE IDE SIGNAL/SLOTS
         self.define_slot("tabSelected", ())
 Then, this signal/slots are displayed in GUI signal/slot edition
 
+BUT!! Signals have to be declared as pyqt signals:
+
+    incoming_unread_messages = QtImport.pyqtSignal(int, bool)
+    reset_unread_messages = QtImport.pyqtSignal(bool)
+    
 #############
  YML FILES AS GUI FILES
  #############

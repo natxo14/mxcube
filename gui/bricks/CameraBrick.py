@@ -235,34 +235,6 @@ class CameraBrick(BaseWidget):
 
         self.toolbar.addAction(temp_action)
 
-        self.toolbar.addSeparator()
-
-        set_visible_mode_action = QtImport.QAction(
-            "Visible", self.toolbar
-        )
-        set_visible_mode_action.setCheckable(True)
-        set_visible_mode_action.triggered.connect(self.set_visible_mode)
-        self.toolbar.addAction(set_visible_mode_action)
-
-        set_signal_mode_action = QtImport.QAction(
-            "Signal", self.toolbar
-        )
-        set_signal_mode_action.setCheckable(True)
-        set_signal_mode_action.triggered.connect(self.set_signal_mode)
-        self.toolbar.addAction(set_signal_mode_action)
-
-        set_bkg_mode_action = QtImport.QAction(
-            "Background", self.toolbar
-        )
-        set_bkg_mode_action.setCheckable(True)
-        set_bkg_mode_action.triggered.connect(self.set_background_mode)
-        self.toolbar.addAction(set_bkg_mode_action)
-
-        mode_action_group = QtImport.QActionGroup(self.toolbar)
-        mode_action_group.addAction(set_visible_mode_action)
-        mode_action_group.addAction(set_signal_mode_action)
-        mode_action_group.addAction(set_bkg_mode_action)
-
         self.camera_control_action = self.popup_menu.addAction(
             "Camera control", self.open_camera_control_dialog
         )

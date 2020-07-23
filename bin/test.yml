@@ -1,24 +1,14 @@
 - children:
   - children:
-    - brick: {class: CameraBrick, name: CameraBrick0}
+    - brick: {class: ESRFID13ConfigurationTabBrick, name: ESRFID13ConfigurationTabBrick0}
       children: []
       connections: []
-      name: CameraBrick0
+      name: ESRFID13ConfigurationTabBrick0
       properties:
-      - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: 0,
-        type: boolean, value: 0}
-      - {comment: '', default_value: 0, hidden: false, name: cameraControls, old_value: 0,
-        type: boolean, value: 0}
-      - {comment: '', default_value: 1, hidden: false, name: displayBeam, old_value: 1,
-        type: boolean, value: 1}
-      - {comment: '', default_value: 1, hidden: false, name: displayOmegaAxis, old_value: 1,
-        type: boolean, value: 1}
-      - {comment: '', default_value: 1, hidden: false, name: displayScale, old_value: 1,
-        type: boolean, value: 1}
+      - {comment: '', default_value: /multiple-positions, hidden: false, name: configfile,
+        old_value: /multiple-positions, type: string, value: /multiple-positions-mockup}
       - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
         old_value: -1, type: integer, value: -1}
-      - {comment: '', default_value: '', hidden: false, name: fixedSize, old_value: '',
-        type: string, value: ''}
       - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
         old_value: -1, type: integer, value: -1}
       - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
@@ -31,14 +21,14 @@
         name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
       - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
         name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
-      - {comment: '', default_value: /graphics, hidden: false, name: mnemonic, old_value: /graphics,
-        type: string, value: /graphics}
-      type: CameraBrick
-    - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick0}
+      type: ESRFID13ConfigurationTabBrick
+    - brick: {class: ESRFDataExportBrick, name: ESRFDataExportBrick0}
       children: []
       connections: []
-      name: GraphicsManagerBrick0
+      name: ESRFDataExportBrick0
       properties:
+      - {comment: '', default_value: /multiple-positions, hidden: false, name: configfile,
+        old_value: /multiple-positions, type: string, value: /multiple-positions-mockup}
       - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
         old_value: null, type: integer, value: -1}
       - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
@@ -53,37 +43,7 @@
         name: instanceAllowAlways, old_value: null, type: boolean, value: 0}
       - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
         name: instanceAllowConnected, old_value: null, type: boolean, value: 0}
-      type: GraphicsManagerBrick
-    - brick: {class: GraphicsToolsBrick, name: GraphicsToolsBrick0}
-      children: []
-      connections: []
-      name: GraphicsToolsBrick0
-      properties:
-      - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: null,
-        type: boolean, value: 0}
-      - {comment: Set fixed height in pixels, default_value: -1, hidden: false, name: fixedHeight,
-        old_value: null, type: integer, value: -1}
-      - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-        old_value: null, type: integer, value: -1}
-      - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: null,
-        type: string, value: '9'}
-      - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
-        name: frame, old_value: null, type: boolean, value: 0}
-      - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: null,
-        type: boolean, value: 0}
-      - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
-        name: instanceAllowAlways, old_value: null, type: boolean, value: 0}
-      - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
-        name: instanceAllowConnected, old_value: null, type: boolean, value: 0}
-      - choices: [menuBar, toolBar, both]
-        comment: ''
-        default_value: menuBar
-        hidden: false
-        name: targetMenu
-        old_value: null
-        type: combo
-        value: menuBar
-      type: GraphicsToolsBrick
+      type: ESRFDataExportBrick
     connections: []
     name: vbox0
     properties:
