@@ -54,6 +54,8 @@ xml file
 
 reload_operation_mode_list : update the list of tags/checkboxes
 
+data_base_path_changed(str) - slot to be connected to ESRFID13ConfigurationTabBrick
+                             data_path_base_changed signal
 
 
 [Comments]
@@ -64,6 +66,9 @@ import sys
 import math
 import logging
 import os
+import json
+import time
+import datetime
 
 import copy
 from gui.utils import Icons, Colors, QtImport
@@ -90,6 +95,9 @@ class ESRFDataExportBrick(BaseWidget):
         self.list_of_operational_modes = []
         self.multipos_file_xml_path = None
         self.action_group = None
+        self.data_base_path = None
+        self.json_file_index = 2
+        self.json_file_name = 'id13ExportData' + "_" + str(self.json_file_index) + ".json"
 
         # Hardware objects ----------------------------------------------------
         
@@ -102,7 +110,8 @@ class ESRFDataExportBrick(BaseWidget):
         
         # Slots ---------------------------------------------------------------
         self.define_slot("reload_operation_mode_list", ())
-
+        self.define_slot("data_base_path_changed", str)
+        
         # Graphic elements ----------------------------------------------------
         # self.main_groupbox = QtImport.QGroupBox("Data export", self)
         self.ui_widgets_manager = QtImport.load_ui_file("data_export_widget.ui")
@@ -184,6 +193,31 @@ class ESRFDataExportBrick(BaseWidget):
             
             groupbox.setLayout(groupbox_layout)
 
+            self.ui_widgets_manager.data_path_base_label.setText(
+                self.data_base_path
+            )
+            self.ui_widgets_manager.file_index_label.setText(
+                self.json_file_index
+            )
+
+    def create_export_data(self):
+        self.data = {}
+
+        time_in_seconds = time.time()
+        dt = datetime.fromtimestamp(time_in_seconds // 1000000000)
+        formated_time_in_msc = dt.strftime('%Y-%m-%d %H:%M:%S')
+        formated_time_in_msc += '.' + str(int(time_in_seconds % 1000000000)).zfill(9)
+
+        self.data['timestamp'] = formated_time_in_msc
+
+
+        
+    def data_base_path_changed(self, data_base_path):
+
+        self.data_base_path = data_base_path
+        self.ui_widgets_manager.data_path_base_label.setText(
+            self.data_base_path
+        )
 
     def reload_operation_mode_list(self):
         pass
@@ -216,5 +250,4 @@ class ESRFDataExportBrick(BaseWidget):
             print(f"DATAEXPORT@@@@@@@@@@@@@@@@ : mode_list : {mode_list} - {type(mode_list)} ")
             self.list_of_operational_modes = eval(mode_list)
         else:
-            print(f"DATAEXPORT@@@@@@@@@@@@@@@@ : xml_tree EMPTY")
-            
+            print(f"DATAEXPORT@@@@@@@@@@@@@@@@ : xml_tree EMPTY")          

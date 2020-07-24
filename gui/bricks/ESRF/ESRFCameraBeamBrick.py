@@ -157,11 +157,11 @@ class ESRFCameraBeamBrick(BaseWidget):
             positions = self.multipos_motor_hwobj.get_positions_names_list()
             for i, position in enumerate(positions):
             # for i,  in range(pos):
-                aux = self.multipos_motor_hwobj.get_position_key_value(position, "beamx")
+                aux = self.multipos_motor_hwobj.get_position_key_value(position, "pos_x")
                 if aux is None:
                     aux = 0
                 beam_pos_x = abs(int(aux))
-                aux = self.multipos_motor_hwobj.get_position_key_value(position, "beamy")
+                aux = self.multipos_motor_hwobj.get_position_key_value(position, "pos_y")
                 if aux is None:
                     aux = 0
                 beam_pos_y = abs(int(aux))
@@ -277,13 +277,6 @@ class ESRFCameraBeamBrick(BaseWidget):
                 'beamy',
                 self.current_beam_position[1]
                 )
-
-            # from PyQt5.QtCore import pyqtRemoveInputHook
-            # pyqtRemoveInputHook()
-            # import pdb
-            # pdb.set_trace()
-            #self.multipos_motor_hwobj.save_xml_position_key_value(current_pos, "beamx", str(self.current_beam_position[0]))
-            #self.multipos_motor_hwobj.save_xml_position_key_value(current_pos, "beamy", str(self.current_beam_position[1]))
 
             #open xml file
             xml_file_tree = cElementTree.parse(self.multipos_motor_hwobj_xml_path)

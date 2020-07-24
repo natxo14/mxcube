@@ -273,39 +273,6 @@ class ESRFCameraCalibrationBrick(BaseWidget):
                 self.ui_widgets_manager.calibration_table.setItem(i, 1, y_column_item)
                 self.ui_widgets_manager.calibration_table.setItem(i, 2, z_column_item)
 
-        # if self.multipos_motor_hwobj is not None:
-        #     positions = self.multipos_motor_hwobj.get_positions_names_list()
-        #     self.ui_widgets_manager.calibration_table.setRowCount(len(positions))
-        #     for i, position in enumerate(positions):
-        #     # for i,  in range(pos):
-        #         aux = self.multipos_motor_hwobj.get_position_key_value(position, "resox")
-        #         if aux is None:
-        #             aux = "1"
-        #         resox = abs(int(aux * 1e9))
-        #         aux = self.multipos_motor_hwobj.get_position_key_value(position, "resoy")
-        #         if aux is None:
-        #             aux = "1"
-        #         resoy = abs(int(aux * 1e9))
-                
-        #         self.calibration_dict[position] = (resox, resoy)
-
-        #         if resox is None:
-        #             resoy = "Not defined"
-        #         if resoy is None:
-        #             resoy = "Not defined"
-
-        #         """
-        #         resolution are displayed in nanometer and saved in merter
-        #         """
-                
-        #         zoom_column_item = QtImport.QTableWidgetItem(str(position))
-        #         y_column_item = QtImport.QTableWidgetItem(str(resox))
-        #         z_column_item = QtImport.QTableWidgetItem(str(resoy))
-
-        #         self.ui_widgets_manager.calibration_table.setItem(i, 0, zoom_column_item)
-        #         self.ui_widgets_manager.calibration_table.setItem(i, 1, y_column_item)
-        #         self.ui_widgets_manager.calibration_table.setItem(i, 2, z_column_item)
-
     def get_zoom_index(self, position_to_find):
         if self.multipos_motor_hwobj is not None:
             positions = self.multipos_motor_hwobj.get_positions_names_list()
@@ -341,38 +308,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
                     self.z_calib = None
                 else:
                     self.z_calib = new_calibration[1]
-
-                # aux = self.multipos_motor_hwobj.get_position_key_value(current_pos, "resox")
-                # if aux is None:
-                #     aux = "1"
-                # resoy = float(aux)
-                # aux = self.multipos_motor_hwobj.get_position_key_value(current_pos, "resoy")
-                # if aux is None:
-                #     aux = "1"
-                # resoz = float(aux)
-
-                # if resoy is None:
-                #     self.y_calib = None
-                #     resoy = "Not defined"
-                # else:
-                #     self.y_calib = resoy
-                #     resoy = str(int(resoy * 1e9))
-                
-                # if resoz is None:
-                #     self.z_calib = None
-                #     resoz = "Not defined"
-                # else:
-                #     self.z_calib = resoz
-                #     resoz = str(int(resoz * 1e9))
-                
-                # zoom_column_item = QtImport.QTableWidgetItem(str(current_pos))
-                # y_column_item = QtImport.QTableWidgetItem(resoy)
-                # z_column_item = QtImport.QTableWidgetItem(resoz)
-
-                # self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 0, zoom_column_item)
-                # self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 1, y_column_item)
-                # self.ui_widgets_manager.beam_positions_table.setItem(self.current_zoom_idx, 2, z_column_item)
-                
+                                
             else:
                 self.y_calib = None
                 self.z_calib = None
@@ -387,16 +323,6 @@ class ESRFCameraCalibrationBrick(BaseWidget):
     
     def zoom_state_changed(self):
         pass
-
-    # def save_calibration(self):
-    #     """
-    #     """
-    #     if self.multipos_motor_hwobj is not None:
-    #         current_pos = self.multipos_motor_hwobj.getPosition()
-    #         self.multipos_motor_hwobj.setPositionKeyValue(current_pos, "resox", str(self.y_calib))
-    #         self.multipos_motor_hwobj.setPositionKeyValue(current_pos, "resoy", str(self.z_calib))
-    #     else:
-    #         print(f"CameraCalibrationBrick--ARG--multipos_motor_hwobj is None")
 
     def save_new_calibration_value(self):
         """

@@ -120,6 +120,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         self.multipos_file_xml_path = None
         self.bliss_session_list = None
         self.bliss_config = static.get_config()
+        self.data_policy_base_path = None
 
         # Hardware objects ----------------------------------------------------
         
@@ -134,6 +135,8 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
 
         self.define_signal("operation_modes_edited", ())
         self.define_signal("operation_modes_saved", ())
+        self.define_signal("data_path_base_changed", ())
+        
         
         # Slots ---------------------------------------------------------------
         self.define_slot("getBeamPosition", ())
@@ -292,7 +295,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             #print(f"xml_tree.find(operational_modes) is not None:")
             mode_list = xml_tree.find("operational_modes").text
 
-        #print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
+        print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
         self.list_of_operational_modes = eval(mode_list)
         #print(f"list_of_operational_modes :mode_list {self.list_of_operational_modes} - {type(self.list_of_operational_modes)} - {type(self.list_of_operational_modes[0])}")
         
@@ -397,14 +400,22 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             try:
                 session.setup()
                 session_info_string = session.scan_saving.__info__()
+                self.data_policy_base_path = session.scan_saving.base_path
+                self.data_path_base_changed.emit(self.data_policy_base_path)
             except RuntimeError:
                 logging.getLogger("HWR").error("Exception on Bliss session setup")    
-
-            
 
             self.ui_widgets_manager.data_policy_label.setText(
                 session_info_string
             )
+    
+    def get_base_path(self):
+        """ 
+        recover data policy base path
+        """
+        return self.data_policy_base_path
+
+
     # def get_zoom_index(self, position_to_find):
     #     if self.multipos_motor_hwobj is not None:
     #         positions = self.multipos_motor_hwobj.get_positions_names_list()
@@ -430,33 +441,33 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
     #             else:
     #                 print(f"################ cameraBeamBrick zoom_changed TABLE NOT INITIALIZED")
                 
-    def beam_position_changed(self,beam_x_y):
-        """
-            beam_x_y (tuple): Position (x, y) [pixel]
-        """
-        #update current_zoom_idx
-        self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
-        conf_table = self.ui_widgets_manager.configuration_table
+    # def beam_position_changed(self,beam_x_y):
+    #     """
+    #         beam_x_y (tuple): Position (x, y) [pixel]
+    #     """
+    #     #update current_zoom_idx
+    #     self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
+    #     conf_table = self.ui_widgets_manager.configuration_table
 
-        self.current_zoom_idx = -1
-        for index in range (conf_table.rowCount()):
-            if self.current_zoom_pos_name == conf_table.item(index, 0).text():
-                self.current_zoom_idx = index
+    #     self.current_zoom_idx = -1
+    #     for index in range (conf_table.rowCount()):
+    #         if self.current_zoom_pos_name == conf_table.item(index, 0).text():
+    #             self.current_zoom_idx = index
 
-        if self.current_zoom_idx == -1:
-            print(f"################ cameraBeamBrick beam_position_changed ERROR!!! ZOOM POSITION NAME NOT IDENTIFIED!!!")
-            return
+    #     if self.current_zoom_idx == -1:
+    #         print(f"################ cameraBeamBrick beam_position_changed ERROR!!! ZOOM POSITION NAME NOT IDENTIFIED!!!")
+    #         return
         
-        print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name} - {index}")
-        self.current_beam_position = beam_x_y
+    #     print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name} - {index}")
+    #     self.current_beam_position = beam_x_y
         
-        self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 1).setText(str(int(beam_x_y[0])))
-        self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 2).setText(str(int(beam_x_y[1])))
+    #     self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 1).setText(str(int(beam_x_y[0])))
+    #     self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 2).setText(str(int(beam_x_y[1])))
 
-        self.zoom_positions_dict[self.current_zoom_pos_name]["pos_x"] = self.current_beam_position[0]
-        self.zoom_positions_dict[self.current_zoom_pos_name]["pos_y"] = self.current_beam_position[1]
+    #     self.zoom_positions_dict[self.current_zoom_pos_name]["pos_x"] = self.current_beam_position[0]
+    #     self.zoom_positions_dict[self.current_zoom_pos_name]["pos_y"] = self.current_beam_position[1]
 
-        self.graphic_data_edited.emit(self.zoom_positions_dict)
+    #     self.graphic_data_edited.emit(self.zoom_positions_dict)
    
     def save_op_mode_list(self):
         """

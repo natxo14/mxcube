@@ -797,6 +797,23 @@ points and lines when motors moved
 ####################################
 #### CENTRING ########
 ####################################
+"""
+
+ID10 and ID13 : VERTICAL SAMPLE STAGE!! NOT HORIZONTAL!!
+take this into account for translation/transformation formulas
+
+on get_centred_point_from_coord:
+(follow code in Microdiff(Mindiff.Minidiff) )
+
+The movement in the axis perpendicular to the sample stage axis is done by sampx and sampy.
+This means:
+Microdiff: horizontal stage sample =>
+movement done in vertical axis coulb be done by phiz motor. BUT it's done with sampx&sampy (whose deplacement
+must be calculated with the delta of pixels in vertical axis)
+
+"""
+
+
         HOW IT WORKS:
         input: delta rotation
 
@@ -1142,9 +1159,9 @@ Clone a bliss_dev conda env
 $ pip install opencv-python
 
 
- ###################################################
-        BLISS DATA POLICY <=> BILSS AS LIBRARY
- ###################################################
+ #################################################################
+        BLISS DATA POLICY <=> BILSS AS LIBRARY <=> TANGO DEVICE
+ #################################################################
 from https://bliss.gitlab-pages.esrf.fr/bliss/master/data_policy.html
 from https://bliss.gitlab-pages.esrf.fr/bliss/master/bliss_as_library.html
 from https://bliss.gitlab-pages.esrf.fr/bliss/master/dev_data_policy_basic.html#scan_saving
@@ -1187,7 +1204,10 @@ does not exist  filename   /tmp/scans/test_session/data.h5
 does not exist  directory  /tmp/scans/test_session
 --------------  ---------  -------------------------------
 
-
+TANGO DEVICE SERVER: METADATA DEVICE SERVER:
+Accessble through JIVE:
+Server => MetadataManager => beamlineID => MetadataManager +> /session_name
+Device +> beamlineID => metadata => session_name => right click 'Test Device'
 
         
 ###### TEMP ###############
