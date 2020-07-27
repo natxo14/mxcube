@@ -56,6 +56,11 @@
            <string>Light Value</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>Zoom</string>
+          </property>
+         </column>
         </widget>
        </item>
        <item>

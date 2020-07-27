@@ -28,9 +28,15 @@ It displays information from:
     * For each zoom motor position, user can see and edit:
         * Beam position values
         * Camera calibration ( nm / pixel )
-        * ligth emiting device value
+        * light emiting device value
+IMPORTANT!! : this data is delivered by the MultiplePositions HWRObject:
+this object handles (load/edit/save) and delivers to different bricks to be displayed/edited like
+CameraBeamBrick / CameraBeamBrick
+
     * A list of editable 'tags' of different 'operation mode' (ex: signal, background, empty)
-        this operation mode will be lately used by ESRFDataExportBrick to tag exported data
+        this operation mode will be lately used by ESRFDataExportBrick to tag exported data.
+
+
 
 * Bliss/ESRF data policy : data saving paths of current experiment
 
@@ -45,13 +51,15 @@ params : freshly edited graphic data as dict
 
 TODO: maybe split in beam_position_changed / calibration_changed ??
 
-graphic_data_saved - emitted when data is saved in xml file
+TO BE DELETED: graphic_data_saved - emitted when data is saved in xml file
 
 operation_modes_edited - emitted when operation mode list edited (not yet saved)
 
 operation_modes_saved - emitted when operation mode list is saved in xml file
 
 [Slots]
+
+beam_cal_pos_data_changed - connected to MultiplePositions hwr_object
 
 beamPositionChanged - y_beam, z_beam, zoom_pos 
                                     - slot which should be connected to all
@@ -96,6 +104,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
     graphic_data_saved = QtImport.pyqtSignal()
     operation_modes_edited = QtImport.pyqtSignal(list)
     operation_modes_saved = QtImport.pyqtSignal()
+    data_path_base_changed = QtImport.pyqtSignal(str)
     
     def __init__(self, *args):
 
@@ -103,20 +112,22 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
 
         # variables -----------------------------------------------------------
 
-        self.zoom_positions_dict = {}
-        #{ "position_name" : { "pos_x" : val, int - pixels
-        #                      "pos_y" : val, int - pixels
+        #self.zoom_positions_dict = {}
+        #{ "position_name" : { "beam_pos_x" : val, int - pixels
+        #                      "beam_pos_y" : val, int - pixels
         #                      "cal_x" : val, int - nm
         #                      "cal_y" : val, int - nm
-        #                      "ligth" : val,
+        #                      "light" : val,
         #                     },
         #}
 
+        self.multipos_hwobj = None
+
         self.list_of_operational_modes = []
 
-        self.current_beam_position = None
-        self.current_zoom_pos_name = None
-        self.current_zoom_idx = -1
+        #self.current_beam_position = None
+        #self.current_zoom_pos_name = None
+        #self.current_zoom_idx = -1
         self.multipos_file_xml_path = None
         self.bliss_session_list = None
         self.bliss_config = static.get_config()
@@ -125,9 +136,11 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         # Hardware objects ----------------------------------------------------
         
         # Internal values -----------------------------------------------------
-        
+        self.table_created = False
+
         # Properties ----------------------------------------------------------
-        self.add_property("configfile", "string", "/multiple-positions")
+        # self.add_property("configfile", "string", "/multiple-positions")
+        self.add_property("mnemonic", "string", "/multiple-positions")
         
         # Signals ------------------------------------------------------------
         self.define_signal("graphic_data_edited", ())
@@ -182,7 +195,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         )
 
         self.ui_widgets_manager.reload_data_policy.clicked.connect(
-            self.display_data_policy
+            self.reload_data_policy
         )
 
         self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
@@ -211,75 +224,125 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
 
 
         # Other hardware object connections --------------------------
-        if HWR.beamline.beam is not None:
-            self.beam_position = HWR.beamline.beam.get_beam_position_on_screen()
-            self.connect(
-                HWR.beamline.beam, "beamPosChanged", self.beam_position_changed
-            )
-            #self.beam_position_changed(HWR.beamline.beam.get_beam_position_on_screen())
-        else:
-            logging.getLogger("HWR").error(
-                "GraphicsManager: BeamInfo hwobj not defined"
-            )
+
+
+        # beam_position_changed != beam_DATA_changed !!!
+        # if HWR.beamline.beam is not None:
+        #     self.beam_position = HWR.beamline.beam.get_beam_position_on_screen()
+        #     self.connect(
+        #         HWR.beamline.beam, "beamPosChanged", self.beam_position_changed
+        #     )
+        #     #self.beam_position_changed(HWR.beamline.beam.get_beam_position_on_screen())
+        # else:
+        #     logging.getLogger("HWR").error(
+        #         "GraphicsManager: BeamInfo hwobj not defined"
+        #     )
 
         self.init_interface()
     
     def configuration_table_item_changed(self, item):
+
+        print(f"configuration_table_item_changed item {item.text()}")
+
+        validated_value = self.validate_cell_value(
+            item.text()
+        )
+        item.setText(str(validated_value))
         item.setBackground(QtImport.QColor(QtImport.Qt.yellow))
 
-    def load_zoom_positions_dict(self):
-        """
-        Parse xml file and load dict :
-
-        { "position_name" : { "pos_x" : val,int - pixels  
-                             "pos_y" : val,int - pixels
-                             "cal_x" : val,int - nm
-                             "cal_y" : val,int - nm
-                             "light" : val,
-                            },
-        }
-        """
-        output_dict = {}
-        xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
-
-        xml_tree = xml_file_tree.getroot()
-        positions = xml_tree.find("positions")
-
-        pos_list = positions.findall("position")
+        # create new dict from new data and send it
+        # emit signal item changed
         
-        for pos in pos_list:
+        table = self.ui_widgets_manager.configuration_table
+        item_row = item.row()
+        item_col = item.column()
+
+        if item_col in (1, 2):
+            who_changed = 0
+        elif item_col in (3, 4):
+            who_changed = 1
+        else:
+            who_changed = 2
+
+        edited_key = table.item(item_row, 0).text()
+
+        dict_elem = {}
             
-            if pos.find("beamx") is not None:
-                pos_x = self.from_text_to_int(pos.find("beamx").text)
-            else:
-                pos_x = 0
-            if pos.find("beamy") is not None:
-                pos_y = self.from_text_to_int(pos.find("beamy").text)
-            else:
-                pos_y = 0
-            if pos.find("resox") is not None:
-                cal_x = self.from_text_to_int(pos.find("resox").text, 1e9)
-            else:
-                cal_x = 0
-            if pos.find("resoy") is not None:
-                cal_y = self.from_text_to_int(pos.find("resoy").text, 1e9)
-            else:
-                cal_y = 0
+        pos_name = table.item(item_row, 0).text()
+        dict_elem["beam_pos_x"] = int(self.validate_cell_value(table.item(item_row, 1).text()))
+        dict_elem["beam_pos_y"] = int(self.validate_cell_value(table.item(item_row, 2).text()))
+        
+        resox = self.validate_cell_value(table.item(item_row, 3).text())
+        dict_elem["cal_x"] = float(resox)
+
+        resoy = self.validate_cell_value(table.item(item_row, 4).text())
+        dict_elem["cal_y"] = float(resoy)
+        
+        dict_elem["light"] = int(self.validate_cell_value(table.item(item_row, 5).text()))
+        dict_elem["zoom"] = int(self.validate_cell_value(table.item(item_row, 6).text()))
+
+        
+        self.multipos_hwobj.edit_data(dict_elem, edited_key, who_changed)
+    
+    # def load_zoom_positions_dict(self):
+    #     """
+    #     recover dict from self.multipos_hwobj
+    #     """
+    #     if self.multipos_hwobj is not None:
+    #         #self.zoom_positions_dict = copy.deepcopy(output_dict)
+
+    #     """
+    #     Parse xml file and load dict :
+
+    #     { "position_name" : { "beam_pos_x" : val,int - pixels  
+    #                          "beam_pos_y" : val,int - pixels
+    #                          "cal_x" : val,int - nm
+    #                          "cal_y" : val,int - nm
+    #                          "light" : val,
+    #                         },
+    #     }
+    #     """
+    #     output_dict = {}
+    #     xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
+
+    #     xml_tree = xml_file_tree.getroot()
+    #     positions = xml_tree.find("positions")
+
+    #     pos_list = positions.findall("position")
+        
+    #     for pos in pos_list:
             
-            if pos.find("light") is not None:
-                light_val = self.from_text_to_int(pos.find("light").text, 1e9)
-            else:
-                light_val = 0
+    #         if pos.find("beamx") is not None:
+    #             pos_x = self.from_text_to_int(pos.find("beamx").text)
+    #         else:
+    #             pos_x = 0
+    #         if pos.find("beamy") is not None:
+    #             pos_y = self.from_text_to_int(pos.find("beamy").text)
+    #         else:
+    #             pos_y = 0
+    #         if pos.find("resox") is not None:
+    #             cal_x = self.from_text_to_int(pos.find("resox").text, 1e9)
+    #         else:
+    #             cal_x = 0
+    #         if pos.find("resoy") is not None:
+    #             cal_y = self.from_text_to_int(pos.find("resoy").text, 1e9)
+    #         else:
+    #             cal_y = 0
             
-            dict_elem = {"pos_x" : pos_x,
-                        "pos_y" : pos_y,
-                        "cal_x" : cal_x,
-                        "cal_y" : cal_y,
-                        "light" : light_val,
-            }
-            output_dict[pos.find('name').text] = dict_elem
+    #         if pos.find("light") is not None:
+    #             light_val = self.from_text_to_int(pos.find("light").text, 1e9)
+    #         else:
+    #             light_val = 0
             
-        self.zoom_positions_dict = copy.deepcopy(output_dict)
+    #         dict_elem = {"beam_pos_x" : pos_x,
+    #                     "beam_pos_y" : pos_y,
+    #                     "cal_x" : cal_x,
+    #                     "cal_y" : cal_y,
+    #                     "light" : light_val,
+    #         }
+    #         output_dict[pos.find('name').text] = dict_elem
+            
+    #     #self.zoom_positions_dict = copy.deepcopy(output_dict)
 
     def load_list_of_operational_modes(self):
         """
@@ -298,29 +361,86 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
         self.list_of_operational_modes = eval(mode_list)
         #print(f"list_of_operational_modes :mode_list {self.list_of_operational_modes} - {type(self.list_of_operational_modes)} - {type(self.list_of_operational_modes[0])}")
-        
-    def from_text_to_int(self, input_str, factor=1):
-        if input_str is None:
-            return 0
-        return abs(int(float(input_str) * factor))
     
     def property_changed(self, property_name, old_value, new_value):
-        if property_name == "configfile":
-            print(f"################ cameraCalibBrick property_name  new_value {new_value}")
+        # if property_name == "configfile":
+        #     print(f"################ cameraCalibBrick property_name  new_value {new_value}")
+        #     if new_value.startswith("/"):
+        #             new_value = new_value[1:]
+
+        #     self.multipos_file_xml_path = os.path.join(
+        #         HWR.getHardwareRepositoryConfigPath(),
+        #         new_value + ".xml")
+        #     print(f"################ CONFIGTABBRICK property_changed - new full path {self.multipos_file_xml_path}")
+        #     self.load_zoom_positions_dict()
+        #     self.load_list_of_operational_modes()
+            
+        #     self.init_interface()
+        
+        if property_name == "mnemonic":
+            if self.multipos_hwobj is not None:
+                self.disconnect(self.multipos_hwobj, "beam_pos_cal_data_changed",
+                                self.beam_cal_pos_data_changed)
+                self.disconnect(self.multipos_hwobj, "beam_pos_cal_data_saved",
+                                self.beam_cal_pos_data_saved)
+                self.disconnect(self.multipos_hwobj, "beam_pos_cal_data_cancelled",
+                                self.beam_cal_pos_data_cancelled)
+                # disconnect signal/slots
+                pass
+            
+            if new_value is not None:
+                self.multipos_hwobj = self.get_hardware_object(new_value)
+            
+            #search xml file so it handles the 'tags'
+            # TODO : create a separate xml file for tags!!
+
             if new_value.startswith("/"):
                     new_value = new_value[1:]
 
             self.multipos_file_xml_path = os.path.join(
                 HWR.getHardwareRepositoryConfigPath(),
                 new_value + ".xml")
-            print(f"################ CONFIGTABBRICK property_changed - new full path {self.multipos_file_xml_path}")
-            self.load_zoom_positions_dict()
+            
+            if self.multipos_hwobj is not None:
+                self.connect(self.multipos_hwobj, "beam_pos_cal_data_changed",
+                                self.beam_cal_pos_data_changed)
+                self.connect(self.multipos_hwobj, "beam_pos_cal_data_saved",
+                                self.beam_cal_pos_data_saved)
+                self.connect(self.multipos_hwobj, "beam_pos_cal_data_cancelled",
+                                self.beam_cal_pos_data_cancelled)              
+            # self.load_zoom_positions_dict()
             self.load_list_of_operational_modes()
             
             self.init_interface()
 
         else:
             BaseWidget.property_changed(self, property_name, old_value, new_value)
+
+    def beam_cal_pos_data_changed(self, who_changed):
+        print(f"ID13ConfTabBrick : beam_cal_pos_data_changed")
+        self.fill_config_table()
+
+        current_pos_name = self.multipos_hwobj.get_value()
+
+        table = self.ui_widgets_manager.configuration_table
+
+        self.ui_widgets_manager.configuration_table.itemChanged.disconnect(
+                self.configuration_table_item_changed
+        )
+
+        for row_index in range(table.rowCount()):
+            if table.item(row_index, 0).text() == current_pos_name:
+                if who_changed == 0:
+                    table.item(row_index, 1).setBackground(QtImport.QColor(QtImport.Qt.yellow))
+                    table.item(row_index, 2).setBackground(QtImport.QColor(QtImport.Qt.yellow))
+                elif who_changed == 0:
+                    table.item(row_index, 3).setBackground(QtImport.QColor(QtImport.Qt.yellow))
+                    table.item(row_index, 4).setBackground(QtImport.QColor(QtImport.Qt.yellow))
+        
+        self.ui_widgets_manager.configuration_table.itemChanged.connect(
+                self.configuration_table_item_changed
+        )
+    
 
     def fill_op_modes_list(self):
         if self.list_of_operational_modes is not None:
@@ -331,46 +451,91 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
 
 
     def fill_config_table(self):
-        if self.zoom_positions_dict is not None:
+        tmp_dict = self.multipos_hwobj.get_positions()
+        if tmp_dict is not None:
+        
+            print(f"fill_config_table tmp_dict {tmp_dict}")
 
-            self.clear_table()
-            self.ui_widgets_manager.configuration_table.setRowCount(len(self.zoom_positions_dict))
             self.ui_widgets_manager.configuration_table.itemChanged.disconnect(
                 self.configuration_table_item_changed
             )
 
-            for i, (position, position_dict_elem) in enumerate(self.zoom_positions_dict.items()):
+            if not self.table_created:
+                # create table items for first and only time
                 
-                zoom_position_item = QtImport.QTableWidgetItem(str(position))
-                beam_pos_x_column_item = QtImport.QTableWidgetItem(str(position_dict_elem['pos_x']))
-                beam_pos_y_column_item = QtImport.QTableWidgetItem(str(position_dict_elem['pos_y']))
-                cal_x_item = QtImport.QTableWidgetItem(str(position_dict_elem['cal_x']))
-                cal_y_item = QtImport.QTableWidgetItem(str(position_dict_elem['cal_y']))
-                light_item = QtImport.QTableWidgetItem(str(position_dict_elem['light']))
+                self.ui_widgets_manager.configuration_table.setRowCount(len(tmp_dict))
 
-                self.ui_widgets_manager.configuration_table.setItem(i, 0, zoom_position_item)
-                self.ui_widgets_manager.configuration_table.setItem(i, 1, beam_pos_x_column_item)
-                self.ui_widgets_manager.configuration_table.setItem(i, 2, beam_pos_y_column_item)
-                self.ui_widgets_manager.configuration_table.setItem(i, 3, cal_x_item)
-                self.ui_widgets_manager.configuration_table.setItem(i, 4, cal_y_item)
-                self.ui_widgets_manager.configuration_table.setItem(i, 5, light_item)
+                for row in range(len(tmp_dict)):
+                    for col in range(7):
+                        tmp_item = QtImport.QTableWidgetItem()
+                        if col == 0:
+                            #zoom position name not editable
+                            tmp_item.setFlags(tmp_item.flags() ^ QtImport.Qt.ItemIsEditable)
+                        self.ui_widgets_manager.configuration_table.setItem(
+                            row,
+                            col,
+                            tmp_item
+                        )
+                self.table_created = True
+            
+            table = self.ui_widgets_manager.configuration_table
+            for i, (position, position_dict_elem) in enumerate(tmp_dict.items()):
+                
+                table.item(i, 0).setText(str(position))
+
+                table.item(i, 1).setText(str(position_dict_elem["beam_pos_x"]))
+                table.item(i, 2).setText(str(position_dict_elem["beam_pos_y"]))
+
+                
+                if position_dict_elem["cal_x"] == 1:
+                    y_calib = "Not defined"
+                else:
+                    y_calib = str(abs(int(position_dict_elem["cal_x"])))
+                if position_dict_elem["cal_y"] == 1:
+                    z_calib = "Not defined"
+                else:
+                    z_calib = str(abs(int(position_dict_elem["cal_y"])))
+
+                table.item(i, 3).setText(y_calib)
+                table.item(i, 4).setText(z_calib)
+
+                table.item(i, 5).setText(str(position_dict_elem['light']))
+                table.item(i, 6).setText(str(position_dict_elem['zoom']))
 
             self.ui_widgets_manager.configuration_table.itemChanged.connect(
                 self.configuration_table_item_changed
             )
+            print(f"fill_config_table itemChanged.connect")
 
-        self.ui_widgets_manager.configuration_table.horizontalHeader().setSectionResizeMode(
-            QtImport.QHeaderView.ResizeToContents
-        )
-                
+
+            self.ui_widgets_manager.configuration_table.horizontalHeader().setSectionResizeMode(
+                QtImport.QHeaderView.ResizeToContents
+            )
+
+    def beam_cal_pos_data_saved(self):
+        """
+        data saved: clean cell background
+        """
+        self.clean_cells_background()
+
+    def beam_cal_pos_data_cancelled(self):
+        """
+        data cancelled:
+        clean cell background
+        reload data from hardware object
+        """
+        self.clean_cells_background()
+        self.fill_config_table()
+
     def init_interface(self):
         """
         Fill table and combobox and make them functional
         """
-        self.fill_config_table()
-        self.fill_op_modes_list()
-        self.load_sessions()
-        self.display_data_policy()
+        if self.multipos_hwobj is not None:
+            self.fill_config_table()
+            self.fill_op_modes_list()
+            self.load_sessions()
+            self.display_data_policy(0)
 
     def load_sessions(self):
         """
@@ -385,8 +550,15 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             )
 
         print(f"ID13CONGI : load_sessions {self.bliss_session_list}")
+    
+    def reload_data_policy(self):
+        """
+        reload data policy of selected session in combobox
+        """
+        index = self.ui_widgets_manager.bliss_session_combo_box.currentIndex()
+        self.display_data_policy(index)
 
-    def display_data_policy(self, index=0):
+    def display_data_policy(self, index):
         """
         Display data policy of selected session in combobox
         """
@@ -410,7 +582,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             )
     
     def get_base_path(self):
-        """ 
+        """
         recover data policy base path
         """
         return self.data_policy_base_path
@@ -464,8 +636,8 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
     #     self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 1).setText(str(int(beam_x_y[0])))
     #     self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 2).setText(str(int(beam_x_y[1])))
 
-    #     self.zoom_positions_dict[self.current_zoom_pos_name]["pos_x"] = self.current_beam_position[0]
-    #     self.zoom_positions_dict[self.current_zoom_pos_name]["pos_y"] = self.current_beam_position[1]
+    #     self.zoom_positions_dict[self.current_zoom_pos_name]["beam_pos_x"] = self.current_beam_position[0]
+    #     self.zoom_positions_dict[self.current_zoom_pos_name]["beam_pos_y"] = self.current_beam_position[1]
 
     #     self.graphic_data_edited.emit(self.zoom_positions_dict)
    
@@ -535,44 +707,15 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 selected_item.text()
             )
 
-    def save_table_changes(self):
+    def clean_cells_background(self):
         """
-        Save data to xml file
-        Clean cell background
+        clean cells background color
         """
         table = self.ui_widgets_manager.configuration_table
-
-        #open xml file
-        xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
-
-        xml_tree = xml_file_tree.getroot()
-        positions = xml_tree.find("positions")
         
-        pos_list = positions.findall("position")
-        # pdb.set_trace()
-
-        for index, pos in enumerate(pos_list):
-            if pos.find('beamx') is not None:
-                beamx = self.validate_cell_value(table.item(index, 1).text())
-                pos.find('beamx').text = str(beamx)
-            if pos.find('beamy') is not None:
-                beamy = self.validate_cell_value(table.item(index, 2).text())
-                pos.find('beamy').text = str(beamy)
-            if pos.find('resox') is not None:
-                resox = self.validate_cell_value(table.item(index, 3).text())
-                pos.find('resox').text = str(resox * 1e-9)
-            if pos.find('resoy') is not None:
-                resoy = self.validate_cell_value(table.item(index, 4).text())
-                pos.find('resoy').text = str(resoy * 1e-9)
-            if pos.find('light') is not None:
-                light = self.validate_cell_value(table.item(index, 5).text())
-                pos.find('light').text = str(light)
-    
-        xml_file_tree.write(self.multipos_file_xml_path)
-
         table.itemChanged.disconnect(
                 self.configuration_table_item_changed
-            )
+        )
 
         for row in range(table.rowCount()):
             for col in range(table.columnCount()):
@@ -580,9 +723,63 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         
         table.itemChanged.connect(
                 self.configuration_table_item_changed
-            )
+        )
+                
+    def save_table_changes(self):
+        """
+        send signal to self.multipos_hwobj to save data to file
+        clean cells background color
+        """
+        if self.multipos_hwobj is not None:
+            self.multipos_hwobj.save_data_to_file(self.multipos_file_xml_path)
 
-        self.graphic_data_saved.emit()
+        # """
+        # Save data to xml file
+        # Clean cell background
+        # """
+        # table = self.ui_widgets_manager.configuration_table
+
+        # #open xml file
+        # xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
+
+        # xml_tree = xml_file_tree.getroot()
+        # positions = xml_tree.find("positions")
+        
+        # pos_list = positions.findall("position")
+        # # pdb.set_trace()
+
+        # for index, pos in enumerate(pos_list):
+        #     if pos.find('beamx') is not None:
+        #         beamx = self.validate_cell_value(table.item(index, 1).text())
+        #         pos.find('beamx').text = str(beamx)
+        #     if pos.find('beamy') is not None:
+        #         beamy = self.validate_cell_value(table.item(index, 2).text())
+        #         pos.find('beamy').text = str(beamy)
+        #     if pos.find('resox') is not None:
+        #         resox = self.validate_cell_value(table.item(index, 3).text())
+        #         pos.find('resox').text = str(resox * 1e-9)
+        #     if pos.find('resoy') is not None:
+        #         resoy = self.validate_cell_value(table.item(index, 4).text())
+        #         pos.find('resoy').text = str(resoy * 1e-9)
+        #     if pos.find('light') is not None:
+        #         light = self.validate_cell_value(table.item(index, 5).text())
+        #         pos.find('light').text = str(light)
+    
+        # xml_file_tree.write(self.multipos_file_xml_path)
+
+        # table.itemChanged.disconnect(
+        #         self.configuration_table_item_changed
+        #     )
+
+        # for row in range(table.rowCount()):
+        #     for col in range(table.columnCount()):
+        #         table.item(row, col).setData(QtImport.Qt.BackgroundRole, None)
+        
+        # table.itemChanged.connect(
+        #         self.configuration_table_item_changed
+        #     )
+
+        # self.graphic_data_saved.emit()
     
     def validate_cell_value(self, input_val):
         """
@@ -598,10 +795,12 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
     def cancel_table_changes(self):
         """
         cancel any change in config table.
-        reload data from last saved version of xml file
+        reload data from last saved version of xml file:
+            recover data from multipos_hwobj and display it
         """
-        
-        self.load_zoom_positions_dict()
+        self.multipos_hwobj.cancel_edited_data()
+
+        # self.load_zoom_positions_dict()
         self.fill_config_table()
     
     def clear_table(self):
@@ -610,4 +809,14 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         """
         #table = self.ui_widgets_manager.findChild(QtI
         # mport.QTableWidget, "aligment_table")
-        self.ui_widgets_manager.configuration_table.clearContents()        
+        self.ui_widgets_manager.configuration_table.clearContents()
+    
+    def from_text_to_int(self, input_str, factor=1):
+        if input_str is None:
+            return 0
+        return abs(int(float(input_str) * factor))
+
+    def from_text_to_float(self, input_str, factor=1):
+        if input_str is None:
+            return 0
+        return abs((float(input_str) * factor))
