@@ -130,7 +130,7 @@ class CameraBrick(BaseWidget):
         self.toolbar.addAction(tmp_menu.menuAction())
 
         temp_action = self.popup_menu.addAction(
-            Icons.load_icon("movetopos"),
+            Icons.load_icon("movetopos-trans"),
             "Move point to beam",
             self.move_center_to_clicked_point,
         )
