@@ -43,6 +43,9 @@
    </property>
    <item row="0" column="0">
     <widget class="QToolBox" name="shapes_toolbox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -55,9 +58,12 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="all_shapes_page">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -109,6 +115,9 @@
          </item>
          <item>
           <widget class="QCheckBox" name="display_lines_cbox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Lines</string>
            </property>
@@ -116,6 +125,9 @@
          </item>
          <item>
           <widget class="QCheckBox" name="display_grids_cbox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Grids</string>
            </property>
@@ -320,6 +332,16 @@
            <string>Index</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>X (pixels)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Y (pixels)</string>
+          </property>
+         </column>
         </widget>
        </item>
        <item row="1" column="0">
@@ -371,6 +393,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="lines_page">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -463,6 +488,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="grids_page">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -849,6 +877,17 @@
       </layout>
      </widget>
      <widget class="QWidget" name="square_page">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>597</width>
+        <height>583</height>
+       </rect>
+      </property>
       <attribute name="icon">
        <iconset>
         <normaloff>../icons/square.png</normaloff>../icons/square.png</iconset>

@@ -129,7 +129,7 @@ class GraphicsManagerBrick(BaseWidget):
         self.main_groupbox.setCheckable(True)
         self.main_groupbox.setChecked(True)
         self.main_groupbox_toggled(True)
-        self.main_groupbox.setToolTip("Click to open/close item manager")
+        # self.main_groupbox.setToolTip("Click to open/close item manager")
 
         self.connect(HWR.beamline.sample_view, "shapeCreated", self.shape_created)
         self.connect(HWR.beamline.sample_view, "shapeDeleted", self.shape_deleted)
@@ -163,7 +163,8 @@ class GraphicsManagerBrick(BaseWidget):
 
         info_str_list.append(str(shape.index))
         if shape_type == "Point":
-            info_str_list.append(str(shape.get_start_position()))
+            info_str_list.append(str(int(shape.get_start_position()[0])))
+            info_str_list.append(str(int(shape.get_start_position()[1])))
             self.manager_widget.point_treewidget.clearSelection()
             point_treewidget_item = QtImport.QTreeWidgetItem(
                 self.manager_widget.point_treewidget, info_str_list
@@ -188,6 +189,8 @@ class GraphicsManagerBrick(BaseWidget):
             grid_treewidget_item.setSelected(True)
             self.__grid_map[shape] = grid_treewidget_item
         elif shape_type == "Square":
+            info_str_list.append(str(shape.get_start_position()))
+            info_str_list.append(str(shape.get_end_position()))
             self.manager_widget.square_treewidget.clearSelection()
             square_treewidget_item = QtImport.QTreeWidgetItem(
                 self.manager_widget.square_treewidget, info_str_list
@@ -232,8 +235,9 @@ class GraphicsManagerBrick(BaseWidget):
         print(f"GRPHICMANAGERBRICK shape_selected type(shape) {type(shape)} selected_state {selected_state}")
         if shape in self.__shape_map:
             print(f"GRPHICMANAGERBRICK shape_selected shape in self.__shape_map:")
-            self.__shape_map[shape].setData(
-                4, QtImport.Qt.DisplayRole, str(selected_state)
+            treewidget_item = self.__shape_map[shape]
+            treewidget_item.setData(
+                3, QtImport.Qt.DisplayRole, str(selected_state)
             )
             self.__shape_map[shape].setSelected(selected_state)
             if self.__point_map.get(shape):
@@ -273,18 +277,19 @@ class GraphicsManagerBrick(BaseWidget):
     def display_all_button_clicked(self):
         for shape, treewidget_item in self.__shape_map.items():
             shape.show()
-            treewidget_item.setData(3, QtImport.Qt.DisplayRole, "True")
+            treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
 
     def hide_all_button_clicked(self):
         for shape, treewidget_item in self.__shape_map.items():
             shape.hide()
-            treewidget_item.setData(3, QtImport.Qt.DisplayRole, "False")
+            treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
 
     def clear_all_button_clicked(self):
         HWR.beamline.sample_view.clear_all_shapes()
 
     def create_point_start_button_clicked(self):
-        HWR.beamline.sample_view.start_centring(tree_click=True)
+        # HWR.beamline.sample_view.start_centring(tree_click=True)
+        HWR.beamline.sample_view.start_one_click_centring()
 
     def create_point_accept_button_clicked(self):
         HWR.beamline.sample_view.start_centring()
@@ -312,8 +317,8 @@ class GraphicsManagerBrick(BaseWidget):
 
     def toggle_buttons_enabled(self):
         self.manager_widget.display_points_cbox.setEnabled(len(self.__shape_map) > 0)
-        self.manager_widget.display_lines_cbox.setEnabled(len(self.__shape_map) > 0)
-        self.manager_widget.display_grids_cbox.setEnabled(len(self.__shape_map) > 0)
+        #self.manager_widget.display_lines_cbox.setEnabled(len(self.__shape_map) > 0)
+        #self.manager_widget.display_grids_cbox.setEnabled(len(self.__shape_map) > 0)
         self.manager_widget.display_square_roi_cbox.setEnabled(len(self.__shape_map) > 0)
 
         self.manager_widget.display_all_button.setEnabled(len(self.__shape_map) > 0)
