@@ -129,16 +129,34 @@ class CameraBrick(BaseWidget):
 
         self.toolbar.addAction(tmp_menu.menuAction())
 
+        icon = QtImport.QIcon()
+        qpixmap_inactive = Icons.load_pixmap("movetopos")
+        qpixmap_active = Icons.load_pixmap("movetopos-pressed")
+        
+        icon.addPixmap(
+            qpixmap_active,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.On,
+        )
+        icon.addPixmap(
+            qpixmap_inactive,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.Off,
+        )
+        
         temp_action = self.popup_menu.addAction(
-            Icons.load_icon("movetopos-trans"),
+            icon,
             "Move point to beam",
-            self.move_center_to_clicked_point,
         )
         temp_action.setCheckable(True)
+        temp_action.toggled.connect(self.move_center_to_clicked_point)
         
         self.toolbar.addAction(temp_action)
 
-        measure_menu = self.popup_menu.addMenu("Measure")
+        measure_menu = self.popup_menu.addMenu(
+            Icons.load_icon("measure_icon"),
+            "Measure",
+        )
         self.measure_distance_action = measure_menu.addAction(
             Icons.load_icon("measure_distance"),
             "Distance",
@@ -153,7 +171,10 @@ class CameraBrick(BaseWidget):
 
         self.toolbar.addAction(measure_menu.menuAction())
 
-        beam_mark_menu = self.popup_menu.addMenu("Beam mark")
+        beam_mark_menu = self.popup_menu.addMenu(
+            Icons.load_icon("beam2"),
+            "Beam mark",
+        )
         self.move_beam_mark_manual_action = beam_mark_menu.addAction(
             "Set position manually", self.move_beam_mark_manual
         )
@@ -166,6 +187,12 @@ class CameraBrick(BaseWidget):
             "Display size", self.display_beam_size_toggled
         )
         self.display_beam_size_action.setCheckable(True)
+
+        self.display_beam_action = beam_mark_menu.addAction(
+            "Display beam mark", self.display_beam_toggled
+        )
+        self.display_beam_action.setCheckable(True)
+        self.display_beam_action.setChecked(True)
 
         self.toolbar.addAction(beam_mark_menu.menuAction())
 
@@ -191,7 +218,10 @@ class CameraBrick(BaseWidget):
         temp_action.setShortcut("Ctrl+X")
         self.popup_menu.addSeparator()
 
-        tools_menu = self.popup_menu.addMenu("Tools")
+        tools_menu = self.popup_menu.addMenu(
+            Icons.load_icon("tools"),
+            "Tools",
+        )
         self.display_grid_action = tools_menu.addAction(
             Icons.load_icon("Grid"), "Display grid", self.display_grid_toggled
         )
@@ -334,6 +364,11 @@ class CameraBrick(BaseWidget):
             self.display_beam_size_action.isChecked()
         )
 
+    def display_beam_toggled(self):
+        self.graphics_manager_hwobj.display_beam(
+            self.display_beam_action.isChecked()
+        )
+
     def start_magnification_tool(self):
         self.graphics_manager_hwobj.set_magnification_mode(True)
 
@@ -414,8 +449,8 @@ class CameraBrick(BaseWidget):
     def create_points_one_click_clicked(self):
         self.graphics_manager_hwobj.start_one_click_centring()
 
-    def move_center_to_clicked_point(self):
-        self.graphics_manager_hwobj.start_move_beam_to_clicked_point()
+    def move_center_to_clicked_point(self, checked):
+        self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
 
     def create_point_current_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=False)
