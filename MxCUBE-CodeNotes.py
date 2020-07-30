@@ -775,6 +775,8 @@ input point to beam_pos
 
 It is expected in start_move_to_beam and move_to_beam methods in
 GenericDIffractometer HwObj.
+
+start_move_to_beam used to create centring points
 """
 
 def motor_positions_to_screen(self, centred_positions_dict):

@@ -567,15 +567,24 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             new_session = self.bliss_session_list[index]
             session_info_string = f"Error loading Bliss session {new_session} configuration"
             print(f"ID13CONGI : display_data_policy new_session {new_session}")
-            session = self.bliss_config.get(new_session)
+            # session = self.bliss_config.get(new_session)
+            session = static.get_config().get(new_session)
+            from bliss.data.node import _get_or_create_node
+            session2 = _get_or_create_node(new_session, node_type="session")
             
             try:
+                # from PyQt5.QtCore import pyqtRemoveInputHook
+                # pyqtRemoveInputHook()
+                # import pdb
+                # pdb.set_trace()
                 session.setup()
                 session_info_string = session.scan_saving.__info__()
                 self.data_policy_base_path = session.scan_saving.base_path
+                print(f"ID13CONGI : session_info_string {session_info_string}")
+                print(f"ID13CONGI : self.data_policy_base_path {self.data_policy_base_path}")
                 self.data_path_base_changed.emit(self.data_policy_base_path)
             except RuntimeError:
-                logging.getLogger("HWR").error("Exception on Bliss session setup")    
+                logging.getLogger("HWR").error("Exception on Bliss session setup")
 
             self.ui_widgets_manager.data_policy_label.setText(
                 session_info_string
