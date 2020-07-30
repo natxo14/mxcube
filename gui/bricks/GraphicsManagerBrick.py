@@ -40,6 +40,8 @@ class GraphicsManagerBrick(BaseWidget):
         self.__grid_map = {}
         self.__square_map = {}
         self.__original_height = 600
+        self.__list_of_tags = ('visible', 'background', 'signal')
+        self.__click_pos = None
 
         # Properties ----------------------------------------------------------
 
@@ -64,11 +66,51 @@ class GraphicsManagerBrick(BaseWidget):
         _main_vlayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(_main_vlayout)
 
+        # mutual exclusive checkboxes
+        self.mutual_exclusive_bg = QtImport.QButtonGroup()
+        self.mutual_exclusive_bg.addButton(
+            self.manager_widget.display_points_cbox
+        )
+        self.mutual_exclusive_bg.addButton(
+            self.manager_widget.display_grids_cbox
+        )
+        self.mutual_exclusive_bg.addButton(
+            self.manager_widget.display_lines_cbox
+        )
+        self.mutual_exclusive_bg.addButton(
+            self.manager_widget.display_square_roi_cbox
+        )
+
+        self.mutual_exclusive_bg.addButton(
+            self.manager_widget.display_all_cbox
+        )
+        
         # Qt signal/slot connections ------------------------------------------
         self.main_groupbox.toggled.connect(self.main_groupbox_toggled)
         self.manager_widget.change_color_button.clicked.connect(
             self.change_color_clicked
         )
+
+        self.manager_widget.display_points_cbox.stateChanged.connect(
+            self.display_points_toggled
+        )
+
+        self.manager_widget.display_lines_cbox.stateChanged.connect(
+            self.display_lines_toggled
+        )
+
+        self.manager_widget.display_grids_cbox.stateChanged.connect(
+            self.display_grids_toggled
+        )
+
+        self.manager_widget.display_square_roi_cbox.stateChanged.connect(
+            self.display_squares_toggled
+        )
+
+        self.manager_widget.display_all_cbox.stateChanged.connect(
+            self.display_all_toggled
+        )
+
         self.manager_widget.display_all_button.clicked.connect(
             self.display_all_button_clicked
         )
@@ -97,9 +139,6 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.shapes_treewidget.itemClicked.connect(
             self.shape_treewiget_item_clicked
         )
-        self.manager_widget.shapes_treewidget.customContextMenuRequested.connect(
-            self.show_shape_treewidget_popup
-        )
 
         self.manager_widget.hor_spacing_ledit.textChanged.connect(
             self.grid_spacing_changed
@@ -125,11 +164,21 @@ class GraphicsManagerBrick(BaseWidget):
         # SizePolicies --------------------------------------------------------
 
         # Other ---------------------------------------------------------------
+        self.manager_widget.shapes_treewidget.setContextMenuPolicy(
+            QtImport.Qt.CustomContextMenu
+        )
+
+        self.manager_widget.shapes_treewidget.customContextMenuRequested.connect(
+            self.prepare_tree_widget_menu
+        )
+
         # by default manager is closed
         self.main_groupbox.setCheckable(True)
         self.main_groupbox.setChecked(True)
         self.main_groupbox_toggled(True)
         # self.main_groupbox.setToolTip("Click to open/close item manager")
+
+        self.manager_widget.display_all_button.hide()
 
         self.connect(HWR.beamline.sample_view, "shapeCreated", self.shape_created)
         self.connect(HWR.beamline.sample_view, "shapeDeleted", self.shape_deleted)
@@ -139,6 +188,47 @@ class GraphicsManagerBrick(BaseWidget):
             "centringInProgress",
             self.centring_in_progress_changed
         )
+
+    def prepare_tree_widget_menu(self, pos):
+        """
+        Prepare menu to select the tag for the given shape
+        """
+        self.__click_pos = pos
+        # get clicked item position in table
+                
+        selection_menu = QtImport.QMenu()
+        selection_menu.addSection("Select shape's nature")
+
+        for tag in self.__list_of_tags:
+            print(f"tag : {tag}")
+            new_action = QtImport.QAction(tag, selection_menu)
+            new_action.setData(tag)
+            # new_action.triggered.connect(
+            #     self.tree_widget_menu_selected
+            # )
+            selection_menu.addAction(new_action)
+        
+        selection_menu.triggered.connect(
+            self.tree_widget_menu_selected
+        )
+        selection_menu.exec(
+            self.manager_widget.shapes_treewidget.mapToGlobal(pos)
+        )
+
+    def tree_widget_menu_selected(self, action):
+        """
+        change shape's information according to selected value
+        """
+        print(f"selected tag : {action} -  action data {action.data()}")
+        for item in self.manager_widget.shapes_treewidget.selectedItems():
+            item.setData(4, QtImport.Qt.DisplayRole, action.data())
+        # clicked_item = self.manager_widget.shapes_treewidget.itemAt(self.__click_pos)
+        # if clicked_item is None:
+        #     #iterate over selected items
+        #     for item in self.manager_widget.shapes_treewidget.selectedItems():
+        #         item.setData(4, QtImport.Qt.DisplayRole, action.data())
+        # else:
+        #     clicked_item.setData(4, QtImport.Qt.DisplayRole, action.data())
 
     def shape_created(self, shape, shape_type):
         """
@@ -151,11 +241,13 @@ class GraphicsManagerBrick(BaseWidget):
             shape.get_display_name(),
             str(True),
             str(True),
-            str(shape.used_count),
+            str("Right click to select collection"),
         )
-        self.__shape_map[shape] = QtImport.QTreeWidgetItem(
+        new_tree_widget_item = QtImport.QTreeWidgetItem(
             self.manager_widget.shapes_treewidget, info_str_list
         )
+        
+        self.__shape_map[shape] = new_tree_widget_item
         self.toggle_buttons_enabled()
 
         # info_str_list = QStringList()
@@ -279,10 +371,26 @@ class GraphicsManagerBrick(BaseWidget):
             shape.show()
             treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
 
+    def display_all_toggled(self, state):
+        if state == QtImport.Qt.Checked:
+            self.display_all_button_clicked()
+
     def hide_all_button_clicked(self):
+        
+        self.mutual_exclusive_bg.setExclusive(False)
+       
+        self.manager_widget.display_points_cbox.setCheckState(QtImport.Qt.Unchecked)
+        self.manager_widget.display_lines_cbox.setCheckState(QtImport.Qt.Unchecked)
+        self.manager_widget.display_grids_cbox.setCheckState(QtImport.Qt.Unchecked)
+        self.manager_widget.display_square_roi_cbox.setCheckState(QtImport.Qt.Unchecked)
+        self.manager_widget.display_all_cbox.setCheckState(QtImport.Qt.Unchecked)
+        
+        self.mutual_exclusive_bg.setExclusive(True)
+
         for shape, treewidget_item in self.__shape_map.items():
             shape.hide()
             treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
+
 
     def clear_all_button_clicked(self):
         HWR.beamline.sample_view.clear_all_shapes()
@@ -357,3 +465,41 @@ class GraphicsManagerBrick(BaseWidget):
                 self.__grid_map.values().index(grid_treewidget_item)
             ]
             grid_item.move_by_pix(direction)
+
+    def display_points_toggled(self, state):
+        """
+        Display points only according to state
+        """
+        self.display_only_type_button_clicked("Point", state)
+                    
+    def display_lines_toggled(self, state):
+        """
+        Display lines only according to state
+        """
+        self.display_only_type_button_clicked("Line", state)
+        
+    def display_grids_toggled(self, state):
+        """
+        Display grids only according to state
+        """
+        self.display_only_type_button_clicked("Grid", state)
+        
+    def display_squares_toggled(self, state):
+        """
+        Display squares only according to state
+        """
+        self.display_only_type_button_clicked("Square", state)
+        
+    def display_only_type_button_clicked(self, shape_type, state):
+        
+        if state == QtImport.Qt.Checked:
+            for shape, treewidget_item in self.__shape_map.items():
+                print(f"display_only_type_button_clicked {treewidget_item.data(1, QtImport.Qt.DisplayRole,)}")
+                if shape_type in  str(treewidget_item.data(1, QtImport.Qt.DisplayRole,)):
+                    shape.show()
+                    treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
+                else:
+                    shape.hide()
+                    treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
+        else:
+            self.display_all_button_clicked()
