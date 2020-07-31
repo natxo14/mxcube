@@ -105,7 +105,7 @@ class ESRFDataExportBrick(BaseWidget):
         # Internal values -----------------------------------------------------
         
         # Properties ----------------------------------------------------------
-        self.add_property("configfile", "string", "/multiple-positions")
+        self.add_property("configfile", "string", "")
         
         # Signals ------------------------------------------------------------
         

@@ -314,9 +314,9 @@ class HardwareObjectMixin(CommandContainer):
 And dispatcher is part of 'Louie', that is also part of Bliss
 MXCuBE and BLISS Share the same signal/slot system
 
-#######################################
-MXCuBE IDE SIGNAL/SLOTS : SIGNAL/SLOTS IN GUI CREATOR IDE
-#######################################
+##############################################################################
+MXCuBE IDE SIGNAL/SLOTS : SIGNAL/SLOTS IN GUI CREATOR IDE BETWEEN BRICKS
+##############################################################################
  in class Connectable
  def define_signal
  def define_slot
@@ -799,6 +799,21 @@ points and lines when motors moved
 ####################################
 #### CENTRING ########
 ####################################
+GENERICDIFF 
+self.centring_status = {
+
+    valid: 
+    startTime:
+    endTime:
+    angleLimit:
+    method:
+    motors: (get_centred_point_from_coord)
+            "phi": phi_angle_motor,
+            "phiz": float(y_axis_motor_pos),
+            "phiy": float(x_axis_motor_pos),
+            "sampx": float(sampx),
+            "sampy": float(sampy),
+}
 """
 
 ID10 and ID13 : VERTICAL SAMPLE STAGE!! NOT HORIZONTAL!!

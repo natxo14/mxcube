@@ -61,9 +61,6 @@ operation_modes_saved - emitted when operation mode list is saved in xml file
 
 beam_cal_pos_data_changed - connected to MultiplePositions hwr_object
 
-beamPositionChanged - y_beam, z_beam, zoom_pos 
-                                    - slot which should be connected to all
-                                     client able to change beam position.
                                      
 calibration_changed - y_res, z_res, zoom_pos 
                                     - slot which should be connected to all
@@ -153,8 +150,9 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         
         # Slots ---------------------------------------------------------------
         self.define_slot("getBeamPosition", ())
-        self.define_slot("beamPositionChanged", ())
         self.define_slot("setBrickEnabled", ())
+        self.define_slot("get_beam_cal_data", ())
+        self.define_slot("return_operational_modes_list", ())
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Beam Configuration", self)
@@ -195,7 +193,8 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         )
 
         self.ui_widgets_manager.reload_data_policy.clicked.connect(
-            self.reload_data_policy
+            #self.reload_data_policy
+            self.load_data_policy
         )
 
         self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
@@ -239,6 +238,13 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         #     )
 
         self.init_interface()
+    
+    def return_operational_modes_list(self, input_list):
+        #clear list
+        input_list[:] = []
+        for item in self.list_of_operational_modes:
+            input_list.append(item)
+
     
     def configuration_table_item_changed(self, item):
 
@@ -534,8 +540,8 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         if self.multipos_hwobj is not None:
             self.fill_config_table()
             self.fill_op_modes_list()
-            self.load_sessions()
-            self.display_data_policy(0)
+            # self.load_sessions()
+            # self.display_data_policy(0)
 
     def load_sessions(self):
         """
@@ -551,9 +557,32 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
 
         print(f"ID13CONGI : load_sessions {self.bliss_session_list}")
     
+    def load_data_policy(self):
+        """
+        Load data policy from input label
+        needed because #1924 BLISS issue
+        """
+        session_name = self.ui_widgets_manager.session_name_label.text()
+        session_name.replace(" ", "")
+
+        session = static.get_config().get(session_name)
+
+        session.setup()
+        session_info_string = session.scan_saving.__info__()
+
+        self.ui_widgets_manager.data_policy_label.setText(
+                session_info_string
+        )
+        self.data_policy_base_path = session.scan_saving.base_path
+        self.ui_widgets_manager.reload_data_policy.setEnabled(False)
+        self.data_path_base_changed.emit(
+            self.data_policy_base_path,
+        )
+            
     def reload_data_policy(self):
         """
         reload data policy of selected session in combobox
+        Disabled untill #1924 BLISS issue fixed
         """
         index = self.ui_widgets_manager.bliss_session_combo_box.currentIndex()
         self.display_data_policy(index)
@@ -811,6 +840,14 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
 
         # self.load_zoom_positions_dict()
         self.fill_config_table()
+
+    def get_beam_cal_data(self, data_dict):
+        """
+        slot to be connected to other bricks 
+        that need beam/calibration data:
+        ex GraphicsManagerBrick to export data
+        """
+        data_dict = self.multipos_hwobj.get_positions()
     
     def clear_table(self):
         """

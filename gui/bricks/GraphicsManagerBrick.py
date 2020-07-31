@@ -22,6 +22,11 @@ from gui.BaseComponents import BaseWidget
 
 from HardwareRepository import HardwareRepository as HWR
 
+import json
+import os
+import copy
+import datetime
+from datetime import date
 
 __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
@@ -29,6 +34,7 @@ __category__ = "Graphics"
 
 
 class GraphicsManagerBrick(BaseWidget):
+
     def __init__(self, *args):
 
         BaseWidget.__init__(self, *args)
@@ -40,15 +46,18 @@ class GraphicsManagerBrick(BaseWidget):
         self.__grid_map = {}
         self.__square_map = {}
         self.__original_height = 600
-        self.__list_of_tags = ('visible', 'background', 'signal')
+        self.__list_of_tags = list()
         self.__click_pos = None
-
+        self.__beam_cal_file_xml_path = None
+        self.__data_export_file_path = None
+        
         # Properties ----------------------------------------------------------
-
+        self.add_property("beam_cal_data_file", "string", "")
+        
         # Signals ------------------------------------------------------------
 
         # Slots ---------------------------------------------------------------
-
+        self.define_slot("set_data_path", ())
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Graphics items", self)
         self.manager_widget = QtImport.load_ui_file("graphics_manager_layout.ui")
@@ -136,8 +145,16 @@ class GraphicsManagerBrick(BaseWidget):
 
         # self.manager_widget.shapes_treewidget.currentItemChanged.connect(\
         #     self.shape_treewiget_current_item_changed)
-        self.manager_widget.shapes_treewidget.itemClicked.connect(
-            self.shape_treewiget_item_clicked
+        # self.manager_widget.shapes_treewidget.itemClicked.connect(
+        #     self.shape_treewiget_item_clicked
+        # )
+
+        self.manager_widget.shapes_treewidget.itemSelectionChanged.connect(
+            self.shape_treewiget_selection_changed
+        )
+
+        self.manager_widget.shapes_treewidget.setSelectionMode(
+            QtImport.QAbstractItemView.ExtendedSelection
         )
 
         self.manager_widget.hor_spacing_ledit.textChanged.connect(
@@ -161,6 +178,12 @@ class GraphicsManagerBrick(BaseWidget):
             self.create_square_clicked
         )
 
+        tmp = self.manager_widget.export_data_button.clicked.connect(
+            self.export_data
+        )
+        print(f"connection : {tmp}")
+
+
         # SizePolicies --------------------------------------------------------
 
         # Other ---------------------------------------------------------------
@@ -168,9 +191,10 @@ class GraphicsManagerBrick(BaseWidget):
             QtImport.Qt.CustomContextMenu
         )
 
-        self.manager_widget.shapes_treewidget.customContextMenuRequested.connect(
+        tmp = self.manager_widget.shapes_treewidget.customContextMenuRequested.connect(
             self.prepare_tree_widget_menu
         )
+        print(f"connection 2: {tmp}")
 
         # by default manager is closed
         self.main_groupbox.setCheckable(True)
@@ -189,10 +213,19 @@ class GraphicsManagerBrick(BaseWidget):
             self.centring_in_progress_changed
         )
 
+    def set_data_path(self, new_path):
+
+        text = self.manager_widget.file_path_label.text()
+        text += new_path
+        self.manager_widget.file_path_label.setText(text)
+        self.__data_export_file_path = new_path
+
     def prepare_tree_widget_menu(self, pos):
         """
         Prepare menu to select the tag for the given shape
         """
+        self.__list_of_tags = ['signal', 'background', 'empty']
+        print(f"prepare_tree_widget_menu after signal : {self.__list_of_tags}")
         self.__click_pos = pos
         # get clicked item position in table
                 
@@ -343,6 +376,29 @@ class GraphicsManagerBrick(BaseWidget):
             self.manager_widget.change_color_button.setEnabled(
                 bool(HWR.beamline.sample_view.get_selected_shapes())
             )
+
+    def shape_treewiget_selection_changed(self):
+        """
+        act when selection changed in tree widget:
+        update shape's status
+        """
+        selected_item_list = self.manager_widget.shapes_treewidget.selectedItems()
+        shape_list = list(self.__shape_map.keys())
+        item_list = list(self.__shape_map.values())
+        index_list = []
+
+        for item in selected_item_list:
+            try:
+                index = item_list.index(item)
+                index_list.append(index)
+            except ValueError:
+                continue
+        for i, shape in enumerate(shape_list):
+            shape.setSelected(i in index_list)
+
+        self.manager_widget.change_color_button.setEnabled(
+            bool(item_list)
+        )
 
     def centring_in_progress_changed(self, centring_in_progress):
         if centring_in_progress:
@@ -503,3 +559,104 @@ class GraphicsManagerBrick(BaseWidget):
                     treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
         else:
             self.display_all_button_clicked()
+    
+    def export_data(self):
+        """
+        create data and export it
+        """
+        self.create_export_data()
+
+    def create_export_data(self):
+        """
+        return dictionnary with data to be exported
+        {
+            "timestamp" : datetime.now()
+            "diff_motors" : { 
+                            "mot0.name": pos0
+                            "mot1.name": pos1
+                             ...
+                            }
+            "positions_dict" : { 
+                                "pos_name_i" : {
+                                            "beam_pos_x" : val, int - pixels
+                                            "beam_pos_y" : val, int - pixels
+                                            "cal_x" : val, int - nm / pixel
+                                            "cal_y" : val, int - nm / pixel
+                                            "light" : val,
+                                            "zoom" : val,
+                                             },
+                               }
+            "selected_shapes_dict": {
+                                    "selected_shape1_name":
+                                        {
+                                        "type" : string
+                                        "index" : int
+                                        "collection: string ( 'visible', 'background'...)
+                                        "centred_position" : dict
+                                                {
+                                                    "phi":
+                                                    "phiz":
+                                                    "phiy":
+                                                    "sampx":
+                                                    "sampy":
+                                                }
+                                        }
+
+                                    }
+
+        }
+
+        """
+        
+        positions_dict = {}
+        
+
+        print(f"create_export_data positions_dict {positions_dict}")
+
+        data = {}
+
+        now = datetime.datetime.now()
+        data['timestamp'] = str(now)
+
+        diff_motors_dict = {}
+        if HWR.beamline.diffractometer is not None:
+            diff_motors_dict = HWR.beamline.diffractometer.get_motors_dict()
+            print(f"motor dict from Diffracto : {diff_motors_dict}")
+
+        data['diff_motors'] = diff_motors_dict
+
+
+        data["positions_dict"] = copy.deepcopy(positions_dict)
+
+        
+        selected_shapes_dict = {}
+
+        for selected_item in self.manager_widget.shapes_treewidget.selectedItems():
+            
+            key = selected_item.data(1, QtImport.Qt.DisplayRole)
+            shape_type = key.split()[0]
+            index = key.split()[-1]
+            collection = selected_item.data(4, QtImport.Qt.DisplayRole)
+            if collection == "Right click to select collection":
+                collection = "not_defined"
+
+            centred_position = {}
+            for shape, dict_item in self.__shape_map.items():
+                if dict_item == selected_item:
+                    centred_position = shape.get_centred_position()
+            
+            shape_dict = {}
+            shape_dict["type"] = shape_type
+            shape_dict["index"] = index
+            shape_dict["collection"] = collection
+            shape_dict["centred_position"] = centred_position
+
+            selected_shapes_dict[key] = shape_dict
+
+        data["selected_shapes_dict"] = selected_shapes_dict
+
+        from pprint import pprint
+        pprint(f"create_export_data data {data}")
+            
+        
+

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>688</width>
-    <height>661</height>
+    <width>862</width>
+    <height>657</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -43,7 +43,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="all_shapes_page">
       <property name="enabled">
@@ -53,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>670</width>
-        <height>458</height>
+        <width>844</width>
+        <height>445</height>
        </rect>
       </property>
       <attribute name="label">
@@ -252,6 +252,20 @@
           </spacer>
          </item>
          <item>
+          <widget class="QPushButton" name="hide_selected_button">
+           <property name="text">
+            <string>Hide selected</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="clear_selected_button">
+           <property name="text">
+            <string>Clear selected</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="display_all_button">
            <property name="enabled">
             <bool>false</bool>
@@ -290,8 +304,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>670</width>
-        <height>458</height>
+        <width>554</width>
+        <height>439</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -395,8 +409,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>670</width>
-        <height>458</height>
+        <width>554</width>
+        <height>439</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -490,8 +504,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>670</width>
-        <height>458</height>
+        <width>554</width>
+        <height>439</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -879,8 +893,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>670</width>
-        <height>458</height>
+        <width>554</width>
+        <height>439</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -938,30 +952,50 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
+      <widget class="QLabel" name="file_path_label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;JSON file path :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="start_data_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Start</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="apply_data_button">
+      <widget class="QPushButton" name="export_data_button">
        <property name="text">
-        <string>Apply</string>
+        <string>Export data</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="cancel_data_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Cancel</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
