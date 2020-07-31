@@ -35,6 +35,8 @@ __category__ = "Graphics"
 
 class GraphicsManagerBrick(BaseWidget):
 
+    get_operational_modes_list_signal = QtImport.pyqtSignal(object)
+
     def __init__(self, *args):
 
         BaseWidget.__init__(self, *args)
@@ -55,6 +57,7 @@ class GraphicsManagerBrick(BaseWidget):
         self.add_property("beam_cal_data_file", "string", "")
         
         # Signals ------------------------------------------------------------
+        self.define_signal("get_operational_modes_list_signal", ())
 
         # Slots ---------------------------------------------------------------
         self.define_slot("set_data_path", ())
@@ -224,8 +227,9 @@ class GraphicsManagerBrick(BaseWidget):
         """
         Prepare menu to select the tag for the given shape
         """
-        self.__list_of_tags = ['signal', 'background', 'empty']
+        self.get_operational_modes_list_signal.emit(self.__list_of_tags)
         print(f"prepare_tree_widget_menu after signal : {self.__list_of_tags}")
+        
         self.__click_pos = pos
         # get clicked item position in table
                 
@@ -610,6 +614,7 @@ class GraphicsManagerBrick(BaseWidget):
         
         positions_dict = {}
         
+        #self.toto_signal.emit(positions_dict)
 
         print(f"create_export_data positions_dict {positions_dict}")
 

@@ -61,7 +61,9 @@
         type: MultiplePositionsBrick
       - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick0}
         children: []
-        connections: []
+        connections:
+        - {receiver: ESRFID13ConfigurationTabBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
+          slot: return_operational_modes_list}
         name: GraphicsManagerBrick0
         properties:
         - {comment: '', default_value: '', hidden: false, name: beam_cal_data_file,
