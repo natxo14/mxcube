@@ -145,7 +145,7 @@ class MultiplePositionsBrick(BaseWidget):
             for index, radio_button in enumerate(self.button_group.buttons(), start=1):
                 radio_button.setParent(None)
 
-            for index, key in enumerate(self.multipos_hwrobj.get_positions_names_list(), start=1): 
+            for index, key in enumerate(self.multipos_hwrobj.get_positions_names_list(), start=1):
                 #print(f"$$$$$$$$$$$$$$$MULTIPOSBRICK hardware_object_change {index} {str(key)}")
                 radio_button = QtImport.QRadioButton(str(key))
                 self.radio_group_layout.addWidget(radio_button)
