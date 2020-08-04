@@ -151,10 +151,6 @@ class ESRFCenteringBrick(BaseWidget):
         self.ui_widgets_manager.show_center_checkbox.hide()
         self.ui_widgets_manager.show_help_line_checkbox.hide()
         
-        # TODO : integrate centering brick with GraphicsManagerBrick : which is best and why
-        self.ui_widgets_manager.start_alignment_button.hide()
-        self.ui_widgets_manager.cancel_alignment_button.hide()
-        
         # Other ---------------------------------------------------------------
 
         self.connect(HWR.beamline.sample_view, "centringStarted", self.centring_started)
@@ -163,7 +159,7 @@ class ESRFCenteringBrick(BaseWidget):
             HWR.beamline.sample_view, "centringSuccessful", self.centring_successful
         )
         self.connect(HWR.beamline.diffractometer, "centring_image_clicked", self.image_clicked)
-        
+ 
         self.change_point_number(self.points_for_aligment)
 
     def centring_started(self):
@@ -174,6 +170,7 @@ class ESRFCenteringBrick(BaseWidget):
 
     def centring_failed(self, method, centring_status):
         #background cell color to red
+        print(f"ESRFCENTERINGBRICK ; centring_failed")
         table = self.ui_widgets_manager.aligment_table
         table.setRowCount(self.points_for_aligment)
         for row in range(table.rowCount()):
@@ -238,7 +235,7 @@ class ESRFCenteringBrick(BaseWidget):
         """
         Launch aligment process
         """
-        pass
+        HWR.beamline.sample_view.
     def cancel_aligment(self):
         """
         Cancel aligment process
@@ -295,4 +292,5 @@ class ESRFCenteringBrick(BaseWidget):
         for row in range(table.rowCount()):
             for column in range(table.columnCount()):
                 table.item(row, column).setText("")
+                table.item(row, column).setData(QtImport.Qt.BackgroundRole, None)
             

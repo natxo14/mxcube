@@ -66,23 +66,32 @@ class CameraBrick(BaseWidget):
         self.info_label = QtImport.QLabel(self)
         self.camera_control_dialog = CameraControlDialog(self)
 
+        self._camera_expo_spin_slider = None
+        self._camera_gain_spin_slider = None
+
+        self.move_center_to_clicked_point_button = None
+
         # populate QMenu and QToolBar
         tmp_menu = QtImport.QMenu(self.toolbar)
         tmp_menu.setIcon(Icons.load_icon("Draw"))
 
         self.popup_menu = QtImport.QMenu(self)
         self.popup_menu.menuAction().setIconVisibleInMenu(True)
-        create_menu = self.popup_menu.addMenu("Create")
+        create_menu = self.popup_menu.addMenu(
+            Icons.load_icon("Draw"),
+            "Create"
+        )
         create_menu.menuAction().setIconVisibleInMenu(True)
 
-        temp_action = create_menu.addAction(
-            Icons.load_icon("VCRPlay2"),
-            "Centring with N points",
-            self.create_point_click_clicked,
-        )
-        temp_action.setShortcut("Ctrl+1")
+        # CENTRING out of menus : only in centring brick
+        # temp_action = create_menu.addAction(
+        #     Icons.load_icon("VCRPlay2"),
+        #     "Centring with N points",
+        #     self.create_point_click_clicked,
+        # )
+        # temp_action.setShortcut("Ctrl+1")
 
-        tmp_menu.addAction(temp_action)
+        # tmp_menu.addAction(temp_action)
 
         temp_action = create_menu.addAction(
             Icons.load_icon("ThumbUp"),
@@ -144,14 +153,16 @@ class CameraBrick(BaseWidget):
             QtImport.QIcon.Off,
         )
         
-        temp_action = self.popup_menu.addAction(
+        self.move_center_to_clicked_point_button = self.popup_menu.addAction(
             icon,
             "Move point to beam",
         )
-        temp_action.setCheckable(True)
-        temp_action.toggled.connect(self.move_center_to_clicked_point)
+        self.move_center_to_clicked_point_button.setCheckable(True)
+        self.move_center_to_clicked_point_button.toggled.connect(
+            self.move_center_to_clicked_point
+        )
         
-        self.toolbar.addAction(temp_action)
+        self.toolbar.addAction(self.move_center_to_clicked_point_button)
 
         measure_menu = self.popup_menu.addMenu(
             Icons.load_icon("measure_icon"),
@@ -265,6 +276,30 @@ class CameraBrick(BaseWidget):
 
         self.toolbar.addAction(temp_action)
 
+
+        camera_expo_gain_menu = self.popup_menu.addMenu(
+            Icons.load_icon("camera-exposure"),
+            "Camera Exposure and Gain",
+        )
+
+        self._camera_expo_spin_slider = SpixAndSliderAction("Camera Exposition")
+        self._camera_expo_spin_slider.value_changed.connect(
+            self.set_camera_exposure_time
+        )
+        camera_expo_gain_menu.addAction(
+            self._camera_expo_spin_slider
+        )
+
+        self._camera_gain_spin_slider = SpixAndSliderAction("Camera Gain")
+        self._camera_gain_spin_slider.value_changed.connect(
+            self.set_camera_gain
+        )
+        camera_expo_gain_menu.addAction(
+            self._camera_gain_spin_slider
+        )
+
+        self.toolbar.addAction(camera_expo_gain_menu.menuAction())
+
         self.camera_control_action = self.popup_menu.addAction(
             "Camera control", self.open_camera_control_dialog
         )
@@ -309,6 +344,9 @@ class CameraBrick(BaseWidget):
                 self.disconnect(
                     self.graphics_manager_hwobj, "infoMsg", self.set_info_msg
                 )
+                self.disconnect(
+                    self.graphics_manager_hwobj, "escape_pressed", self.escape_pressed
+                )
 
             self.graphics_manager_hwobj = self.get_hardware_object(new_value)
 
@@ -320,6 +358,10 @@ class CameraBrick(BaseWidget):
                     self.graphics_manager_hwobj, "imageScaleChanged", self.image_scaled
                 )
                 self.connect(self.graphics_manager_hwobj, "infoMsg", self.set_info_msg)
+                self.connect(
+                    self.graphics_manager_hwobj, "escape_pressed", self.escape_pressed
+                )
+
                 self.graphics_view = self.graphics_manager_hwobj.get_graphics_view()
                 # self.graphics_camera_frame = self.graphics_manager_hwobj.get_camera_frame()
                 self.main_layout.addWidget(self.graphics_view)
@@ -330,6 +372,15 @@ class CameraBrick(BaseWidget):
                     self.camera_control_dialog.set_camera_hwobj(
                         self.graphics_manager_hwobj.camera
                     )
+                    
+                    #set gain/expo control's values from camera
+                    camera_gain = self.graphics_manager_hwobj.camera.get_gain()
+                    camera_expo = self.graphics_manager_hwobj.camera.get_exposure_time()
+                    
+                    self._camera_expo_spin_slider.set_value(camera_expo)
+                    self._camera_gain_spin_slider.set_value(camera_gain)
+
+                    
         elif property_name == "fixedSize":
             try:
                 fixed_size = list(map(int, new_value.split()))
@@ -358,6 +409,14 @@ class CameraBrick(BaseWidget):
             self.camera_control_action.setEnabled(new_value)
         else:
             BaseWidget.property_changed(self, property_name, old_value, new_value)
+
+    def escape_pressed(self):
+        """
+        'Unpress' move to beam button
+        """
+        if self.move_center_to_clicked_point_button.isChecked():
+            self.move_center_to_clicked_point_button.setChecked(False)
+
 
     def display_beam_size_toggled(self):
         self.graphics_manager_hwobj.display_beam_size(
@@ -534,6 +593,17 @@ class CameraBrick(BaseWidget):
                 self.snapshot_file_index += 1
             except BaseException:
                 logging.getLogger().exception("CameraBrick: error saving snapshot!")
+
+
+    def set_camera_exposure_time(self, expo_value):
+        self.graphics_manager_hwobj.camera.set_exposure_time(
+            expo_value
+        )  
+        
+    def set_camera_gain(self, gain_value):
+        self.graphics_manager_hwobj.camera.set_gain(
+            gain_value
+        ) 
 
     def set_visible_mode(self, checked=False):
         
@@ -898,3 +968,35 @@ class DuoStateButton(QtImport.QToolButton):
 
     def command_failed(self):
         self.command_done()
+
+class SpixAndSliderAction(QtImport.QWidgetAction):
+
+    value_changed = QtImport.pyqtSignal(float)
+
+    def __init__(self, action_string="default label", ):
+
+        QtImport.QWidgetAction.__init__(self, None)
+
+        self.main_widget = QtImport.QWidget(None)
+        self._main_layout = QtImport.QHBoxLayout()
+
+        self._label = QtImport.QLabel(action_string)
+        
+        self._slider = QtImport.QSlider(QtImport.Qt.Horizontal)
+        self._spinbox = QtImport.QDoubleSpinBox()
+
+        self._slider.valueChanged.connect(self.set_value)
+        self._spinbox.valueChanged.connect(self.set_value)
+
+        self._main_layout.addWidget(self._label)
+        self._main_layout.addWidget(self._slider)
+        self._main_layout.addWidget(self._spinbox)
+
+        self.main_widget.setLayout(self._main_layout)
+
+        self.setDefaultWidget(self.main_widget)
+
+    def set_value(self, value):
+        self._slider.setValue(value)
+        self._spinbox.setValue(value)
+        self.value_changed.emit(value)

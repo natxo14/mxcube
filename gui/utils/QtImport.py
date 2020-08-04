@@ -198,6 +198,7 @@ if (qt_variant == "PyQt5") or (qt_variant is None and not qt_imported):
             QVBoxLayout,
             QWhatsThis,
             QWidget,
+            QWidgetAction,
         )
         from PyQt5.QtGui import (
             QBrush,

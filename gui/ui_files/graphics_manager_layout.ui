@@ -53,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>844</width>
-        <height>445</height>
+        <width>874</width>
+        <height>431</height>
        </rect>
       </property>
       <attribute name="label">
@@ -239,6 +239,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="hide_all_cbox">
+           <property name="text">
+            <string>None</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -304,8 +311,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>554</width>
-        <height>439</height>
+        <width>844</width>
+        <height>445</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -409,8 +416,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>554</width>
-        <height>439</height>
+        <width>844</width>
+        <height>445</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -504,8 +511,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>554</width>
-        <height>439</height>
+        <width>844</width>
+        <height>445</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -893,8 +900,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>554</width>
-        <height>439</height>
+        <width>844</width>
+        <height>445</height>
        </rect>
       </property>
       <attribute name="icon">

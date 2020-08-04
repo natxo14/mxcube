@@ -205,7 +205,7 @@ class GraphicsManagerBrick(BaseWidget):
         self.main_groupbox_toggled(True)
         # self.main_groupbox.setToolTip("Click to open/close item manager")
 
-        self.manager_widget.display_all_button.hide()
+        #self.manager_widget.display_all_button.hide()
 
         self.connect(HWR.beamline.sample_view, "shapeCreated", self.shape_created)
         self.connect(HWR.beamline.sample_view, "shapeDeleted", self.shape_deleted)
@@ -215,6 +215,12 @@ class GraphicsManagerBrick(BaseWidget):
             "centringInProgress",
             self.centring_in_progress_changed
         )
+        self.connect(HWR.beamline.sample_view, "escape_pressed", self.escape_pressed)
+
+    def escape_pressed(self):
+        """
+
+        """
 
     def set_data_path(self, new_path):
 
@@ -430,13 +436,19 @@ class GraphicsManagerBrick(BaseWidget):
         for shape, treewidget_item in self.__shape_map.items():
             shape.show()
             treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
-
+    
     def display_all_toggled(self, state):
         if state == QtImport.Qt.Checked:
             self.display_all_button_clicked()
 
+        self.manager_widget.display_all_cbox.setChecked(True)
+
     def hide_all_button_clicked(self):
         
+        for shape, treewidget_item in self.__shape_map.items():
+            shape.hide()
+            treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
+
         self.mutual_exclusive_bg.setExclusive(False)
        
         self.manager_widget.display_points_cbox.setCheckState(QtImport.Qt.Unchecked)
@@ -446,11 +458,6 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.display_all_cbox.setCheckState(QtImport.Qt.Unchecked)
         
         self.mutual_exclusive_bg.setExclusive(True)
-
-        for shape, treewidget_item in self.__shape_map.items():
-            shape.hide()
-            treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
-
 
     def clear_all_button_clicked(self):
         HWR.beamline.sample_view.clear_all_shapes()
