@@ -92,11 +92,13 @@ class GraphicsManagerBrick(BaseWidget):
         self.mutual_exclusive_bg.addButton(
             self.manager_widget.display_square_roi_cbox
         )
-
         self.mutual_exclusive_bg.addButton(
             self.manager_widget.display_all_cbox
         )
-        
+        self.mutual_exclusive_bg.addButton(
+            self.manager_widget.hide_all_cbox
+        )
+                
         # Qt signal/slot connections ------------------------------------------
         self.main_groupbox.toggled.connect(self.main_groupbox_toggled)
         self.manager_widget.change_color_button.clicked.connect(
@@ -123,14 +125,30 @@ class GraphicsManagerBrick(BaseWidget):
             self.display_all_toggled
         )
 
+        self.manager_widget.hide_all_cbox.stateChanged.connect(
+            self.hide_all_toggled
+        )
+
         self.manager_widget.display_all_button.clicked.connect(
             self.display_all_button_clicked
         )
+        self.manager_widget.display_all_button.hide()
+
         self.manager_widget.hide_all_button.clicked.connect(
             self.hide_all_button_clicked
         )
-        self.manager_widget.clear_all_button.clicked.connect(
-            self.clear_all_button_clicked
+        self.manager_widget.hide_all_button.hide()
+
+        self.manager_widget.delete_all_button.clicked.connect(
+            self.delete_all_button_clicked
+        )
+
+        self.manager_widget.delete_selection_button.clicked.connect(
+            self.delete_selection_button_clicked
+        )
+
+        self.manager_widget.hide_selection_button.clicked.connect(
+            self.hide_selection_button_clicked
         )
 
         self.manager_widget.create_point_start_button.clicked.connect(
@@ -139,6 +157,10 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.create_point_accept_button.clicked.connect(
             self.create_point_accept_button_clicked
         )
+
+        # TODO : what does 'accept' mean ??
+        self.manager_widget.create_point_accept_button.hide()
+
         self.manager_widget.create_line_button.clicked.connect(
             self.create_line_button_clicked
         )
@@ -441,7 +463,9 @@ class GraphicsManagerBrick(BaseWidget):
         if state == QtImport.Qt.Checked:
             self.display_all_button_clicked()
 
-        self.manager_widget.display_all_cbox.setChecked(True)
+    def hide_all_toggled(self, state):
+        if state == QtImport.Qt.Checked:
+            self.hide_all_button_clicked()
 
     def hide_all_button_clicked(self):
         
@@ -449,17 +473,55 @@ class GraphicsManagerBrick(BaseWidget):
             shape.hide()
             treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
 
-        self.mutual_exclusive_bg.setExclusive(False)
+        # self.mutual_exclusive_bg.setExclusive(False)
        
-        self.manager_widget.display_points_cbox.setCheckState(QtImport.Qt.Unchecked)
-        self.manager_widget.display_lines_cbox.setCheckState(QtImport.Qt.Unchecked)
-        self.manager_widget.display_grids_cbox.setCheckState(QtImport.Qt.Unchecked)
-        self.manager_widget.display_square_roi_cbox.setCheckState(QtImport.Qt.Unchecked)
-        self.manager_widget.display_all_cbox.setCheckState(QtImport.Qt.Unchecked)
+        # self.manager_widget.display_points_cbox.setCheckState(QtImport.Qt.Unchecked)
+        # self.manager_widget.display_lines_cbox.setCheckState(QtImport.Qt.Unchecked)
+        # self.manager_widget.display_grids_cbox.setCheckState(QtImport.Qt.Unchecked)
+        # self.manager_widget.display_square_roi_cbox.setCheckState(QtImport.Qt.Unchecked)
+        # self.manager_widget.display_all_cbox.setCheckState(QtImport.Qt.Unchecked)
         
-        self.mutual_exclusive_bg.setExclusive(True)
+        # self.mutual_exclusive_bg.setExclusive(True)
+    
+    def delete_selection_button_clicked(self):
+        """
+        delete selected items
+        """
+        shape_list = list(self.__shape_map.keys())
+        for shape in self.__shape_map.keys():
+            if shape.isSelected():
+                HWR.beamline.sample_view.delete_shape(shape)
 
-    def clear_all_button_clicked(self):
+
+    def hide_selection_button_clicked(self):
+        """
+        hide selected items
+        """
+        shape_list = list(self.__shape_map.keys())
+        for shape in self.__shape_map.keys():
+            if shape.isSelected():
+                self.__shape_map[shape].setData(2, QtImport.Qt.DisplayRole, "False")
+                shape.hide()
+
+        # selected_item_list = self.manager_widget.shapes_treewidget.selectedItems()
+        # shape_list = list(self.__shape_map.keys())
+        # item_list = list(self.__shape_map.values())
+        # index_list = []
+
+        # for item in selected_item_list:
+        #     try:
+        #         index = item_list.index(item)
+        #         index_list.append(index)
+        #     except ValueError:
+        #         continue
+        # for i, shape in enumerate(shape_list):
+        #     shape.hide()
+
+        # self.manager_widget.change_color_button.setEnabled(
+        #     bool(item_list)
+        # )
+
+    def delete_all_button_clicked(self):
         HWR.beamline.sample_view.clear_all_shapes()
 
     def create_point_start_button_clicked(self):
@@ -495,10 +557,12 @@ class GraphicsManagerBrick(BaseWidget):
         #self.manager_widget.display_lines_cbox.setEnabled(len(self.__shape_map) > 0)
         #self.manager_widget.display_grids_cbox.setEnabled(len(self.__shape_map) > 0)
         self.manager_widget.display_square_roi_cbox.setEnabled(len(self.__shape_map) > 0)
+        self.manager_widget.hide_all_cbox.setEnabled(len(self.__shape_map) > 0)
+        self.manager_widget.display_all_cbox.setEnabled(len(self.__shape_map) > 0)
 
         self.manager_widget.display_all_button.setEnabled(len(self.__shape_map) > 0)
         self.manager_widget.hide_all_button.setEnabled(len(self.__shape_map) > 0)
-        self.manager_widget.clear_all_button.setEnabled(len(self.__shape_map) > 0)
+        self.manager_widget.delete_all_button.setEnabled(len(self.__shape_map) > 0)
 
     def shape_treewiget_item_clicked(self, current_item, column):
         for key, value in self.__shape_map.items():
@@ -562,7 +626,7 @@ class GraphicsManagerBrick(BaseWidget):
         if state == QtImport.Qt.Checked:
             for shape, treewidget_item in self.__shape_map.items():
                 print(f"display_only_type_button_clicked {treewidget_item.data(1, QtImport.Qt.DisplayRole,)}")
-                if shape_type in  str(treewidget_item.data(1, QtImport.Qt.DisplayRole,)):
+                if shape_type in str(treewidget_item.data(1, QtImport.Qt.DisplayRole,)):
                     shape.show()
                     treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
                 else:
