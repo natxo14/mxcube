@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>862</width>
-    <height>657</height>
+    <width>941</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -53,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>874</width>
-        <height>431</height>
+        <width>923</width>
+        <height>449</height>
        </rect>
       </property>
       <attribute name="label">
@@ -259,16 +259,16 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="hide_selected_button">
+          <widget class="QPushButton" name="hide_selection_button">
            <property name="text">
-            <string>Hide selected</string>
+            <string>Hide selection</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="clear_selected_button">
+          <widget class="QPushButton" name="delete_selection_button">
            <property name="text">
-            <string>Clear selected</string>
+            <string>Delete selection</string>
            </property>
           </widget>
          </item>
@@ -293,12 +293,12 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="clear_all_button">
+          <widget class="QPushButton" name="delete_all_button">
            <property name="enabled">
             <bool>false</bool>
            </property>
            <property name="text">
-            <string>Clear all</string>
+            <string>Delete all</string>
            </property>
           </widget>
          </item>
@@ -311,13 +311,13 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>844</width>
-        <height>445</height>
+        <width>923</width>
+        <height>449</height>
        </rect>
       </property>
       <attribute name="icon">
        <iconset>
-        <normaloff>../icons/Point.png</normaloff>../icons/Point.png</iconset>
+        <normaloff>../icons/calibration_point.png</normaloff>../icons/calibration_point.png</iconset>
       </attribute>
       <attribute name="label">
        <string>Points</string>
@@ -416,8 +416,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>844</width>
-        <height>445</height>
+        <width>923</width>
+        <height>449</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -511,8 +511,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>844</width>
-        <height>445</height>
+        <width>923</width>
+        <height>449</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -900,8 +900,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>844</width>
-        <height>445</height>
+        <width>923</width>
+        <height>449</height>
        </rect>
       </property>
       <attribute name="icon">
