@@ -94,7 +94,7 @@ class CameraBrick(BaseWidget):
         # tmp_menu.addAction(temp_action)
 
         temp_action = create_menu.addAction(
-            Icons.load_icon("ThumbUp"),
+            Icons.load_icon("calibration_point"),
             "Centring point on beam position",
             self.create_point_current_clicked,
         )
@@ -105,7 +105,7 @@ class CameraBrick(BaseWidget):
         # in double temp_action.setIcon(Icons.load_icon("ThumbUp"))
 
         temp_action = create_menu.addAction(
-            Icons.load_icon("ThumbUp"),
+            Icons.load_icon("calibration_point"),
             "Centring points with one click",
             self.create_points_one_click_clicked,
         )
