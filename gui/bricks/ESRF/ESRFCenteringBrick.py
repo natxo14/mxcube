@@ -140,11 +140,11 @@ class ESRFCenteringBrick(BaseWidget):
         )
 
         self.ui_widgets_manager.start_alignment_button.clicked.connect(
-            self.start_aligment
+            self.start_centring
         )
 
         self.ui_widgets_manager.cancel_alignment_button.clicked.connect(
-            self.cancel_aligment
+            self.cancel_centring
         )
 
         # TODO : add show center and show help line functionalities
@@ -231,16 +231,16 @@ class ESRFCenteringBrick(BaseWidget):
         Doc
         """
         pass
-    def start_aligment(self):
+    def start_centring(self):
         """
         Launch aligment process
         """
-        HWR.beamline.sample_view.
-    def cancel_aligment(self):
+        HWR.beamline.sample_view.start_centring(tree_click=True)
+    def cancel_centring(self):
         """
         Cancel aligment process
         """
-        pass
+        HWR.beamline.sample_view.reject_centring()
 
     def change_point_number(self, new_int_value):
         """

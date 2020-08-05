@@ -261,16 +261,24 @@ class ESRFCameraCalibrationBrick(BaseWidget):
 
     def beam_cal_pos_data_changed(self, who_changed):
         # TODO : identify changed data and set cell background to yellow
+        print(f"################ cameraCalibBrick beam_cal_pos_data_changed who_changed {who_changed}")
+        if who_changed == 0:
+            return
+
+        print(f"################ cameraCalibBrick beam_cal_pos_data_changed update_gui")
         self.update_gui()
 
         pos_name = self.multipos_hwobj.get_value()
         table = self.ui_widgets_manager.calibration_table
 
+        print(f"################ cameraCalibBrick beam_cal_pos_data_changed pos_name {pos_name}")
         for index_row in range(table.rowCount()):
-            if table.item(index_row, 0) == pos_name:
+            print(f"################ cameraCalibBrick beam_cal_pos_data_changed index_row {index_row} - {table.rowCount()}")
+            if table.item(index_row, 0).text() == pos_name:
+                print(f"################ cameraCalibBrick beam_cal_pos_data_changed pos_name {pos_name}")
                 table.item(index_row, 1).setBackground(QtImport.QColor(QtImport.Qt.yellow))
                 table.item(index_row, 2).setBackground(QtImport.QColor(QtImport.Qt.yellow))
-    
+            
     def beam_cal_pos_data_saved(self):
         """
         data saved: clean cell background

@@ -192,12 +192,12 @@ class ESRFCameraBeamBrick(BaseWidget):
     #     print(f"################ cameraCalibBrick beam_position_dict {self.beam_position_dict}")
     def beam_position_data_changed(self, new_beam_data):
         
-        dict_elem = self.multipos_hwobj.get_current_position()
+        # dict_elem = self.multipos_hwobj.get_current_position()
 
-        dict_elem["beam_pos_x"] = new_beam_data[0]
-        dict_elem["beam_pos_y"] = new_beam_data[1]
+        # dict_elem["beam_pos_x"] = new_beam_data[0]
+        # dict_elem["beam_pos_y"] = new_beam_data[1]
 
-        self.multipos_hwobj.edit_data(dict_elem, None, 0)
+        self.multipos_hwobj.beam_position_data_changed(new_beam_data)
 
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "zoom":
@@ -266,6 +266,9 @@ class ESRFCameraBeamBrick(BaseWidget):
         self.init_interface()
         
     def beam_cal_pos_data_changed(self, who_changed):
+
+        if who_changed == 1:
+            return
         # TODO : identify changed data and set cell background to yellow
         self.init_interface()
 
