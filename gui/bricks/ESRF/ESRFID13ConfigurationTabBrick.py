@@ -439,7 +439,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 if who_changed == 0:
                     table.item(row_index, 1).setBackground(QtImport.QColor(QtImport.Qt.yellow))
                     table.item(row_index, 2).setBackground(QtImport.QColor(QtImport.Qt.yellow))
-                elif who_changed == 0:
+                elif who_changed == 1:
                     table.item(row_index, 3).setBackground(QtImport.QColor(QtImport.Qt.yellow))
                     table.item(row_index, 4).setBackground(QtImport.QColor(QtImport.Qt.yellow))
         
