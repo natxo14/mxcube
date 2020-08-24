@@ -43,7 +43,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="all_shapes_page">
       <property name="enabled">
@@ -54,7 +54,7 @@
         <x>0</x>
         <y>0</y>
         <width>923</width>
-        <height>449</height>
+        <height>446</height>
        </rect>
       </property>
       <attribute name="label">
@@ -312,7 +312,7 @@
         <x>0</x>
         <y>0</y>
         <width>923</width>
-        <height>449</height>
+        <height>446</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -371,23 +371,29 @@
          </item>
          <item>
           <widget class="QPushButton" name="create_point_start_button">
+           <property name="toolTip">
+            <string>Create Point</string>
+           </property>
            <property name="text">
-            <string>Centre</string>
+            <string/>
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../icons/VCRPlay2.png</normaloff>../icons/VCRPlay2.png</iconset>
+             <normaloff>../icons/calibration_point_green.png</normaloff>../icons/calibration_point_green.png</iconset>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="create_point_accept_button">
+           <property name="toolTip">
+            <string>Point On Beam</string>
+           </property>
            <property name="text">
-            <string>Accept</string>
+            <string/>
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../icons/ThumbUp.png</normaloff>../icons/ThumbUp.png</iconset>
+             <normaloff>../icons/beam2.png</normaloff>../icons/beam2.png</iconset>
            </property>
           </widget>
          </item>
@@ -518,7 +524,7 @@
         <x>0</x>
         <y>0</y>
         <width>923</width>
-        <height>449</height>
+        <height>446</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -907,7 +913,7 @@
         <x>0</x>
         <y>0</y>
         <width>923</width>
-        <height>449</height>
+        <height>446</height>
        </rect>
       </property>
       <attribute name="icon">

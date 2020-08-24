@@ -162,7 +162,7 @@ class GraphicsManagerBrick(BaseWidget):
         )
 
         # TODO : what does 'accept' mean ??
-        self.manager_widget.create_point_accept_button.hide()
+        # self.manager_widget.create_point_accept_button.hide()
 
         self.manager_widget.create_line_button.clicked.connect(
             self.create_line_button_clicked
