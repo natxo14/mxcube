@@ -244,11 +244,11 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         input_list[:] = []
         for item in self.list_of_operational_modes:
             input_list.append(item)
-        print(f"SLOT return_operational_modes_list : {input_list}")
+        #print(f"SLOT return_operational_modes_list : {input_list}")
     
     def configuration_table_item_changed(self, item):
 
-        print(f"configuration_table_item_changed item {item.text()}")
+        #print(f"configuration_table_item_changed item {item.text()}")
 
         validated_value = self.validate_cell_value(
             item.text()
