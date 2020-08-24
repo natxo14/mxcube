@@ -94,7 +94,7 @@ class CameraBrick(BaseWidget):
         # tmp_menu.addAction(temp_action)
 
         temp_action = create_menu.addAction(
-            Icons.load_icon("calibration_point"),
+            Icons.load_icon("beam2"),
             "Centring point on beam position",
             self.create_point_current_clicked,
         )
@@ -105,7 +105,7 @@ class CameraBrick(BaseWidget):
         # in double temp_action.setIcon(Icons.load_icon("ThumbUp"))
 
         temp_action = create_menu.addAction(
-            Icons.load_icon("calibration_point"),
+            Icons.load_icon("calibration_point_green"),
             "Centring points with one click",
             self.create_points_one_click_clicked,
         )
@@ -116,6 +116,9 @@ class CameraBrick(BaseWidget):
             Icons.load_icon("Line.png"), "Helical line", self.create_line_clicked
         )
         temp_action.setShortcut("Ctrl+3")
+
+        tmp_menu.addAction(temp_action)
+
         temp_action = create_menu.addAction(
             Icons.load_icon("Line.png"),
             "Automatic helical line",
