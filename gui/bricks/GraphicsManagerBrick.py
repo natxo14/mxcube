@@ -24,9 +24,12 @@ from HardwareRepository import HardwareRepository as HWR
 
 import json
 import os
+from os.path import expanduser
+from pprint import pprint
 import copy
 import datetime
 from datetime import date
+import logging
 
 __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
@@ -52,6 +55,8 @@ class GraphicsManagerBrick(BaseWidget):
         self.__click_pos = None
         self.__beam_cal_file_xml_path = None
         self.__data_export_file_path = None
+        self.__export_file_prefix = "export_file_prefix"
+        self.__export_file_index = 0
         
         # Properties ----------------------------------------------------------
         self.add_property("beam_cal_data_file", "string", "")
@@ -132,13 +137,11 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.display_all_button.clicked.connect(
             self.display_all_button_clicked
         )
-        self.manager_widget.display_all_button.hide()
-
+        
         self.manager_widget.hide_all_button.clicked.connect(
             self.hide_all_button_clicked
         )
-        self.manager_widget.hide_all_button.hide()
-
+        
         self.manager_widget.delete_all_button.clicked.connect(
             self.delete_all_button_clicked
         )
@@ -256,13 +259,13 @@ class GraphicsManagerBrick(BaseWidget):
         Prepare menu to select the tag for the given shape
         """
         self.get_operational_modes_list_signal.emit(self.__list_of_tags)
-        print(f"prepare_tree_widget_menu after signal : {self.__list_of_tags}")
+        # print(f"prepare_tree_widget_menu after signal : {self.__list_of_tags}")
         
         self.__click_pos = pos
         # get clicked item position in table
                 
         selection_menu = QtImport.QMenu()
-        selection_menu.addSection("Select shape's nature")
+        selection_menu.addSection("Select shape's collection")
 
         for tag in self.__list_of_tags:
             print(f"tag : {tag}")
@@ -272,7 +275,7 @@ class GraphicsManagerBrick(BaseWidget):
             #     self.tree_widget_menu_selected
             # )
             selection_menu.addAction(new_action)
-        
+        selection_menu.setMinimumWidth(150)
         selection_menu.triggered.connect(
             self.tree_widget_menu_selected
         )
@@ -284,7 +287,7 @@ class GraphicsManagerBrick(BaseWidget):
         """
         change shape's information according to selected value
         """
-        print(f"selected tag : {action} -  action data {action.data()}")
+        #print(f"selected tag : {action} -  action data {action.data()}")
         for item in self.manager_widget.shapes_treewidget.selectedItems():
             item.setData(4, QtImport.Qt.DisplayRole, action.data())
         # clicked_item = self.manager_widget.shapes_treewidget.itemAt(self.__click_pos)
@@ -389,9 +392,9 @@ class GraphicsManagerBrick(BaseWidget):
         self.toggle_buttons_enabled()
 
     def shape_selected(self, shape, selected_state):
-        print(f"GRPHICMANAGERBRICK shape_selected type(shape) {type(shape)} selected_state {selected_state}")
+        #print(f"GRPHICMANAGERBRICK shape_selected type(shape) {type(shape)} selected_state {selected_state}")
         if shape in self.__shape_map:
-            print(f"GRPHICMANAGERBRICK shape_selected shape in self.__shape_map:")
+            #print(f"GRPHICMANAGERBRICK shape_selected shape in self.__shape_map:")
             treewidget_item = self.__shape_map[shape]
             treewidget_item.setData(
                 3, QtImport.Qt.DisplayRole, str(selected_state)
@@ -455,10 +458,18 @@ class GraphicsManagerBrick(BaseWidget):
                 item.set_base_color(color)
 
     def display_all_button_clicked(self):
+        print(f"display_all_button_clicked")
         for shape, treewidget_item in self.__shape_map.items():
+            print(f"shape {shape} to be showed")
             shape.show()
             treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
+        
+        self.manager_widget.display_all_cbox.setChecked(True)
     
+    def hide_all_toggled(self, state):
+        if state == QtImport.Qt.Checked:
+            self.hide_all_button_clicked()
+
     def display_all_toggled(self, state):
         if state == QtImport.Qt.Checked:
             self.display_all_button_clicked()
@@ -466,6 +477,11 @@ class GraphicsManagerBrick(BaseWidget):
     def hide_all_toggled(self, state):
         if state == QtImport.Qt.Checked:
             self.hide_all_button_clicked()
+    def hide_selected_button_clicked(self):
+        for shape, treewidget_item in self.__shape_map.items():
+            if shape.isSelected():
+                shape.hide()
+                treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
 
     def hide_all_button_clicked(self):
         
@@ -473,6 +489,7 @@ class GraphicsManagerBrick(BaseWidget):
             shape.hide()
             treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
 
+        self.manager_widget.hide_all_cbox.setChecked(True)
         # self.mutual_exclusive_bg.setExclusive(False)
        
         # self.manager_widget.display_points_cbox.setCheckState(QtImport.Qt.Unchecked)
@@ -487,7 +504,7 @@ class GraphicsManagerBrick(BaseWidget):
         """
         delete selected items
         """
-        shape_list = list(self.__shape_map.keys())
+        
         for shape in self.__shape_map.keys():
             if shape.isSelected():
                 HWR.beamline.sample_view.delete_shape(shape)
@@ -497,7 +514,7 @@ class GraphicsManagerBrick(BaseWidget):
         """
         hide selected items
         """
-        shape_list = list(self.__shape_map.keys())
+        
         for shape in self.__shape_map.keys():
             if shape.isSelected():
                 self.__shape_map[shape].setData(2, QtImport.Qt.DisplayRole, "False")
@@ -524,6 +541,12 @@ class GraphicsManagerBrick(BaseWidget):
     def delete_all_button_clicked(self):
         HWR.beamline.sample_view.clear_all_shapes()
 
+    def clear_selected_button_clicked(self):
+        print(f"clear_selected_button_clicked")
+        for shape in HWR.beamline.sample_view.get_selected_shapes():
+            print(f"shape {shape} - {shape.get_display_name()} to be deleted")
+            HWR.beamline.sample_view.delete_shape(shape)
+            
     def create_point_start_button_clicked(self):
         # HWR.beamline.sample_view.start_centring(tree_click=True)
         HWR.beamline.sample_view.start_one_click_centring()
@@ -641,6 +664,36 @@ class GraphicsManagerBrick(BaseWidget):
         """
         self.create_export_data()
 
+        formats = [
+            "txt",
+            "json",
+            "csv"
+        ]
+
+        current_file_name = "%s/%s_%d.%s" % (
+            expanduser("~"),
+            self.__export_file_prefix,
+            self.__export_file_index,
+            "txt",
+        )
+        filename, _filter = QtImport.QFileDialog.getSaveFileName(
+                self,
+                "Choose a filename to save under",
+                current_file_name,
+                "Text files (%s)" % " ".join(formats),
+            )
+        
+        if filename:
+            data_to_export = self.create_export_data()
+            try:
+                #self.graphics_manager_hwobj.save_scene_snapshot(filename)
+                print(f"filename : {filename}")
+                data_file = open(filename, 'w')
+                pprint(data_to_export, data_file)
+                self.__export_file_index += 1
+            except BaseException:
+                logging.getLogger("HWR").error("GraphicsManagerBrick: error saving data!")
+            
     def create_export_data(self):
         """
         return dictionnary with data to be exported
@@ -707,32 +760,62 @@ class GraphicsManagerBrick(BaseWidget):
         
         selected_shapes_dict = {}
 
-        for selected_item in self.manager_widget.shapes_treewidget.selectedItems():
-            
-            key = selected_item.data(1, QtImport.Qt.DisplayRole)
-            shape_type = key.split()[0]
-            index = key.split()[-1]
-            collection = selected_item.data(4, QtImport.Qt.DisplayRole)
+        for shape in HWR.beamline.sample_view.get_selected_shapes():
+            item = self.__shape_map[shape]
+
+            display_name = shape.get_display_name()
+            shape_type = display_name.split()[0]
+            index = display_name.split()[-1]
+
+            collection = item.data(4, QtImport.Qt.DisplayRole)
             if collection == "Right click to select collection":
                 collection = "not_defined"
 
             centred_position = {}
-            for shape, dict_item in self.__shape_map.items():
-                if dict_item == selected_item:
-                    centred_position = shape.get_centred_position()
-            
+
+            if shape_type == "Point":
+                centred_position = shape.get_centred_position()
+            elif shape_type == "Line":
+                centred_position = shape.get_centred_positions()
+            elif shape_type == "SquareROI":
+                centred_position = shape.get_centred_positions()
+
+
             shape_dict = {}
             shape_dict["type"] = shape_type
             shape_dict["index"] = index
             shape_dict["collection"] = collection
             shape_dict["centred_position"] = centred_position
 
-            selected_shapes_dict[key] = shape_dict
+            selected_shapes_dict[display_name] = shape_dict
+
+        # for selected_item in self.manager_widget.shapes_treewidget.selectedItems():
+            
+        #     key = selected_item.data(1, QtImport.Qt.DisplayRole)
+        #     shape_type = key.split()[0]
+        #     index = key.split()[-1]
+        #     collection = selected_item.data(4, QtImport.Qt.DisplayRole)
+        #     if collection == "Right click to select collection":
+        #         collection = "not_defined"
+
+        #     centred_position = {}
+        #     for shape, dict_item in self.__shape_map.items():
+        #         if dict_item == selected_item:
+        #             centred_position = shape.get_centred_position()
+            
+        #     shape_dict = {}
+        #     shape_dict["type"] = shape_type
+        #     shape_dict["index"] = index
+        #     shape_dict["collection"] = collection
+        #     shape_dict["centred_position"] = centred_position
+
+        #     selected_shapes_dict[key] = shape_dict
 
         data["selected_shapes_dict"] = selected_shapes_dict
 
-        from pprint import pprint
-        pprint(f"create_export_data data {data}")
+        pprint(f"create_export_data data")
+        pprint(data)
             
+        return data
         
 
