@@ -275,7 +275,7 @@
          <item>
           <widget class="QPushButton" name="display_all_button">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Display all</string>
@@ -285,7 +285,7 @@
          <item>
           <widget class="QPushButton" name="hide_all_button">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Hide all</string>
@@ -295,7 +295,7 @@
          <item>
           <widget class="QPushButton" name="delete_all_button">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Delete all</string>
@@ -410,14 +410,14 @@
      </widget>
      <widget class="QWidget" name="lines_page">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>923</width>
-        <height>449</height>
+        <height>446</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -445,6 +445,9 @@
        </property>
        <item row="0" column="0">
         <widget class="QTreeWidget" name="line_treewidget">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -477,6 +480,9 @@
          </property>
          <item>
           <widget class="QPushButton" name="create_line_button">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Create new line</string>
            </property>
