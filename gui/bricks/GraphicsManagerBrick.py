@@ -505,10 +505,8 @@ class GraphicsManagerBrick(BaseWidget):
         delete selected items
         """
         
-        for shape in self.__shape_map.keys():
-            if shape.isSelected():
-                HWR.beamline.sample_view.delete_shape(shape)
-
+        for shape in HWR.beamline.sample_view.get_selected_shapes():
+            HWR.beamline.sample_view.delete_shape(shape)
 
     def hide_selection_button_clicked(self):
         """
