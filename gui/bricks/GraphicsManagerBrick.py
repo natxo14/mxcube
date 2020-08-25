@@ -222,7 +222,6 @@ class GraphicsManagerBrick(BaseWidget):
         tmp = self.manager_widget.shapes_treewidget.customContextMenuRequested.connect(
             self.prepare_tree_widget_menu
         )
-        print(f"connection 2: {tmp}")
 
         # by default manager is closed
         self.main_groupbox.setCheckable(True)
@@ -559,7 +558,7 @@ class GraphicsManagerBrick(BaseWidget):
         HWR.beamline.sample_view.create_grid(self.get_spacing())
     
     def create_square_clicked(self):
-        HWR.beamline.sample_view.create_square_roi()
+        HWR.beamline.sample_view.create_square()
 
     def show_shape_treewidget_popup(self, item, point, col):
         QtImport.QMenu(self.manager_widget.shapes_treewidget)
@@ -718,7 +717,7 @@ class GraphicsManagerBrick(BaseWidget):
                                         "type" : string
                                         "index" : int
                                         "collection: string ( 'visible', 'background'...)
-                                        "centred_position" : dict
+                                        "centred_positions" : list( dict )
                                                 {
                                                     "phi":
                                                     "phiz":
@@ -733,13 +732,8 @@ class GraphicsManagerBrick(BaseWidget):
         }
 
         """
-        
         positions_dict = {}
-        
-        #self.toto_signal.emit(positions_dict)
-
-        print(f"create_export_data positions_dict {positions_dict}")
-
+                
         data = {}
 
         now = datetime.datetime.now()
@@ -748,12 +742,12 @@ class GraphicsManagerBrick(BaseWidget):
         diff_motors_dict = {}
         if HWR.beamline.diffractometer is not None:
             diff_motors_dict = HWR.beamline.diffractometer.get_motors_dict()
-            print(f"motor dict from Diffracto : {diff_motors_dict}")
+            # print(f"motor dict from Diffracto : {diff_motors_dict}")
 
         data['diff_motors'] = diff_motors_dict
 
 
-        data["positions_dict"] = copy.deepcopy(positions_dict)
+        data["positions_dict"] = HWR.beamline.diffractometer.get_diffractometer_status()
 
         
         selected_shapes_dict = {}
@@ -769,21 +763,21 @@ class GraphicsManagerBrick(BaseWidget):
             if collection == "Right click to select collection":
                 collection = "not_defined"
 
-            centred_position = {}
+            centred_positions = []
 
             if shape_type == "Point":
-                centred_position = shape.get_centred_position()
+                centred_positions.append(shape.get_centred_position())
             elif shape_type == "Line":
-                centred_position = shape.get_centred_positions()
-            elif shape_type == "SquareROI":
-                centred_position = shape.get_centred_positions()
+                centred_positions.append(list(shape.get_centred_positions()))
+            elif shape_type == "Square":
+                centred_positions.append(list(shape.get_centred_positions()))
 
 
             shape_dict = {}
             shape_dict["type"] = shape_type
             shape_dict["index"] = index
             shape_dict["collection"] = collection
-            shape_dict["centred_position"] = centred_position
+            shape_dict["centred_positions"] = centred_positions
 
             selected_shapes_dict[display_name] = shape_dict
 

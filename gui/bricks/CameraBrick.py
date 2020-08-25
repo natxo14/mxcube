@@ -530,7 +530,7 @@ class CameraBrick(BaseWidget):
         self.graphics_manager_hwobj.create_auto_grid()
     
     def create_square_roi(self):
-        self.graphics_manager_hwobj.create_square_roi()
+        self.graphics_manager_hwobj.create_square()
 
     def move_beam_mark_manual(self):
         self.graphics_manager_hwobj.start_move_beam_mark()
