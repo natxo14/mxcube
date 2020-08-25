@@ -285,7 +285,7 @@ class CameraBrick(BaseWidget):
             "Camera Exposure and Gain",
         )
 
-        self._camera_expo_spin_slider = SpixAndSliderAction("Camera Exposition")
+        self._camera_expo_spin_slider = SpinAndSliderAction(0, 60, "Camera Exposition")
         self._camera_expo_spin_slider.value_changed.connect(
             self.set_camera_exposure_time
         )
@@ -293,7 +293,7 @@ class CameraBrick(BaseWidget):
             self._camera_expo_spin_slider
         )
 
-        self._camera_gain_spin_slider = SpixAndSliderAction("Camera Gain")
+        self._camera_gain_spin_slider = SpinAndSliderAction(0, 1.0, "Camera Gain")
         self._camera_gain_spin_slider.value_changed.connect(
             self.set_camera_gain
         )
@@ -377,9 +377,13 @@ class CameraBrick(BaseWidget):
                     )
                     
                     #set gain/expo control's values from camera
+                    camera_expo_limits = self.graphics_manager_hwobj.camera.get_exposure_limits()
+                    
+                    self._camera_expo_spin_slider.set_limits(*camera_expo_limits)
+
                     camera_gain = self.graphics_manager_hwobj.camera.get_gain()
                     camera_expo = self.graphics_manager_hwobj.camera.get_exposure_time()
-                    
+                                        
                     self._camera_expo_spin_slider.set_value(camera_expo)
                     self._camera_gain_spin_slider.set_value(camera_gain)
 
@@ -972,11 +976,11 @@ class DuoStateButton(QtImport.QToolButton):
     def command_failed(self):
         self.command_done()
 
-class SpixAndSliderAction(QtImport.QWidgetAction):
+class SpinAndSliderAction(QtImport.QWidgetAction):
 
     value_changed = QtImport.pyqtSignal(float)
 
-    def __init__(self, action_string="default label", ):
+    def __init__(self, spin_min_value, spin_max_value, action_string="default label"):
 
         QtImport.QWidgetAction.__init__(self, None)
 
@@ -988,8 +992,13 @@ class SpixAndSliderAction(QtImport.QWidgetAction):
         self._slider = QtImport.QSlider(QtImport.Qt.Horizontal)
         self._spinbox = QtImport.QDoubleSpinBox()
 
-        self._slider.valueChanged.connect(self.set_value)
-        self._spinbox.valueChanged.connect(self.set_value)
+        self._spinbox.setRange(spin_min_value, spin_max_value)
+        self._spinbox.setSingleStep((spin_max_value - spin_min_value)/100.0)
+
+        self._slider.setRange(0, 100)
+
+        self._slider.valueChanged.connect(self.set_value_from_slider)
+        self._spinbox.valueChanged.connect(self.set_value_from_spin)
 
         self._main_layout.addWidget(self._label)
         self._main_layout.addWidget(self._slider)
@@ -999,7 +1008,20 @@ class SpixAndSliderAction(QtImport.QWidgetAction):
 
         self.setDefaultWidget(self.main_widget)
 
-    def set_value(self, value):
-        self._slider.setValue(value)
-        self._spinbox.setValue(value)
-        self.value_changed.emit(value)
+    def set_value_from_slider(self, slider_value):
+        spin_min = self._spinbox.minimum()
+        self._spinbox.setValue(spin_min + slider_value/100.0)
+        self.value_changed.emit(self._spinbox.value())
+
+    def set_value_from_spin(self, spin_value):
+        slider_val = ((spin_value - self._spinbox.minimum()) * 100.0) / self._spinbox.maximum()
+        self._slider.setValue(slider_val)
+        self.value_changed.emit(spin_value)
+
+    def set_limits(self, min_value, max_value):
+        
+        self._spinbox.setRange(min_value, max_value)
+        self._spinbox.setSingleStep((max_value - min_value)/100.0)
+
+        self._slider.setRange = (0, 100)
+        
