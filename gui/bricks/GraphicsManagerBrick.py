@@ -274,7 +274,7 @@ class GraphicsManagerBrick(BaseWidget):
             #     self.tree_widget_menu_selected
             # )
             selection_menu.addAction(new_action)
-        selection_menu.setMinimumWidth(150)
+        selection_menu.setMinimumWidth(200)
         selection_menu.triggered.connect(
             self.tree_widget_menu_selected
         )

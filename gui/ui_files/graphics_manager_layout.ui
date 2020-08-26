@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>941</width>
-    <height>658</height>
+    <width>668</width>
+    <height>657</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,8 +25,8 @@
   <property name="windowTitle">
    <string>Graphics manager</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <widget class="QToolBox" name="shapes_toolbox">
      <property name="enabled">
       <bool>true</bool>
@@ -43,7 +43,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="all_shapes_page">
       <property name="enabled">
@@ -53,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>923</width>
-        <height>446</height>
+        <width>650</width>
+        <height>377</height>
        </rect>
       </property>
       <attribute name="label">
@@ -76,7 +76,7 @@
        <property name="spacing">
         <number>2</number>
        </property>
-       <item row="2" column="0">
+       <item row="1" column="0">
         <layout class="QHBoxLayout" name="rowthree_hbox">
          <property name="spacing">
           <number>2</number>
@@ -126,7 +126,7 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0">
+       <item row="0" column="0">
         <widget class="QTreeWidget" name="shapes_treewidget">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -179,131 +179,6 @@
          </column>
         </widget>
        </item>
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="rowone_hbox">
-         <property name="spacing">
-          <number>6</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="display_label">
-           <property name="text">
-            <string>Display</string>
-           </property>
-           <property name="wordWrap">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="display_all_cbox">
-           <property name="text">
-            <string>All</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="display_points_cbox">
-           <property name="text">
-            <string>Points</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="display_lines_cbox">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Lines</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="display_grids_cbox">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Grids</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="display_square_roi_cbox">
-           <property name="text">
-            <string>Square</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="hide_all_cbox">
-           <property name="text">
-            <string>None</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="hide_selection_button">
-           <property name="text">
-            <string>Hide selection</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="delete_selection_button">
-           <property name="text">
-            <string>Delete selection</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="display_all_button">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Display all</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="hide_all_button">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Hide all</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="delete_all_button">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Delete all</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="points_page">
@@ -311,8 +186,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>923</width>
-        <height>446</height>
+        <width>650</width>
+        <height>377</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -422,8 +297,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>923</width>
-        <height>446</height>
+        <width>650</width>
+        <height>377</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -523,8 +398,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>923</width>
-        <height>446</height>
+        <width>650</width>
+        <height>377</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -912,8 +787,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>923</width>
-        <height>446</height>
+        <width>650</width>
+        <height>377</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -971,7 +846,124 @@
      </widget>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QLabel" name="display_label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Display:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="display_all_cbox">
+       <property name="text">
+        <string>All</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="hide_selected_cbox">
+       <property name="text">
+        <string>Selected</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="hide_all_cbox">
+       <property name="text">
+        <string>None</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="display_points_cbox">
+       <property name="text">
+        <string>Points</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="display_lines_cbox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Lines</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="display_square_roi_cbox">
+       <property name="text">
+        <string>Square</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="display_grids_cbox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Grids</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <item>
+      <widget class="QLabel" name="display_label_2">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Delete:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="delete_selection_button">
+       <property name="text">
+        <string>Delete selection</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="delete_all_button">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Delete all</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="file_path_label">
@@ -1007,14 +999,34 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="hide_selection_button">
+       <property name="text">
+        <string>Hide selection</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="hide_all_button">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Hide all</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="display_all_button">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Display all</string>
+       </property>
+      </widget>
+     </item>
     </layout>
-   </item>
-   <item row="1" column="0">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
