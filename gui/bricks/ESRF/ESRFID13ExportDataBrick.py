@@ -49,6 +49,8 @@ delete_graphic_items : sent after export data (if option checked)
 
 sample_changed - sample changed from outside GUI
 
+data_policy_changed(str) - slot to be connected to ESRFID13ConfigurationTabBrick
+                             data_policy_changed signal
 
 [Comments]
 
@@ -80,16 +82,20 @@ __category__ = "ESRF"
 
 class ESRFID13ExportDataBrick(BaseWidget):
 
-    delete_graphic_items = QtImport.pyqtSignal(object)
+    get_data_policy_signal = QtImport.pyqtSignal(object)
     
     def __init__(self, *args):
 
         BaseWidget.__init__(self, *args)
 
+        # Signals ------------------------------------------------------------
+        self.define_signal("get_data_policy_signal", ())
+        
+
         # Slots ---------------------------------------------------------------
         self.define_slot("sample_changed", ())
+        self.define_slot("data_policy_changed", ())
 
-        
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Export Data", self)
         self.ui_widgets_manager = QtImport.load_ui_file("export_data_layout.ui")
@@ -104,7 +110,6 @@ class ESRFID13ExportDataBrick(BaseWidget):
         self.main_groupbox.setLayout(_groupbox_vlayout)
 
         # Qt signal/slot connections ------------------------------------------
-        self.main_groupbox.toggled.connect(self.main_groupbox_toggled)
         self.ui_widgets_manager.export_button.clicked.connect(
             self.export_button_clicked
         )
@@ -121,9 +126,30 @@ class ESRFID13ExportDataBrick(BaseWidget):
             self.set_export_file_path
         )
 
+    def data_policy_changed(self, data_policy_full_info):
+        """
+        param : data_policy_full_info
+            data policy full info as given by bliss' SCAN_SAVING.__info__()
+        """
+
+        # search for sample info in data_policy_full_info
+
+        #split string with \n
+        info_list = data_policy_full_info.split('\n')
+        print("data_policy_changed!!!")
+        print(info_list)
+
+        for info in info_list:
+            print(f"SCAN SAVING : {info} ")
+            if ".base_path" in info:
+                print(f"BASE PATH FOUND :  {info}")
+                info_split = info.split('=')
+                print(f"BASE PATH SPLIT :  {info_split}")
+                self.ui_widgets_manager.sample_name_tbox.setText(info_split[1])
+
 
     def set_export_file_path(self):
-        
+        pass
         #get full path from bliss 
 
     def export_button_clicked(self):
@@ -151,7 +177,7 @@ class ESRFID13ExportDataBrick(BaseWidget):
                                         {
                                         "type" : string
                                         "index" : int
-                                        "collection: string ( 'visible', 'background'...)
+                                        "operation_mode": string ( 'visible', 'background'...)
                                         "centred_positions" : list( dict )
                                                 {
                                                     "phi":
@@ -210,6 +236,7 @@ class ESRFID13ExportDataBrick(BaseWidget):
             for shape in HWR.beamline.sample_view.get_selected_shapes():
                 
                 display_name = shape.get_display_name()
+                operation_mode = shape.get_operation_mode()
                 shape_type = display_name.split()[0]
                 index = display_name.split()[-1]
                 
@@ -226,7 +253,7 @@ class ESRFID13ExportDataBrick(BaseWidget):
                 shape_dict = {}
                 shape_dict["type"] = shape_type
                 shape_dict["index"] = index
-                shape_dict["collection"] = collection
+                shape_dict["operation_mode"] = operation_mode
                 shape_dict["centred_positions"] = centred_positions
 
                 selected_shapes_dict[display_name] = shape_dict
