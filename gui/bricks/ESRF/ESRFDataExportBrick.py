@@ -17,6 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with MXCuBE.  If not, see <http://www.gnu.org/licenses/>.
 """
+TODO: DELETE THIS BRICK: see ESRFID13ExportDataBrick
 ESRF Data Export Brick
 
 [Description]
@@ -54,8 +55,12 @@ xml file
 
 reload_operation_mode_list : update the list of tags/checkboxes
 
+TODO : delete this
 data_base_path_changed(str) - slot to be connected to ESRFID13ConfigurationTabBrick
                              data_path_base_changed signal
+
+data_policy_changed(str) - slot to be connected to ESRFID13ConfigurationTabBrick
+                             data_policy_changed signal
 
 
 [Comments]
@@ -112,7 +117,8 @@ class ESRFDataExportBrick(BaseWidget):
         # Slots ---------------------------------------------------------------
         self.define_slot("reload_operation_mode_list", ())
         self.define_slot("data_base_path_changed", ())
-        
+        self.define_slot("data_policy_changed", ())
+                
         # Graphic elements ----------------------------------------------------
         # self.main_groupbox = QtImport.QGroupBox("Data export", self)
         self.ui_widgets_manager = QtImport.load_ui_file("data_export_widget.ui")
@@ -213,7 +219,26 @@ class ESRFDataExportBrick(BaseWidget):
         # more simple
         now = datetime.datetime.now()
         self.data['timestamp'] = str(now)
-        
+    
+    def data_policy_changed(self, data_policy_full_info):
+        """
+        param : data_policy_full_info
+            data policy full info as given by bliss' SCAN_SAVING.__info__()
+        """
+
+        # search for sample info in data_policy_full_info
+
+        #split string with \n
+        info_list = data_policy_full_info.split('\n')
+        print(info_list)
+
+        for info in info_list:
+            if ".base_path" in info:
+                print(info)
+                info_split = info.split('=')
+                self.ui_widgets_manager.sample_name_tbox.setText(info_split[1])
+
+
     def data_base_path_changed(self, data_base_path):
 
         self.data_base_path = data_base_path
