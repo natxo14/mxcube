@@ -31,6 +31,11 @@ import datetime
 from datetime import date
 import logging
 
+try:
+    from xml.etree import cElementTree  # python2.5
+except ImportError:
+    import cElementTree
+
 __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
 __category__ = "Graphics"
@@ -57,15 +62,19 @@ class GraphicsManagerBrick(BaseWidget):
         self.__data_export_file_path = None
         self.__export_file_prefix = "export_file_prefix"
         self.__export_file_index = 0
+        self.__op_modes_file_path = None
+        self.chbox_item_layout = None
         
         # Properties ----------------------------------------------------------
-        self.add_property("beam_cal_data_file", "string", "")
+        self.add_property("op_mode_list_file", "string", "")
         
         # Signals ------------------------------------------------------------
         self.define_signal("get_operational_modes_list_signal", ())
 
         # Slots ---------------------------------------------------------------
         self.define_slot("set_data_path", ())
+        self.define_slot("update_operational_modes", ())
+
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Graphics items", self)
         self.manager_widget = QtImport.load_ui_file("graphics_manager_layout.ui")
@@ -84,6 +93,8 @@ class GraphicsManagerBrick(BaseWidget):
         self.setLayout(_main_vlayout)
 
         # mutual exclusive checkboxes
+        self.mutual_exclusive_op_mode = QtImport.QButtonGroup()
+
         self.mutual_exclusive_bg = QtImport.QButtonGroup()
         self.mutual_exclusive_bg.addButton(
             self.manager_widget.display_points_cbox
@@ -102,6 +113,9 @@ class GraphicsManagerBrick(BaseWidget):
         )
         self.mutual_exclusive_bg.addButton(
             self.manager_widget.hide_all_cbox
+        )
+        self.mutual_exclusive_bg.addButton(
+            self.manager_widget.show_selected_cbox
         )
                 
         # Qt signal/slot connections ------------------------------------------
@@ -132,6 +146,10 @@ class GraphicsManagerBrick(BaseWidget):
 
         self.manager_widget.hide_all_cbox.stateChanged.connect(
             self.hide_all_toggled
+        )
+
+        self.manager_widget.show_selected_cbox.stateChanged.connect(
+            self.show_selected_toggled
         )
 
         self.manager_widget.display_all_button.clicked.connect(
@@ -240,7 +258,20 @@ class GraphicsManagerBrick(BaseWidget):
             self.centring_in_progress_changed
         )
         self.connect(HWR.beamline.sample_view, "escape_pressed", self.escape_pressed)
+    
+    def property_changed(self, property_name, old_value, new_value):
+        if property_name == "op_mode_list_file":
+            if new_value.startswith("/"):
+                    new_value = new_value[1:]
 
+            self.__op_modes_file_path = os.path.join(
+                HWR.getHardwareRepositoryConfigPath(),
+                new_value + ".xml")
+
+            self.load_list_of_operational_modes()
+            self.create_operational_modes_checkboxes()
+        else:
+            BaseWidget.property_changed(self, property_name, old_value, new_value)
     def escape_pressed(self):
         """
 
@@ -258,7 +289,7 @@ class GraphicsManagerBrick(BaseWidget):
         Prepare menu to select the tag for the given shape
         """
         self.get_operational_modes_list_signal.emit(self.__list_of_tags)
-        # print(f"prepare_tree_widget_menu after signal : {self.__list_of_tags}")
+        print(f"prepare_tree_widget_menu after signal : {self.__list_of_tags}")
         
         self.__click_pos = pos
         # get clicked item position in table
@@ -282,6 +313,44 @@ class GraphicsManagerBrick(BaseWidget):
             self.manager_widget.shapes_treewidget.mapToGlobal(pos)
         )
 
+    def update_operational_modes(self, new_op_mode_list):
+        print(f"GraphicsManagerBrick update_operational_modes {new_op_mode_list}")
+
+        self.__list_of_tags = new_op_mode_list
+        self.create_operational_modes_checkboxes()
+
+    def create_operational_modes_checkboxes(self):
+        
+        if self.__list_of_tags:
+            
+            self.manager_widget.operational_modes_layout
+            
+            while self.manager_widget.operational_modes_layout.count() > 1:
+
+                last_widget_index = self.manager_widget.operational_modes_layout.count() - 1
+                layout_item = self.manager_widget.operational_modes_layout.takeAt(last_widget_index)
+                widget = layout_item.widget()
+                                
+                if widget.metaObject().className() == "QCheckBox":
+                    self.mutual_exclusive_op_mode.removeButton(widget)
+                    self.manager_widget.operational_modes_layout.removeItem(layout_item)
+                    self.manager_widget.operational_modes_layout.removeWidget(widget)
+                    widget.setParent(None)
+                    widget.deleteLater()
+                    widget.setVisible(False)
+                    widget = None
+                    self.adjustSize()
+                
+            # create new boxes
+            for tag in self.__list_of_tags:
+                tmp_cbox = QtImport.QCheckBox(tag, None)
+                self.mutual_exclusive_op_mode.addButton(tmp_cbox)
+                self.manager_widget.operational_modes_layout.addWidget(tmp_cbox)
+                tmp_cbox.setChecked(True)
+                
+        else:
+            self.manager_widget.defaut_collection_label.hide()
+
     def tree_widget_menu_selected(self, action):
         """
         change shape's information according to selected value
@@ -303,13 +372,18 @@ class GraphicsManagerBrick(BaseWidget):
         and depending on shape type also information to
         treewidget of all points/lines/grids
         """
+
+        # get shape's operational mode
+        op_mode = self.mutual_exclusive_op_mode.checkedButton().text()
         info_str_list = (
             str(self.manager_widget.shapes_treewidget.topLevelItemCount() + 1),
             shape.get_display_name(),
             str(True),
             str(True),
-            str("Right click to select collection"),
+            str(op_mode),
         )
+        shape.set_operation_mode(op_mode)
+
         new_tree_widget_item = QtImport.QTreeWidgetItem(
             self.manager_widget.shapes_treewidget, info_str_list
         )
@@ -348,8 +422,8 @@ class GraphicsManagerBrick(BaseWidget):
             grid_treewidget_item.setSelected(True)
             self.__grid_map[shape] = grid_treewidget_item
         elif shape_type == "Square":
-            info_str_list.append(str(shape.get_start_position()))
-            info_str_list.append(str(shape.get_end_position()))
+            info_str_list.append(str(int(shape.get_start_position())))
+            info_str_list.append(str(int(shape.get_end_position())))
             self.manager_widget.square_treewidget.clearSelection()
             square_treewidget_item = QtImport.QTreeWidgetItem(
                 self.manager_widget.square_treewidget, info_str_list
@@ -473,12 +547,16 @@ class GraphicsManagerBrick(BaseWidget):
         if state == QtImport.Qt.Checked:
             self.display_all_button_clicked()
 
-    def hide_all_toggled(self, state):
+    def show_selected_toggled(self, state):
         if state == QtImport.Qt.Checked:
-            self.hide_all_button_clicked()
-    def hide_selected_button_clicked(self):
+            self.show_selected_button_clicked()
+    
+    def show_selected_button_clicked(self):
         for shape, treewidget_item in self.__shape_map.items():
             if shape.isSelected():
+                shape.show()
+                treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
+            else:
                 shape.hide()
                 treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
 
@@ -652,8 +730,25 @@ class GraphicsManagerBrick(BaseWidget):
                 else:
                     shape.hide()
                     treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
-        else:
-            self.display_all_button_clicked()
+        # else:
+        #     self.display_all_button_clicked()
+    
+    def load_list_of_operational_modes(self):
+        """
+        Parse xml file and load list of operational modes :
+
+        'tag0', 'tag1', ...
+        """
+        xml_file_tree = cElementTree.parse(self.__op_modes_file_path)
+
+        xml_tree = xml_file_tree.getroot()
+        mode_list = []
+        if xml_tree.find("operational_modes") is not None:
+            #print(f"xml_tree.find(operational_modes) is not None:")
+            mode_list = xml_tree.find("operational_modes").text
+
+        print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
+        self.__list_of_tags = eval(mode_list)
     
     def export_data(self):
         """
