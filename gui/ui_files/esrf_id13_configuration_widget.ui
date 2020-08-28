@@ -178,30 +178,7 @@
        <item>
         <widget class="QComboBox" name="bliss_session_combo_box">
          <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>BLISS session name:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="session_name_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -212,13 +189,6 @@
          </property>
          <property name="text">
           <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="reload_data_policy">
-         <property name="text">
-          <string>Load session</string>
          </property>
         </widget>
        </item>

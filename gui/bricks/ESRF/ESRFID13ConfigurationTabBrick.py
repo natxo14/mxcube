@@ -100,8 +100,10 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
     graphic_data_edited = QtImport.pyqtSignal(dict)
     graphic_data_saved = QtImport.pyqtSignal()
     operation_modes_edited = QtImport.pyqtSignal(list)
-    operation_modes_saved = QtImport.pyqtSignal()
+    operation_modes_saved = QtImport.pyqtSignal(list)
+    # TODO : delete data_path_base_changed
     data_path_base_changed = QtImport.pyqtSignal(str)
+    data_policy_changed = QtImport.pyqtSignal(object)
     
     def __init__(self, *args):
 
@@ -129,6 +131,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         self.bliss_session_list = None
         self.bliss_config = static.get_config()
         self.data_policy_base_path = None
+        self.data_policy_full_info = None
 
         # Hardware objects ----------------------------------------------------
         
@@ -146,6 +149,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         self.define_signal("operation_modes_edited", ())
         self.define_signal("operation_modes_saved", ())
         self.define_signal("data_path_base_changed", ())
+        self.define_signal("data_policy_changed", ())
         
         
         # Slots ---------------------------------------------------------------
@@ -192,11 +196,6 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             self.cancel_table_changes
         )
 
-        self.ui_widgets_manager.reload_data_policy.clicked.connect(
-            #self.reload_data_policy
-            self.load_data_policy
-        )
-
         self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
             self.display_data_policy
         )
@@ -220,7 +219,6 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         self.ui_widgets_manager.label_list.currentRowChanged.connect(
             self.label_list_selection_changed
         )
-
 
         # Other hardware object connections --------------------------
 
@@ -540,8 +538,8 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         if self.multipos_hwobj is not None:
             self.fill_config_table()
             self.fill_op_modes_list()
-            # self.load_sessions()
-            # self.display_data_policy(0)
+            self.load_sessions()
+            self.display_data_policy(0)
 
     def load_sessions(self):
         """
@@ -555,38 +553,9 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 session
             )
 
+        self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
         print(f"ID13CONGI : load_sessions {self.bliss_session_list}")
-    
-    def load_data_policy(self):
-        """
-        Load data policy from input label
-        needed because #1924 BLISS issue
-        """
-        session_name = self.ui_widgets_manager.session_name_label.text()
-        session_name.replace(" ", "")
-
-        session = static.get_config().get(session_name)
-
-        session.setup()
-        session_info_string = session.scan_saving.__info__()
-
-        self.ui_widgets_manager.data_policy_label.setText(
-                session_info_string
-        )
-        self.data_policy_base_path = session.scan_saving.base_path
-        self.ui_widgets_manager.reload_data_policy.setEnabled(False)
-        self.data_path_base_changed.emit(
-            self.data_policy_base_path,
-        )
             
-    def reload_data_policy(self):
-        """
-        reload data policy of selected session in combobox
-        Disabled untill #1924 BLISS issue fixed
-        """
-        index = self.ui_widgets_manager.bliss_session_combo_box.currentIndex()
-        self.display_data_policy(index)
-
     def display_data_policy(self, index):
         """
         Display data policy of selected session in combobox
@@ -596,10 +565,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             new_session = self.bliss_session_list[index]
             session_info_string = f"Error loading Bliss session {new_session} configuration"
             print(f"ID13CONGI : display_data_policy new_session {new_session}")
-            # session = self.bliss_config.get(new_session)
             session = static.get_config().get(new_session)
-            from bliss.data.node import _get_or_create_node
-            session2 = _get_or_create_node(new_session, node_type="session")
             
             try:
                 # from PyQt5.QtCore import pyqtRemoveInputHook
@@ -608,10 +574,13 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 # pdb.set_trace()
                 session.setup()
                 session_info_string = session.scan_saving.__info__()
+                self.data_policy_full_info = session_info_string
                 self.data_policy_base_path = session.scan_saving.base_path
                 print(f"ID13CONGI : session_info_string {session_info_string}")
                 print(f"ID13CONGI : self.data_policy_base_path {self.data_policy_base_path}")
                 self.data_path_base_changed.emit(self.data_policy_base_path)
+                self.data_policy_changed.emit(session.scan_saving)
+                
             except RuntimeError:
                 logging.getLogger("HWR").error("Exception on Bliss session setup")
 
@@ -691,7 +660,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
 
         xml_file_tree.write(self.multipos_file_xml_path)
 
-        self.operation_modes_saved.emit()
+        self.operation_modes_saved.emit(self.list_of_operational_modes)
     
     def add_op_mode_to_list(self):
         """

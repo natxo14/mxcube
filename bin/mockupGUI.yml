@@ -64,10 +64,10 @@
         connections:
         - {receiver: ESRFID13ConfigurationTabBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
           slot: return_operational_modes_list}
+        - {receiver: ESRFID13ConfigurationTabBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
+          slot: return_operational_modes_list}
         name: GraphicsManagerBrick0
         properties:
-        - {comment: '', default_value: '', hidden: false, name: beam_cal_data_file,
-          old_value: '', type: string, value: ''}
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
           name: fixedHeight, old_value: -1, type: integer, value: -1}
         - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
@@ -82,7 +82,29 @@
           name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
         - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
           name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+        - {comment: '', default_value: '', hidden: false, name: op_mode_list_file,
+          old_value: '', type: string, value: /multiple-positions-mockup}
         type: GraphicsManagerBrick
+      - brick: {class: ESRFID13ExportDataBrick, name: ESRFID13ExportDataBrick0}
+        children: []
+        connections: []
+        name: ESRFID13ExportDataBrick0
+        properties:
+        - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
+          name: fixedHeight, old_value: -1, type: integer, value: -1}
+        - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
+          old_value: -1, type: integer, value: -1}
+        - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
+          type: string, value: '9'}
+        - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
+          name: frame, old_value: 0, type: boolean, value: 0}
+        - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
+          type: boolean, value: 0}
+        - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
+          name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
+        - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
+          name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
+        type: ESRFID13ExportDataBrick
       connections: []
       name: hsplitter0
       properties:
@@ -655,31 +677,13 @@
           type: combo
           value: default
         type: vbox
-      - brick: {class: ESRFDataExportBrick, name: ESRFDataExportBrick0}
-        children: []
-        connections: []
-        name: ESRFDataExportBrick0
-        properties:
-        - {comment: '', default_value: '', hidden: false, name: configfile, old_value: '',
-          type: string, value: /multiple-positions-mockup}
-        - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
-          name: fixedHeight, old_value: -1, type: integer, value: -1}
-        - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-          old_value: -1, type: integer, value: -1}
-        - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
-          type: string, value: '9'}
-        - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
-          name: frame, old_value: 0, type: boolean, value: 0}
-        - {comment: Hide widget, default_value: 0, hidden: false, name: hide, old_value: 0,
-          type: boolean, value: 0}
-        - {comment: Allow to control brick in all modes, default_value: 0, hidden: false,
-          name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
-        - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
-          name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
-        type: ESRFDataExportBrick
       - brick: {class: ESRFID13ConfigurationTabBrick, name: ESRFID13ConfigurationTabBrick0}
         children: []
-        connections: []
+        connections:
+        - {receiver: ESRFID13ExportDataBrick0, receiverWindow: window0, signal: data_policy_changed,
+          slot: data_policy_changed}
+        - {receiver: GraphicsManagerBrick0, receiverWindow: window0, signal: operation_modes_saved,
+          slot: update_operational_modes}
         name: ESRFID13ConfigurationTabBrick0
         properties:
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,

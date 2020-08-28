@@ -378,7 +378,8 @@ class CameraBrick(BaseWidget):
                     
                     #set gain/expo control's values from camera
                     camera_expo_limits = self.graphics_manager_hwobj.camera.get_exposure_limits()
-                    
+                    print(f"CAMERABRICK ========================================")
+                    print(f"camera_expo_limits : {camera_expo_limits}" )
                     self._camera_expo_spin_slider.set_limits(*camera_expo_limits)
 
                     camera_gain = self.graphics_manager_hwobj.camera.get_gain()
@@ -386,6 +387,9 @@ class CameraBrick(BaseWidget):
                                         
                     self._camera_expo_spin_slider.set_value(camera_expo)
                     self._camera_gain_spin_slider.set_value(camera_gain)
+
+                    print(f"CAMERABRICK ========================================")
+                    print(f"camera_expo_limits : {camera_expo_limits} - camera_gain {camera_gain} - camera_expo {camera_expo}")
 
                     
         elif property_name == "fixedSize":
@@ -603,8 +607,9 @@ class CameraBrick(BaseWidget):
 
 
     def set_camera_exposure_time(self, expo_value):
+        print(f" set_camera_exposure_time {expo_value}", type(expo_value))
         self.graphics_manager_hwobj.camera.set_exposure_time(
-            expo_value
+            float(expo_value)
         )  
         
     def set_camera_gain(self, gain_value):
@@ -993,8 +998,11 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self._spinbox = QtImport.QDoubleSpinBox()
 
         self._spinbox.setRange(spin_min_value, spin_max_value)
+        print(f"_spinbox.setRange : {spin_min_value} {spin_max_value}")
+        print(f"_spinbox.setSingleStep : {(spin_max_value - spin_min_value)/100.0}")
         self._spinbox.setSingleStep((spin_max_value - spin_min_value)/100.0)
-
+        print(f"_spinbox.singleStep : {self._spinbox.singleStep()}")
+        
         self._slider.setRange(0, 100)
 
         self._slider.valueChanged.connect(self.set_value_from_slider)
@@ -1009,19 +1017,27 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self.setDefaultWidget(self.main_widget)
 
     def set_value_from_slider(self, slider_value):
+        print(f"set_value_from_slider : slider_value {slider_value} - limits {self._slider.minimun()}, {self._slider.maximum()}")
+        
         spin_min = self._spinbox.minimum()
         self._spinbox.setValue(spin_min + slider_value/100.0)
         self.value_changed.emit(self._spinbox.value())
 
     def set_value_from_spin(self, spin_value):
+        print(f"set_value_from_spin : spin_value {spin_value} - limits {self._slider.minimum()}, {self._slider.maximum()}")
+        
         slider_val = ((spin_value - self._spinbox.minimum()) * 100.0) / self._spinbox.maximum()
         self._slider.setValue(slider_val)
         self.value_changed.emit(spin_value)
+
+    def set_value(self,spin_value):
+        self._spinbox.setValue(spin_value)
 
     def set_limits(self, min_value, max_value):
         
         self._spinbox.setRange(min_value, max_value)
         self._spinbox.setSingleStep((max_value - min_value)/100.0)
 
-        self._slider.setRange = (0, 100)
+        print(f"_spinbox.set_limits : {min_value} {max_value}")
+        print(f"_spinbox.setSingleStep : {(max_value - min_value)/100.0}")
         

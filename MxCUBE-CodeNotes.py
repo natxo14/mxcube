@@ -258,14 +258,14 @@ CODEBYTES
 #######
 
 Debug + PyQt
-# from PyQt5.QtCore import pyqtRemoveInputHook
--        # pyqtRemoveInputHook()
--        # import pdb
--        # pdb.set_trace()
--        # print(f"""get object by role
--        #           object : {obj}
--        #           obj._objectsByRole : {obj._objectsByRole}
--        #           role : {role}""")
+from PyQt5.QtCore import pyqtRemoveInputHook
+    pyqtRemoveInputHook()
+    import pdb
+    pdb.set_trace()
+    print(f"""get object by role
+                object : {obj}
+                obj._objectsByRole : {obj._objectsByRole}
+                role : {role}""")
 
 
 ##########################
