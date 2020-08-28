@@ -103,7 +103,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
     operation_modes_saved = QtImport.pyqtSignal(list)
     # TODO : delete data_path_base_changed
     data_path_base_changed = QtImport.pyqtSignal(str)
-    data_policy_changed = QtImport.pyqtSignal(str)
+    data_policy_changed = QtImport.pyqtSignal(object)
     
     def __init__(self, *args):
 
@@ -196,11 +196,6 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             self.cancel_table_changes
         )
 
-        self.ui_widgets_manager.reload_data_policy.clicked.connect(
-            #self.reload_data_policy
-            self.load_data_policy
-        )
-
         self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
             self.display_data_policy
         )
@@ -224,11 +219,6 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
         self.ui_widgets_manager.label_list.currentRowChanged.connect(
             self.label_list_selection_changed
         )
-
-        # TODO : delete following tags/textbox/button
-        self.ui_widgets_manager.label_4.setVisible(False)
-        self.ui_widgets_manager.session_name_label.setVisible(False)
-        self.ui_widgets_manager.reload_data_policy.setVisible(False)
 
         # Other hardware object connections --------------------------
 
@@ -563,38 +553,9 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 session
             )
 
+        self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
         print(f"ID13CONGI : load_sessions {self.bliss_session_list}")
-    
-    def load_data_policy(self):
-        """
-        Load data policy from input label
-        needed because #1924 BLISS issue
-        """
-        session_name = self.ui_widgets_manager.session_name_label.text()
-        session_name.replace(" ", "")
-
-        session = static.get_config().get(session_name)
-
-        session.setup()
-        session_info_string = session.scan_saving.__info__()
-
-        self.ui_widgets_manager.data_policy_label.setText(
-                session_info_string
-        )
-        self.data_policy_base_path = session.scan_saving.base_path
-        self.ui_widgets_manager.reload_data_policy.setEnabled(False)
-        self.data_path_base_changed.emit(
-            self.data_policy_base_path,
-        )
             
-    def reload_data_policy(self):
-        """
-        reload data policy of selected session in combobox
-        Disabled untill #1924 BLISS issue fixed
-        """
-        index = self.ui_widgets_manager.bliss_session_combo_box.currentIndex()
-        self.display_data_policy(index)
-
     def display_data_policy(self, index):
         """
         Display data policy of selected session in combobox
@@ -618,7 +579,7 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
                 print(f"ID13CONGI : session_info_string {session_info_string}")
                 print(f"ID13CONGI : self.data_policy_base_path {self.data_policy_base_path}")
                 self.data_path_base_changed.emit(self.data_policy_base_path)
-                self.data_policy_changed.emit(self.data_policy_full_info)
+                self.data_policy_changed.emit(session.scan_saving)
                 
             except RuntimeError:
                 logging.getLogger("HWR").error("Exception on Bliss session setup")
