@@ -90,8 +90,7 @@ class ESRFID13ExportDataBrick(BaseWidget):
 
         # Signals ------------------------------------------------------------
         self.define_signal("get_data_policy_signal", ())
-        
-
+    
         # Slots ---------------------------------------------------------------
         self.define_slot("sample_changed", ())
         self.define_slot("data_policy_changed", ())
@@ -101,7 +100,9 @@ class ESRFID13ExportDataBrick(BaseWidget):
         self.ui_widgets_manager = QtImport.load_ui_file("export_data_layout.ui")
 
         # Internal values -----------------------------------------------------
-        
+        self.__data_policy_scan_saving = None
+        self.__current_sample = None
+
         # Layout --------------------------------------------------------------
         _groupbox_vlayout = QtImport.QVBoxLayout(self)
         _groupbox_vlayout.addWidget(self.ui_widgets_manager)
@@ -126,31 +127,45 @@ class ESRFID13ExportDataBrick(BaseWidget):
             self.set_export_file_path
         )
 
-    def data_policy_changed(self, data_policy_full_info):
+    def data_policy_changed(self, data_policy_scan_saving):
         """
-        param : data_policy_full_info
-            data policy full info as given by bliss' SCAN_SAVING.__info__()
+        param : data_policy_scan_saving
+            data policy object as given by bliss' SCAN_SAVING
         """
+        
+        self.__data_policy_scan_saving = data_policy_scan_saving
 
-        # search for sample info in data_policy_full_info
+        info_list = self.__data_policy_scan_saving.__info__()
 
-        #split string with \n
-        info_list = data_policy_full_info.split('\n')
+        info_list = info_list.split('\n')
         print("data_policy_changed!!!")
         print(info_list)
 
-        for info in info_list:
-            print(f"SCAN SAVING : {info} ")
-            if ".base_path" in info:
-                print(f"BASE PATH FOUND :  {info}")
-                info_split = info.split('=')
-                print(f"BASE PATH SPLIT :  {info_split}")
-                self.ui_widgets_manager.sample_name_tbox.setText(info_split[1])
+        try:
+            self.__current_sample = self.__data_policy_scan_saving.sample
+        except AttributeError:
+            self.__current_sample = "no_sample"
+            print(f"no sample defined in data policy")
 
+        self.ui_widgets_manager.sample_name_tbox.setText(self.__current_sample)
+
+        self.set_export_file_path()
 
     def set_export_file_path(self):
-        pass
-        #get full path from bliss 
+
+        sample_name = self.ui_widgets_manager.sample_name_tbox.text()
+        sample_name = sample_name.strip()
+
+        filename = self.ui_widgets_manager.filename_tbox.text()
+        filename = filename.strip()
+
+        file_index = self.ui_widgets_manager.file_index_tbox.text()
+
+        path = self.__data_policy_scan_saving.get_path()
+
+        file_full_path = path + '/' + sample_name + '_' + filename + '_' + file_index + '.json'
+
+        self.ui_widgets_manager.export_full_path_tbox.setText(file_full_path)
 
     def export_button_clicked(self):
 
@@ -193,7 +208,8 @@ class ESRFID13ExportDataBrick(BaseWidget):
         }
 
         """
-
+        
+        # file exists?? overwrite ??
         if self.ui_widgets_manager.overwrite_warn_cbbox.isChecked():
             # get full filename and check if file already exists
             file_full_path = self.ui_widgets_manager.export_full_path_tbox.text()
@@ -211,11 +227,37 @@ class ESRFID13ExportDataBrick(BaseWidget):
                     ):
                     return
 
+        # create json file data and write
+        data = self.build_data()
+        
+        file_full_path = self.ui_widgets_manager.export_full_path_tbox.text()
+
+        with open(file_full_path, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+
+        # take snapshots
+        file_full_path_no_extension = file_full_path[0:file_full_path.rfind('.')]
+        if HWR.beamline.sample_view is not None:
+            snapshot_file_path = file_full_path_no_extension + '.jpeg'
+            raw_snapshot_file_path = file_full_path_no_extension + '_raw.jpeg'
+            HWR.beamline.sample_view.save_scene_snapshot(snapshot_file_path)
+            HWR.beamline.sample_view.save_raw_scene_snapshot(raw_snapshot_file_path)
+
+        # update GUI
         if self.ui_widgets_manager.clean_comment_cbox.isChecked():
             self.ui_widgets_manager.comment_text_edit.clear()
 
         if self.ui_widgets_manager.delete_items_cbox.isChecked():
             HWR.beamline.sample_view.clear_all_shapes()
+
+        file_index = int(self.ui_widgets_manager.file_index_tbox.text())
+        file_index += 1
+        file_index_formated = '{:04d}'.format(file_index)
+        self.ui_widgets_manager.file_index_tbox.setText(file_index_formated)
+
+        self.set_export_file_path()
+
+    def build_data(self):
 
         data = {}
 
@@ -224,8 +266,10 @@ class ESRFID13ExportDataBrick(BaseWidget):
 
         data['data_creator'] = "GUIApplication"
 
+        data['comments'] = self.ui_widgets_manager.comment_text_edit.toPlainText()
+
         diff_motors_dict = {}
-        positions_dict = {}
+        position_dict = {}
         selected_shapes_dict = {}
 
         if HWR.beamline.diffractometer is not None:
@@ -233,38 +277,47 @@ class ESRFID13ExportDataBrick(BaseWidget):
             diff_motors_dict = HWR.beamline.diffractometer.get_motors_dict()
             position_dict = HWR.beamline.diffractometer.get_diffractometer_status()
 
+            # from PyQt5.QtCore import pyqtRemoveInputHook
+            # pyqtRemoveInputHook()
+            # import pdb
+            # pdb.set_trace()
+
             for shape in HWR.beamline.sample_view.get_selected_shapes():
                 
                 display_name = shape.get_display_name()
                 operation_mode = shape.get_operation_mode()
                 shape_type = display_name.split()[0]
                 index = display_name.split()[-1]
-                
+                global_index = shape.global_index
+
                 centred_positions = []
+                pixel_positions = []
 
                 if shape_type == "Point":
                     centred_positions.append(shape.get_centred_position())
+                    pixel_positions.append(shape.get_start_position())
                 elif shape_type == "Line":
                     centred_positions.append(list(shape.get_centred_positions()))
+                    pixel_positions.append(shape.get_pixels_positions())
                 elif shape_type == "Square":
                     centred_positions.append(list(shape.get_centred_positions()))
-
-
+                    pixel_positions.append(shape.get_pixels_positions())
+                                
                 shape_dict = {}
                 shape_dict["type"] = shape_type
                 shape_dict["index"] = index
+                shape_dict["index_global"] = global_index
                 shape_dict["operation_mode"] = operation_mode
-                shape_dict["centred_positions"] = centred_positions
+                #shape_dict["centred_positions"] = centred_positions
+                shape_dict["pixel_positions"] = pixel_positions
 
                 selected_shapes_dict[display_name] = shape_dict
 
         data['diff_motors'] = diff_motors_dict
         data["position_dict"] = position_dict
+        data['selected_points'] = selected_shapes_dict
 
-
-        file_index = int(self.ui_widgets_manager.file_index_tbox.text())
-        file_index += 1
-        self.ui_widgets_manager.file_index_tbox.setText(str(file_index))
+        return data
 
 
         
