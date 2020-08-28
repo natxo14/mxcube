@@ -238,8 +238,15 @@ class ESRFID13ExportDataBrick(BaseWidget):
         # take snapshots
         file_full_path_no_extension = file_full_path[0:file_full_path.rfind('.')]
         if HWR.beamline.sample_view is not None:
-            snapshot_file_path = file_full_path_no_extension + '.jpeg'
-            raw_snapshot_file_path = file_full_path_no_extension + '_raw.jpeg'
+            snapshot_file_path = file_full_path_no_extension + ".png"
+            file_full_path_no_extension_no_index = file_full_path_no_extension[0:-4]
+            raw_snapshot_file_path = (
+                file_full_path_no_extension_no_index +
+                "_raw_" +
+                self.ui_widgets_manager.file_index_tbox.text() +
+                ".png"
+            )
+
             HWR.beamline.sample_view.save_scene_snapshot(snapshot_file_path)
             HWR.beamline.sample_view.save_raw_scene_snapshot(raw_snapshot_file_path)
 
@@ -260,29 +267,36 @@ class ESRFID13ExportDataBrick(BaseWidget):
     def build_data(self):
 
         data = {}
-
         now = datetime.datetime.now()
         data['timestamp'] = str(now)
-
         data['data_creator'] = "GUIApplication"
-
         data['comments'] = self.ui_widgets_manager.comment_text_edit.toPlainText()
-
-        diff_motors_dict = {}
+        data['image_size'] = (0,0)
+        motors_dict = {}
         position_dict = {}
-        selected_shapes_dict = {}
+        shapes_dict = {}
+
+        if HWR.beamline.sample_view is not None:
+            data['image_size'] = HWR.beamline.sample_view.get_image_size()
 
         if HWR.beamline.diffractometer is not None:
 
-            diff_motors_dict = HWR.beamline.diffractometer.get_motors_dict()
+            motors_dict = HWR.beamline.diffractometer.get_motors_dict()
             position_dict = HWR.beamline.diffractometer.get_diffractometer_status()
+
+            data['beam_pos_x'] = position_dict['beam_pos_x']
+            data['beam_pos_y'] = position_dict['beam_pos_y']
+            data['cal_x'] = position_dict['cal_x']
+            data['cal_y'] = position_dict['cal_y']
+            data['zoom_tag'] = position_dict['zoom_tag']
+            data['zoom_value'] = position_dict['zoom']
 
             # from PyQt5.QtCore import pyqtRemoveInputHook
             # pyqtRemoveInputHook()
             # import pdb
             # pdb.set_trace()
 
-            for shape in HWR.beamline.sample_view.get_selected_shapes():
+            for shape in HWR.beamline.sample_view.get_shapes():
                 
                 display_name = shape.get_display_name()
                 operation_mode = shape.get_operation_mode()
@@ -291,31 +305,29 @@ class ESRFID13ExportDataBrick(BaseWidget):
                 global_index = shape.global_index
 
                 centred_positions = []
-                pixel_positions = []
-
+                shape_dict = {}
+                
                 if shape_type == "Point":
                     centred_positions.append(shape.get_centred_position())
-                    pixel_positions.append(shape.get_start_position())
+                    shape_dict["pixel_x"] = round(shape.get_start_position()[0])
+                    shape_dict["pixel_y"] = round(shape.get_start_position()[1])
                 elif shape_type == "Line":
                     centred_positions.append(list(shape.get_centred_positions()))
-                    pixel_positions.append(shape.get_pixels_positions())
+                    shape_dict["pixel_positions"] = shape.get_points_info()
                 elif shape_type == "Square":
                     centred_positions.append(list(shape.get_centred_positions()))
-                    pixel_positions.append(shape.get_pixels_positions())
-                                
-                shape_dict = {}
-                shape_dict["type"] = shape_type
+                    shape_dict["pixel_positions"] = shape.get_points_info()                
+
+                shape_dict["graphic_type"] = shape_type
                 shape_dict["index"] = index
                 shape_dict["index_global"] = global_index
                 shape_dict["operation_mode"] = operation_mode
-                #shape_dict["centred_positions"] = centred_positions
-                shape_dict["pixel_positions"] = pixel_positions
+                
+                shapes_dict[display_name.replace(" ", "_")] = shape_dict
 
-                selected_shapes_dict[display_name] = shape_dict
-
-        data['diff_motors'] = diff_motors_dict
-        data["position_dict"] = position_dict
-        data['selected_points'] = selected_shapes_dict
+        data['motors'] = motors_dict
+        # data["position_dict"] = position_dict
+        data['graphic_items_points'] = shapes_dict
 
         return data
 

@@ -521,7 +521,7 @@ class MotorSpinBoxBrick(BaseWidget):
         if motor_ho_name is not None:
             self.motor_hwobj = self.get_hardware_object(motor_ho_name)
             print(f"######### MotorSpinBoxBrick : set_motor motor_ho_name is not None #########")
-            print(f"self.motor_hwobj.GUIstep {self.motor_hwobj.GUIstep}")
+            #print(f"self.motor_hwobj.GUIstep {self.motor_hwobj.GUIstep}")
             
         if self.motor_hwobj is None:
             print(f"######### MotorSpinBoxBrick : set_motor self.motor_hwobj is None #########")
