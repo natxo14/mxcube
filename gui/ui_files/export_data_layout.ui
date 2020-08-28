@@ -88,7 +88,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="sample_name_tbox"/>
+           <widget class="QLineEdit" name="sample_name_tbox">
+            <property name="text">
+             <string>samplename</string>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_3">
@@ -98,7 +102,11 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="filename_tbox"/>
+           <widget class="QLineEdit" name="filename_tbox">
+            <property name="text">
+             <string>filename</string>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_4">
@@ -135,7 +143,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="export_full_path_tbox"/>
+        <widget class="QLineEdit" name="export_full_path_tbox">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -153,6 +165,13 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="reload_policy_data_button">
+         <property name="text">
+          <string>Reload Data Policy</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="export_button">
