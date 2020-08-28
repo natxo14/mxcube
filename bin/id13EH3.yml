@@ -988,7 +988,7 @@
         - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
           name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
         - {comment: '', default_value: /multiple-positions, hidden: false, name: mnemonic,
-          old_value: null, type: string, value: /multiple-positions}
+          old_value: null, type: string, value: /multiple-positionsID13EH3}
         type: ESRFID13ConfigurationTabBrick
       connections: []
       name: vsplitter1
