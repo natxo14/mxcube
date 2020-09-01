@@ -49,7 +49,7 @@ delete_graphic_items : sent after export data (if option checked)
 
 sample_changed - sample changed from outside GUI
 
-data_policy_changed(str) - slot to be connected to ESRFID13ConfigurationTabBrick
+data_policy_changed(str) - slot to be connected to ESRFID13ConfigurationBrick
                              data_policy_changed signal
 
 [Comments]
@@ -115,16 +115,20 @@ class ESRFID13ExportDataBrick(BaseWidget):
             self.export_button_clicked
         )
 
-        self.ui_widgets_manager.sample_name_tbox.editingFinished.connect(
-            self.set_export_file_path
+        self.ui_widgets_manager.sample_name_tbox.textChanged.connect(
+            self.set_export_file_name
         )
 
-        self.ui_widgets_manager.filename_tbox.editingFinished.connect(
-            self.set_export_file_path
+        self.ui_widgets_manager.filename_tbox.textChanged.connect(
+            self.set_export_file_name
         )
 
-        self.ui_widgets_manager.file_index_tbox.editingFinished.connect(
-            self.set_export_file_path
+        self.ui_widgets_manager.file_index_tbox.textChanged.connect(
+            self.set_export_file_name
+        )
+
+        self.ui_widgets_manager.select_file_path_button.clicked.connect(
+            self.select_file_path_button_clicked
         )
 
     def data_policy_changed(self, data_policy_scan_saving):
@@ -141,6 +145,14 @@ class ESRFID13ExportDataBrick(BaseWidget):
         print("data_policy_changed!!!")
         print(info_list)
 
+        self.set_export_file_path()
+
+    def set_export_file_path(self):
+        """
+        set full path (and maybe also sample name) coming from data policy
+        (changes from bliss console)
+        """
+
         try:
             self.__current_sample = self.__data_policy_scan_saving.sample
         except AttributeError:
@@ -148,11 +160,18 @@ class ESRFID13ExportDataBrick(BaseWidget):
             print(f"no sample defined in data policy")
 
         self.ui_widgets_manager.sample_name_tbox.setText(self.__current_sample)
+        
+        try:
+            path = self.__data_policy_scan_saving.get_path()
+        except AttributeError:
+            path = "no_data_path"
 
-        self.set_export_file_path()
+        self.ui_widgets_manager.export_folder_path_tbox.setText(path)
 
-    def set_export_file_path(self):
-
+    def set_export_file_name(self):
+        """
+        set full file name when file's sample/sub/index textboxes change
+        """
         sample_name = self.ui_widgets_manager.sample_name_tbox.text()
         sample_name = sample_name.strip()
 
@@ -160,12 +179,25 @@ class ESRFID13ExportDataBrick(BaseWidget):
         filename = filename.strip()
 
         file_index = self.ui_widgets_manager.file_index_tbox.text()
+        filename = sample_name + '_' + filename + '_' + file_index + '.json'
+    
+        self.ui_widgets_manager.export_filename_tbox.setText(filename)
 
-        path = self.__data_policy_scan_saving.get_path()
+    def select_file_path_button_clicked(self):
+        file_dialog = QtImport.QFileDialog(self)
+        
+        old_folder_path = self.ui_widgets_manager.export_folder_path_tbox.text().strip()
+        # file_dialog.setNameFilter("%s*" % self._base_image_dir)
+        if not os.path.exists(old_folder_path):
+            old_folder_path = "/"
+        selected_dir = str(
+            file_dialog.getExistingDirectory(
+                self, "Select a directory", old_folder_path, QtImport.QFileDialog.ShowDirsOnly
+            )
+        )
 
-        file_full_path = path + '/' + sample_name + '_' + filename + '_' + file_index + '.json'
-
-        self.ui_widgets_manager.export_full_path_tbox.setText(file_full_path)
+        if selected_dir is not None and len(selected_dir) > 0:
+            self.ui_widgets_manager.export_folder_path_tbox.setText(selected_dir)
 
     def export_button_clicked(self):
 
@@ -208,11 +240,15 @@ class ESRFID13ExportDataBrick(BaseWidget):
         }
 
         """
+
+        folder_path = self.ui_widgets_manager.export_folder_path_tbox.text().strip()
+        filename = self.ui_widgets_manager.export_filename_tbox.text().strip()
+        file_full_path = folder_path + '/' + filename
         
         # file exists?? overwrite ??
         if self.ui_widgets_manager.overwrite_warn_cbbox.isChecked():
             # get full filename and check if file already exists
-            file_full_path = self.ui_widgets_manager.export_full_path_tbox.text()
+            
 
             if os.path.exists(file_full_path):
                 if (
@@ -230,8 +266,6 @@ class ESRFID13ExportDataBrick(BaseWidget):
         # create json file data and write
         data = self.build_data()
         
-        file_full_path = self.ui_widgets_manager.export_full_path_tbox.text()
-
         with open(file_full_path, 'w') as json_file:
             json.dump(data, json_file, indent=4)
 
@@ -262,7 +296,7 @@ class ESRFID13ExportDataBrick(BaseWidget):
         file_index_formated = '{:04d}'.format(file_index)
         self.ui_widgets_manager.file_index_tbox.setText(file_index_formated)
 
-        self.set_export_file_path()
+        self.set_export_file_name()
 
     def build_data(self):
 
