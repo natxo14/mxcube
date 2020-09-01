@@ -21,6 +21,7 @@ from gui.utils import Icons, QtImport
 from gui.BaseComponents import BaseWidget
 
 from HardwareRepository import HardwareRepository as HWR
+from HardwareRepository.HardwareObjects import QtGraphicsLib as GraphicsLib
 
 import json
 import os
@@ -164,9 +165,15 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.create_point_start_button.clicked.connect(
             self.create_point_start_button_clicked
         )
+        # self.manager_widget.create_point_start_button_2.clicked.connect(
+        #     self.create_point_start_button_clicked
+        # )
         self.manager_widget.create_point_accept_button.clicked.connect(
             self.create_point_accept_button_clicked
         )
+        # self.manager_widget.create_point_accept_button_2.clicked.connect(
+        #     self.create_point_accept_button_clicked
+        # )
 
         # TODO : what does 'accept' mean ??
         # self.manager_widget.create_point_accept_button.hide()
@@ -174,6 +181,17 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.create_line_button.clicked.connect(
             self.create_line_button_clicked
         )
+        # self.manager_widget.create_line_button_2.clicked.connect(
+        #     self.create_line_button_clicked
+        # )
+
+        self.manager_widget.create_square_button.clicked.connect(
+            self.create_square_clicked
+        )
+        # self.manager_widget.create_square_button_2.clicked.connect(
+        #     self.create_square_clicked
+        # )
+
         self.manager_widget.draw_grid_button.clicked.connect(
             self.draw_grid_button_clicked
         )
@@ -187,6 +205,22 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.shapes_treewidget.itemSelectionChanged.connect(
             self.shape_treewiget_selection_changed
         )
+
+        # self.manager_widget.select_all_button.clicked.connect(
+        #     self.select_all_button_clicked
+        # )
+
+        # self.manager_widget.select_points_button.clicked.connect(
+        #     self.select_points_button_clicked
+        # )
+
+        # self.manager_widget.select_lines_button.clicked.connect(
+        #     self.select_lines_button_clicked
+        # )
+
+        # self.manager_widget.select_square_roi_button.clicked.connect( 
+        #     self.select_square_roi_button_clicked
+        # )
 
         self.manager_widget.shapes_treewidget.setSelectionMode(
             QtImport.QAbstractItemView.ExtendedSelection
@@ -208,10 +242,7 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.move_down_button.clicked.connect(
             self.grid_move_down_clicked
         )
-
-        self.manager_widget.create_square_button.clicked.connect(
-            self.create_square_clicked
-        )
+       
 
         # SizePolicies --------------------------------------------------------
 
@@ -500,6 +531,31 @@ class GraphicsManagerBrick(BaseWidget):
             bool(item_list)
         )
 
+    def select_all_button_clicked(self):
+        for shape in self.__shape_map.keys():
+            shape.setSelected(True)
+
+    def select_points_button_clicked(self):
+        for shape in self.__shape_map.keys():
+            if isinstance(shape, GraphicsLib.GraphicsItemPoint):
+                shape.setSelected(True)
+            else:
+                shape.setSelected(False)
+    
+    def select_lines_button_clicked(self):
+        for shape in self.__shape_map.keys():
+            if isinstance(shape, GraphicsLib.GraphicsItemLine):
+                shape.setSelected(True)
+            else:
+                shape.setSelected(False)
+    
+    def select_square_roi_button_clicked(self):
+        for shape in self.__shape_map.keys():
+            if isinstance(shape, GraphicsLib.GraphicsItemSquareROI):
+                shape.setSelected(True)
+            else:
+                shape.setSelected(False)
+    
     def centring_in_progress_changed(self, centring_in_progress):
         if centring_in_progress:
             self.manager_widget.create_point_start_button.setIcon(
