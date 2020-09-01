@@ -64,7 +64,6 @@ class GraphicsManagerBrick(BaseWidget):
         self.__export_file_prefix = "export_file_prefix"
         self.__export_file_index = 0
         self.__op_modes_file_path = None
-        self.chbox_item_layout = None
         
         # Properties ----------------------------------------------------------
         self.add_property("op_mode_list_file", "string", "")
@@ -165,15 +164,15 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.create_point_start_button.clicked.connect(
             self.create_point_start_button_clicked
         )
-        # self.manager_widget.create_point_start_button_2.clicked.connect(
-        #     self.create_point_start_button_clicked
-        # )
+        self.manager_widget.create_point_start_button_2.clicked.connect(
+            self.create_point_start_button_clicked
+        )
         self.manager_widget.create_point_accept_button.clicked.connect(
             self.create_point_accept_button_clicked
         )
-        # self.manager_widget.create_point_accept_button_2.clicked.connect(
-        #     self.create_point_accept_button_clicked
-        # )
+        self.manager_widget.create_point_accept_button_2.clicked.connect(
+            self.create_point_accept_button_clicked
+        )
 
         # TODO : what does 'accept' mean ??
         # self.manager_widget.create_point_accept_button.hide()
@@ -181,16 +180,16 @@ class GraphicsManagerBrick(BaseWidget):
         self.manager_widget.create_line_button.clicked.connect(
             self.create_line_button_clicked
         )
-        # self.manager_widget.create_line_button_2.clicked.connect(
-        #     self.create_line_button_clicked
-        # )
+        self.manager_widget.create_line_button_2.clicked.connect(
+            self.create_line_button_clicked
+        )
 
         self.manager_widget.create_square_button.clicked.connect(
             self.create_square_clicked
         )
-        # self.manager_widget.create_square_button_2.clicked.connect(
-        #     self.create_square_clicked
-        # )
+        self.manager_widget.create_square_button_2.clicked.connect(
+            self.create_square_clicked
+        )
 
         self.manager_widget.draw_grid_button.clicked.connect(
             self.draw_grid_button_clicked
@@ -206,21 +205,21 @@ class GraphicsManagerBrick(BaseWidget):
             self.shape_treewiget_selection_changed
         )
 
-        # self.manager_widget.select_all_button.clicked.connect(
-        #     self.select_all_button_clicked
-        # )
+        self.manager_widget.select_all_button.clicked.connect(
+            self.select_all_button_clicked
+        )
 
-        # self.manager_widget.select_points_button.clicked.connect(
-        #     self.select_points_button_clicked
-        # )
+        self.manager_widget.select_points_button.clicked.connect(
+            self.select_points_button_clicked
+        )
 
-        # self.manager_widget.select_lines_button.clicked.connect(
-        #     self.select_lines_button_clicked
-        # )
+        self.manager_widget.select_lines_button.clicked.connect(
+            self.select_lines_button_clicked
+        )
 
-        # self.manager_widget.select_square_roi_button.clicked.connect( 
-        #     self.select_square_roi_button_clicked
-        # )
+        self.manager_widget.select_square_roi_button.clicked.connect( 
+            self.select_square_roi_button_clicked
+        )
 
         self.manager_widget.shapes_treewidget.setSelectionMode(
             QtImport.QAbstractItemView.ExtendedSelection
@@ -256,10 +255,10 @@ class GraphicsManagerBrick(BaseWidget):
         )
 
         # by default manager is closed
-        self.main_groupbox.setCheckable(True)
-        self.main_groupbox.setChecked(True)
-        self.main_groupbox_toggled(True)
-        # self.main_groupbox.setToolTip("Click to open/close item manager")
+        # self.main_groupbox.setCheckable(True)
+        # self.main_groupbox.setChecked(True)
+        # self.main_groupbox_toggled(True)
+        # # self.main_groupbox.setToolTip("Click to open/close item manager")
 
         self.connect(HWR.beamline.sample_view, "shapeCreated", self.shape_created)
         self.connect(HWR.beamline.sample_view, "shapeDeleted", self.shape_deleted)
@@ -354,10 +353,12 @@ class GraphicsManagerBrick(BaseWidget):
                     self.adjustSize()
                 
             # create new boxes
-            for tag in self.__list_of_tags:
+            for index, tag in enumerate(self.__list_of_tags):
+                col = index % 4
+                row = index // 4
                 tmp_cbox = QtImport.QCheckBox(tag, None)
                 self.mutual_exclusive_op_mode.addButton(tmp_cbox)
-                self.manager_widget.operational_modes_layout.addWidget(tmp_cbox)
+                self.manager_widget.operational_modes_layout.addWidget(tmp_cbox, row, col + 1)
                 tmp_cbox.setChecked(True)
                 
         else:
