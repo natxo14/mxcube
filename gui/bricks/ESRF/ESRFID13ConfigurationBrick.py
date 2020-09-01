@@ -95,7 +95,7 @@ __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
 __category__ = "ESRF"
 
-class ESRFID13ConfigurationTabBrick(BaseWidget):
+class ESRFID13ConfigurationBrick(BaseWidget):
  
     graphic_data_edited = QtImport.pyqtSignal(dict)
     graphic_data_saved = QtImport.pyqtSignal()
@@ -216,7 +216,11 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
             self.save_op_mode_list
         )
 
-        self.ui_widgets_manager.label_list.currentRowChanged.connect(
+        # self.ui_widgets_manager.label_list.currentRowChanged.connect(
+        #     self.label_list_selection_changed
+        # )
+
+        self.ui_widgets_manager.label_list.itemSelectionChanged.connect(
             self.label_list_selection_changed
         )
 
@@ -664,55 +668,75 @@ class ESRFID13ConfigurationTabBrick(BaseWidget):
     
     def add_op_mode_to_list(self):
         """
-        add lable to list
+        add lable list to list
         and to self.list_of_operational_modes
         Data not saved yet
         """
-        new_label = self.ui_widgets_manager.new_label_edit.text()
-        new_label = new_label.replace(" ", "")
+        new_label_list_full = self.ui_widgets_manager.new_label_edit.text().strip()
+        new_label_list = new_label_list_full.split()
 
-        if not new_label:
+        if not new_label_list:
             return
         # check if label already exist
-        if new_label not in self.list_of_operational_modes:
-            self.list_of_operational_modes.append(new_label)
-            self.ui_widgets_manager.label_list.addItem(new_label)
-            #select newly added item
-            self.ui_widgets_manager.label_list.setCurrentRow(
-                self.ui_widgets_manager.label_list.count() - 1
-            )
-            self.operation_modes_edited.emit(self.list_of_operational_modes)
-        
+        for new_label in new_label_list:
+            if new_label not in self.list_of_operational_modes:
+                self.list_of_operational_modes.append(new_label)
+                self.ui_widgets_manager.label_list.addItem(new_label)
+                #select newly added item
+                self.ui_widgets_manager.label_list.setCurrentRow(
+                    self.ui_widgets_manager.label_list.count() - 1
+                )
+                
+        self.operation_modes_edited.emit(self.list_of_operational_modes)
+
     def delete_op_mode_from_list(self):
         """
         delete lable from list
         detele from self.list_of_operational_modes
         changes not saved yet
         """
-        label_to_delete = self.ui_widgets_manager.new_label_edit.text()
-        label_to_delete = label_to_delete.replace(" ", "")
-
-        if not label_to_delete:
+        label_to_delete_list_full = self.ui_widgets_manager.new_label_edit.text().strip()
+        label_to_delete_list = label_to_delete_list_full.split()
+        
+        if not label_to_delete_list:
             return
-
-        if label_to_delete not in self.list_of_operational_modes:
-            return
-        else:
+        for label_to_delete in label_to_delete_list:
+            if label_to_delete not in self.list_of_operational_modes:
+                continue
             index = self.list_of_operational_modes.index(label_to_delete)
             self.ui_widgets_manager.label_list.takeItem(index)
             self.list_of_operational_modes.remove(label_to_delete)
             #select first item
-            if self.list_of_operational_modes:
-                self.ui_widgets_manager.label_list.setCurrentRow(0)
-            self.operation_modes_edited.emit(self.list_of_operational_modes)
+        if self.list_of_operational_modes:
+            self.ui_widgets_manager.label_list.setCurrentRow(0)
+        self.operation_modes_edited.emit(self.list_of_operational_modes)
 
-    def label_list_selection_changed(self, selected_row):
+        # if label_to_delete not in self.list_of_operational_modes:
+        #     return
+        # else:
+        #     index = self.list_of_operational_modes.index(label_to_delete)
+        #     self.ui_widgets_manager.label_list.takeItem(index)
+        #     self.list_of_operational_modes.remove(label_to_delete)
+        #     #select first item
+        #     if self.list_of_operational_modes:
+        #         self.ui_widgets_manager.label_list.setCurrentRow(0)
+        #     self.operation_modes_edited.emit(self.list_of_operational_modes)
+
+    def label_list_selection_changed(self):
+        selected_label_list = self.ui_widgets_manager.label_list.selectedItems()
         
-        if selected_row != -1:
-            selected_item = self.ui_widgets_manager.label_list.item(selected_row)
-            self.ui_widgets_manager.new_label_edit.setText(
-                selected_item.text()
+        label_text_list = []
+        for label in selected_label_list:
+            label_text_list.append(label.text())
+        self.ui_widgets_manager.new_label_edit.setText(
+                ' '.join(label_text_list)
             )
+
+        # if selected_row != -1:
+        #     selected_item = self.ui_widgets_manager.label_list.item(selected_row)
+        #     self.ui_widgets_manager.new_label_edit.setText(
+        #         selected_item.text()
+        #     )
 
     def clean_cells_background(self):
         """
