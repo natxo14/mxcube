@@ -98,9 +98,33 @@ Pass everything through self.multiple_pos_hwobj : it has everything needed to in
 Everything is depending on the 'name' of the new position in Multiposition hwr_obj
 
 
-#####
-ASK!!
-#####
+##############################
+            ASK!!
+##############################
+
+FOR MXCUBE:
+
+motorspinboxbrick:
+really_move_up/down
+
+if self.move_step is not None:
+            step = self.move_step
+        elif hasattr(self.motor_hwobj, "GUIstep"):
+            if self.motor_hwobj.GUIstep is not None:
+                step = self.motor_hwobj.GUIstep
+        elif self["delta"] != "":
+            step = float(self["delta"])
+
+IS THIS LOGIC: user has changed the step with the GUI, but the "GUIStep" parameter in xml (or the 'delta') prevails...
+SHOULDN''T THIS BE THE OPPOSITE ??
+
+DIFFERENCE BETWEEN DELTAS vs DEFAULT STEP
+
+Discrepancy between MultiposBricks vs MotorSpinBoxBrick
+"defaultStep" property vs "defaultSteps"
+
+++++++++++++++++++++++++++++++++++++++++
+
 For Antonia:
 BlissMotor states:
 what we get from Bliss: a list of status.
