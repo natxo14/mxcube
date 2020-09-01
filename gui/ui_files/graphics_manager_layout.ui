@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>668</width>
-    <height>665</height>
+    <width>616</width>
+    <height>527</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -43,7 +43,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="all_shapes_page">
       <property name="enabled">
@@ -53,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>650</width>
-        <height>393</height>
+        <width>598</width>
+        <height>188</height>
        </rect>
       </property>
       <attribute name="label">
@@ -186,8 +186,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>650</width>
-        <height>393</height>
+        <width>598</width>
+        <height>188</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -240,28 +240,28 @@
          <item>
           <widget class="QLabel" name="point_create_label">
            <property name="text">
-            <string>Create new point:</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Create new point:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="create_point_start_button">
            <property name="toolTip">
-            <string>Create Point</string>
+            <string>Create Point On Click</string>
            </property>
            <property name="text">
             <string/>
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../icons/calibration_point_green.png</normaloff>../icons/calibration_point_green.png</iconset>
+             <normaloff>../icons/calibration_point.png</normaloff>../icons/calibration_point.png</iconset>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="create_point_accept_button">
            <property name="toolTip">
-            <string>Point On Beam</string>
+            <string>Create Point On Beam</string>
            </property>
            <property name="text">
             <string/>
@@ -297,8 +297,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>650</width>
-        <height>393</height>
+        <width>598</width>
+        <height>188</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -360,12 +360,22 @@
           <number>6</number>
          </property>
          <item>
+          <widget class="QLabel" name="point_create_label_2">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Create new line:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="create_line_button">
            <property name="enabled">
             <bool>true</bool>
            </property>
-           <property name="text">
+           <property name="toolTip">
             <string>Create new line</string>
+           </property>
+           <property name="text">
+            <string/>
            </property>
            <property name="icon">
             <iconset>
@@ -398,8 +408,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>650</width>
-        <height>393</height>
+        <width>584</width>
+        <height>242</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -787,8 +797,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>650</width>
-        <height>393</height>
+        <width>598</width>
+        <height>188</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -821,9 +831,23 @@
        <item row="1" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QPushButton" name="create_square_button">
+          <widget class="QLabel" name="point_create_label_3">
            <property name="text">
-            <string>Create square</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Create new square:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="create_square_button">
+           <property name="toolTip">
+            <string>Create new square</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../icons/square.png</normaloff>../icons/square.png</iconset>
            </property>
           </widget>
          </item>
@@ -852,6 +876,169 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_7">
+     <item>
+      <widget class="QLabel" name="create_label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Create:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="create_point_start_button_2">
+       <property name="toolTip">
+        <string>Create Point On Click</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/calibration_point.png</normaloff>../icons/calibration_point.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="create_point_accept_button_2">
+       <property name="toolTip">
+        <string>Create Point On Beam</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/beam2.png</normaloff>../icons/beam2.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="create_line_button_2">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="toolTip">
+        <string>Create new line</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/Line.png</normaloff>../icons/Line.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="create_square_button_2">
+       <property name="toolTip">
+        <string>Create new square</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/square.png</normaloff>../icons/square.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="select_label_3">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Select:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="select_all_button">
+       <property name="text">
+        <string>All</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="select_points_button">
+       <property name="toolTip">
+        <string>Select all Points</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/calibration_point_green.png</normaloff>../icons/calibration_point_green.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="select_lines_button">
+       <property name="toolTip">
+        <string>Select all Lines</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/Line-selected.png</normaloff>../icons/Line-selected.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="select_square_roi_button">
+       <property name="toolTip">
+        <string>Select all Squares</string>
+       </property>
+       <property name="text">
+        <string>Square</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/square-selected.png</normaloff>../icons/square-selected.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
