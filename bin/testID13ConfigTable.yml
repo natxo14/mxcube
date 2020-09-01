@@ -1,8 +1,8 @@
 - children:
-  - brick: {class: ESRFID13ConfigurationTabBrick, name: ESRFID13ConfigurationTabBrick0}
+  - brick: {class: ESRFID13ConfigurationBrick, name: ESRFID13ConfigurationBrick0}
     children: []
     connections: []
-    name: ESRFID13ConfigurationTabBrick0
+    name: ESRFID13ConfigurationBrick0
     properties:
     - {comment: '', default_value: /multiple-positions, hidden: false, name: configfile,
       old_value: /multipos-, type: string, value: /multiple-positions}
@@ -20,7 +20,7 @@
       name: instanceAllowAlways, old_value: 0, type: boolean, value: 0}
     - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
       name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
-    type: ESRFID13ConfigurationTabBrick
+    type: ESRFID13ConfigurationBrick
   connections: []
   name: window0
   properties:

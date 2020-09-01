@@ -62,9 +62,9 @@
       - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick0}
         children: []
         connections:
-        - {receiver: ESRFID13ConfigurationTabBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
+        - {receiver: ESRFID13ConfigurationBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
           slot: return_operational_modes_list}
-        - {receiver: ESRFID13ConfigurationTabBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
+        - {receiver: ESRFID13ConfigurationBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
           slot: return_operational_modes_list}
         name: GraphicsManagerBrick0
         properties:
@@ -677,14 +677,14 @@
           type: combo
           value: default
         type: vbox
-      - brick: {class: ESRFID13ConfigurationTabBrick, name: ESRFID13ConfigurationTabBrick0}
+      - brick: {class: ESRFID13ConfigurationBrick, name: ESRFID13ConfigurationBrick0}
         children: []
         connections:
         - {receiver: ESRFID13ExportDataBrick0, receiverWindow: window0, signal: data_policy_changed,
           slot: data_policy_changed}
         - {receiver: GraphicsManagerBrick0, receiverWindow: window0, signal: operation_modes_saved,
           slot: update_operational_modes}
-        name: ESRFID13ConfigurationTabBrick0
+        name: ESRFID13ConfigurationBrick0
         properties:
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
           name: fixedHeight, old_value: -1, type: integer, value: -1}
@@ -702,7 +702,7 @@
           name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
         - {comment: '', default_value: /multiple-positions, hidden: false, name: mnemonic,
           old_value: /multiple-positions, type: string, value: /multiple-positions-mockup}
-        type: ESRFID13ConfigurationTabBrick
+        type: ESRFID13ConfigurationBrick
       connections: []
       name: hbox0
       properties:
