@@ -45,6 +45,7 @@ __category__ = "Graphics"
 class GraphicsManagerBrick(BaseWidget):
 
     get_operational_modes_list_signal = QtImport.pyqtSignal(object)
+    create_centring_point_button_toggled = QtImport.pyqtSignal(bool)
 
     def __init__(self, *args):
 
@@ -70,11 +71,13 @@ class GraphicsManagerBrick(BaseWidget):
         
         # Signals ------------------------------------------------------------
         self.define_signal("get_operational_modes_list_signal", ())
+        self.define_signal("create_centring_point_button_toggled", ())
 
         # Slots ---------------------------------------------------------------
         self.define_slot("set_data_path", ())
         self.define_slot("update_operational_modes", ())
         self.define_slot("delete_all_button_clicked", ())
+        self.define_slot("toggle_create_point_start_button", ())
 
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Graphics items", self)
@@ -161,11 +164,11 @@ class GraphicsManagerBrick(BaseWidget):
             self.delete_selection_button_clicked
         )
 
-        self.manager_widget.create_point_start_button.clicked.connect(
-            self.create_point_start_button_clicked
+        self.manager_widget.create_point_start_button.toggled.connect(
+            self.create_point_start_button_toggled
         )
-        self.manager_widget.create_point_start_button_2.clicked.connect(
-            self.create_point_start_button_clicked
+        self.manager_widget.create_point_start_button_2.toggled.connect(
+            self.create_point_start_button_toggled
         )
         self.manager_widget.create_point_accept_button.clicked.connect(
             self.create_point_accept_button_clicked
@@ -661,10 +664,22 @@ class GraphicsManagerBrick(BaseWidget):
         for shape in HWR.beamline.sample_view.get_selected_shapes():
             print(f"shape {shape} - {shape.get_display_name()} to be deleted")
             HWR.beamline.sample_view.delete_shape(shape)
-            
-    def create_point_start_button_clicked(self):
+    
+    def toggle_create_point_start_button(self, checked):
+        print(f"GRAPHICSMANAGERBRICK toggle_create_point_start_button checked {checked}")
+        self.manager_widget.create_point_start_button.setChecked(checked)
+        self.manager_widget.create_point_start_button_2.setChecked(checked)
+
+    def create_point_start_button_toggled(self, checked):
         # HWR.beamline.sample_view.start_centring(tree_click=True)
-        HWR.beamline.sample_view.start_one_click_centring()
+        self.manager_widget.create_point_start_button.setChecked(checked)
+        self.manager_widget.create_point_start_button_2.setChecked(checked)
+        print(f"GRAPHICSMANAGERBRICK create_point_start_button_toggled checked {checked}")
+        if checked:
+            HWR.beamline.sample_view.start_one_click_centring()
+        else:
+            HWR.beamline.sample_view.stop_one_click_centring()
+        self.create_centring_point_button_toggled.emit(checked)
 
     def create_point_accept_button_clicked(self):
         HWR.beamline.sample_view.start_centring()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>527</height>
+    <width>545</width>
+    <height>433</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -53,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>600</width>
-        <height>225</height>
+        <width>529</width>
+        <height>131</height>
        </rect>
       </property>
       <attribute name="label">
@@ -254,7 +254,11 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../icons/calibration_point.png</normaloff>../icons/calibration_point.png</iconset>
+             <normaloff>../icons/calibration_point.png</normaloff>
+             <normalon>../icons/calibration_point_selected.png</normalon>../icons/calibration_point.png</iconset>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -899,7 +903,11 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../icons/calibration_point.png</normaloff>../icons/calibration_point.png</iconset>
+         <normaloff>../icons/calibration_point.png</normaloff>
+         <normalon>../icons/calibration_point_selected.png</normalon>../icons/calibration_point.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

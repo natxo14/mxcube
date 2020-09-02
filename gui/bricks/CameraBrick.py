@@ -30,11 +30,21 @@ __category__ = "Graphics"
 
 
 class CameraBrick(BaseWidget):
+
+    move_center_to_clicked_point_button_toggled = QtImport.pyqtSignal(bool)
+    create_centring_point_button_toggled = QtImport.pyqtSignal(bool)
+    
     def __init__(self, *args):
         BaseWidget.__init__(self, *args)
 
         # Hardware objects ----------------------------------------------------
         self.graphics_manager_hwobj = None
+
+        # Signals ------------------------------------------------------------
+        self.define_signal("move_center_to_clicked_point_button_toggled", ())
+        self.define_signal("create_centring_point_button_toggled", ())
+        # Slots ---------------------------------------------------------------
+        self.define_slot("toggle_create_point_start_button", ())
 
         # Internal values -----------------------------------------------------
         self.graphics_scene_size = None
@@ -56,7 +66,7 @@ class CameraBrick(BaseWidget):
         self.add_property("displayOmegaAxis", "boolean", True)
         self.add_property("beamDefiner", "boolean", False)
         self.add_property("cameraControls", "boolean", False)
-
+        
         # Graphic elements-----------------------------------------------------
         self.toolbar = QtImport.QToolBar(self)
         self.info_widget = QtImport.QWidget(self)
@@ -70,18 +80,33 @@ class CameraBrick(BaseWidget):
         self._camera_gain_spin_slider = None
 
         self.move_center_to_clicked_point_button = None
+        self.create_centring_point_button = None
+        self.select_button = None
 
         # populate QMenu and QToolBar
-        tmp_menu = QtImport.QMenu(self.toolbar)
-        tmp_menu.setIcon(Icons.load_icon("Draw"))
+        
+        tmp_menu = QtImport.QMenu("Create", self.toolbar)
+        tmp_menu.setIcon(Icons.load_icon("draw-black-white"))
 
         self.popup_menu = QtImport.QMenu(self)
         self.popup_menu.menuAction().setIconVisibleInMenu(True)
+
+        self.select_button = self.popup_menu.addAction(
+            Icons.load_icon("select"),
+            "Select items in image",
+        )
+        self.select_button.setCheckable(True)
+        self.select_button.toggled.connect(
+            self.select_button_toggled
+        )
+        
+        self.toolbar.addAction(self.select_button)
+
         create_menu = self.popup_menu.addMenu(
             Icons.load_icon("Draw"),
             "Create"
         )
-        create_menu.menuAction().setIconVisibleInMenu(True)
+        # create_menu.menuAction().setIconVisibleInMenu(True)
 
         # CENTRING out of menus : only in centring brick
         # temp_action = create_menu.addAction(
@@ -103,15 +128,33 @@ class CameraBrick(BaseWidget):
         tmp_menu.addAction(temp_action)
         
         # in double temp_action.setIcon(Icons.load_icon("ThumbUp"))
-
-        temp_action = create_menu.addAction(
-            Icons.load_icon("calibration_point"),
-            "Centring points with one click",
-            self.create_points_one_click_clicked,
+        
+        icon_point = QtImport.QIcon()
+        qpixmap_inactive = Icons.load_pixmap("calibration_point")
+        qpixmap_active = Icons.load_pixmap("calibration_point_selected")
+        
+        icon_point.addPixmap(
+            qpixmap_active,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.On,
+        )
+        icon_point.addPixmap(
+            qpixmap_inactive,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.Off,
         )
 
-        tmp_menu.addAction(temp_action)
+        self.create_centring_point_button = create_menu.addAction(
+            icon_point,
+            "Centring points with one click",
+        )
+        self.create_centring_point_button.setCheckable(True)
+        self.create_centring_point_button.toggled.connect(
+            self.create_points_one_click_clicked
+        )
         
+        tmp_menu.addAction(self.create_centring_point_button)
+                
         temp_action = create_menu.addAction(
             Icons.load_icon("Line.png"), "Helical line", self.create_line_clicked
         )
@@ -162,7 +205,7 @@ class CameraBrick(BaseWidget):
         )
         self.move_center_to_clicked_point_button.setCheckable(True)
         self.move_center_to_clicked_point_button.toggled.connect(
-            self.move_center_to_clicked_point
+            self.move_center_to_clicked_point_button_toggled
         )
         
         self.toolbar.addAction(self.move_center_to_clicked_point_button)
@@ -308,6 +351,18 @@ class CameraBrick(BaseWidget):
         )
         self.camera_control_action.setEnabled(False)
 
+        # Another objects--------------------------------------------
+        self.exclusive_action_group = QtImport.QActionGroup(self.toolbar)
+        self.exclusive_action_group.addAction(
+            self.move_center_to_clicked_point_button
+        )
+        self.exclusive_action_group.addAction(
+            self.create_centring_point_button
+        )
+        self.exclusive_action_group.addAction(
+            self.select_button
+        )
+        
         # Layout --------------------------------------------------------------
         _info_widget_hlayout = QtImport.QHBoxLayout(self.info_widget)
         _info_widget_hlayout.addWidget(self.display_beam_size_cbox)
@@ -423,12 +478,10 @@ class CameraBrick(BaseWidget):
 
     def escape_pressed(self):
         """
-        'Unpress' move to beam button
+        'Unpress' all press buttons
         """
-        if self.move_center_to_clicked_point_button.isChecked():
-            self.move_center_to_clicked_point_button.setChecked(False)
-
-
+        self.select_button.setChecked(True)
+        
     def display_beam_size_toggled(self):
         self.graphics_manager_hwobj.display_beam_size(
             self.display_beam_size_action.isChecked()
@@ -513,13 +566,29 @@ class CameraBrick(BaseWidget):
             self.display_histogram_action.isChecked()
         )
 
+    def toggle_create_point_start_button(self,check):
+        self.create_centring_point_button.setChecked(check)
+
     def create_point_click_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=True)
 
-    def create_points_one_click_clicked(self):
-        self.graphics_manager_hwobj.start_one_click_centring()
+    def select_button_toggled(self, checked):
+        if checked:
+            self.graphics_manager_hwobj.stop_current_state()
 
-    def move_center_to_clicked_point(self, checked):
+    def create_points_one_click_clicked(self, checked):
+        
+        print(f"CAMERABRICK create_points_one_click_clicked checked {checked}")
+        if checked:
+            self.graphics_manager_hwobj.start_one_click_centring()
+        else:
+            self.graphics_manager_hwobj.stop_one_click_centring()
+        
+        self.create_centring_point_button_toggled.emit(checked)
+        
+    def move_center_to_clicked_point_button_toggled(self, checked):
+        print(f"CAMERABRICK move_center_to_clicked_point_button_toggled checked {checked}")
+        self.move_center_to_clicked_point_button_toggled.emit(checked)
         self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
 
     def create_point_current_clicked(self):
@@ -626,6 +695,14 @@ class CameraBrick(BaseWidget):
 
     def set_background_mode(self, checked=False):
         pass
+
+    def uncheck_exclusive_actions(self):
+
+        self.exclusive_action_group.setExclusive(False)
+
+        if self.exclusive_action_group.checkedAction() is not None:
+            self.exclusive_action_group.checkedAction().setChecked(False)
+        self.exclusive_action_group.setExclusive(True)
 
 
 class CameraControlDialog(QtImport.QDialog):
@@ -1050,4 +1127,5 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
 
         print(f"_spinbox.set_limits : {min_value} {max_value}")
         print(f"_spinbox.setSingleStep : {(max_value - min_value)/100.0}")
+    
         
