@@ -224,6 +224,26 @@ On xml files : differences between: device/equipment/object
 
 METTRE OBJECT PARTOUT!!
 
+########################################
+INSTALL EXTERNAL PACKAGE DEPENDENCIES
+########################################
+when an especific beamline has its own devices and dependencies,
+like id13 with turret and volpi:
+that package needs to be installed:
+
+blissadm@lid13eh22:~/local/id13.git(master)$ git pull
+blissadm@lid13eh22:~/local/id13.git(master)$ pip install --no-deps -e .
+
+--no-deps
+    Don’t install package dependencies.
+-e, --editable <path/url>
+    Install a project in editable mode (i.e. setuptools “develop mode”) from a local project path or a VCS url.
+
+
+
+
+
+
 ##############################################
     Adding Bricks to GUI Builder
 ##############################################
