@@ -205,7 +205,7 @@ class CameraBrick(BaseWidget):
         )
         self.move_center_to_clicked_point_button.setCheckable(True)
         self.move_center_to_clicked_point_button.toggled.connect(
-            self.move_center_to_clicked_point_button_toggled
+            self.move_center_to_clicked_point
         )
         
         self.toolbar.addAction(self.move_center_to_clicked_point_button)
@@ -586,7 +586,7 @@ class CameraBrick(BaseWidget):
         
         self.create_centring_point_button_toggled.emit(checked)
         
-    def move_center_to_clicked_point_button_toggled(self, checked):
+    def move_center_to_clicked_point(self, checked):
         print(f"CAMERABRICK move_center_to_clicked_point_button_toggled checked {checked}")
         self.move_center_to_clicked_point_button_toggled.emit(checked)
         self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
