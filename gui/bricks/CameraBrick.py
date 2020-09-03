@@ -567,7 +567,14 @@ class CameraBrick(BaseWidget):
         )
 
     def toggle_create_point_start_button(self,check):
-        self.create_centring_point_button.setChecked(check)
+        """
+        slot connected to GraphicsManagerBrick
+        if check is false => check select_item checkbutton
+        """
+        if check:
+            self.create_centring_point_button.setChecked(check)
+        else:
+            self.select_button.setChecked(True)
 
     def create_point_click_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=True)
