@@ -51,6 +51,7 @@ class MultipleMotorsBrick(BaseWidget):
         self.add_property("defaultDecimals", "string", "")
         self.add_property("predefinedPositions", "string", "")
         self.add_property("showMoveButtons", "boolean", True)
+        self.add_property("showSpinBoxButtons", "boolean", True)
         self.add_property("showSlider", "boolean", False)
         self.add_property("showStop", "boolean", True)
         self.add_property("showStep", "boolean", True)

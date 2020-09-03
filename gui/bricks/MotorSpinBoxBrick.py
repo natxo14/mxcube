@@ -54,6 +54,7 @@ class MotorSpinBoxBrick(BaseWidget):
         self.add_property("label", "string", "")
         self.add_property("showLabel", "boolean", True)
         self.add_property("showMoveButtons", "boolean", True)
+        self.add_property("showSpinBoxButtons", "boolean", True)
         self.add_property("showSlider", "boolean", False)
         self.add_property("showStop", "boolean", True)
         self.add_property("showStep", "boolean", True)
@@ -593,6 +594,11 @@ class MotorSpinBoxBrick(BaseWidget):
             else:
                 self.move_left_button.hide()
                 self.move_right_button.hide()
+        elif property_name == "showSpinBoxButtons":
+            if new_value:
+                self.position_spinbox.setButtonSymbols(QtImport.QAbstractSpinBox.UpDownArrows)
+            else:
+                self.position_spinbox.setButtonSymbols(QtImport.QAbstractSpinBox.NoButtons)
         elif property_name == "showStop":
             if new_value:
                 self.stop_button.show()

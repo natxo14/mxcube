@@ -146,6 +146,7 @@ if (qt_variant == "PyQt5") or (qt_variant is None and not qt_imported):
             QDial,
             QDialog,
             QDoubleSpinBox,
+            QAbstractSpinBox,
             QFileDialog,
             QFrame,
             QGraphicsItem,
