@@ -83,8 +83,9 @@ from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
 
-from bliss.config import static
 from bliss.config import get_sessions_list
+from bliss.config.conductor.client import get_redis_connection
+import pickle
 
 try:
     from xml.etree import cElementTree  # python2.5
@@ -129,7 +130,6 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         #self.current_zoom_idx = -1
         self.multipos_file_xml_path = None
         self.bliss_session_list = None
-        self.bliss_config = static.get_config()
         self.data_policy_base_path = None
         self.data_policy_full_info = None
 
@@ -569,24 +569,45 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             new_session = self.bliss_session_list[index]
             session_info_string = f"Error loading Bliss session {new_session} configuration"
             print(f"ID13CONGI : display_data_policy new_session {new_session}")
-            session = static.get_config().get(new_session)
             
-            try:
-                # from PyQt5.QtCore import pyqtRemoveInputHook
-                # pyqtRemoveInputHook()
-                # import pdb
-                # pdb.set_trace()
-                session.setup()
-                session_info_string = session.scan_saving.__info__()
-                self.data_policy_full_info = session_info_string
-                self.data_policy_base_path = session.scan_saving.base_path
-                print(f"ID13CONGI : session_info_string {session_info_string}")
-                print(f"ID13CONGI : self.data_policy_base_path {self.data_policy_base_path}")
-                self.data_path_base_changed.emit(self.data_policy_base_path)
-                self.data_policy_changed.emit(session.scan_saving)
+            redis_connection = get_redis_connection()
+            #redis_connection.keys("*scan_saving*")
+
+            request_dict = redis_connection.hgetall(f"parameters:scan_saving:{new_session}:default")
+
+            session_info_string = ''
+            for key, val in request_dict.items():
+                print(f" display_data_policy key, val : {key} , {val}")
+                info_str = ''
+                #try:
+                info_str = pickle.loads(key)
+                #except pickle.PickleError:
+                #    info_str = 'unknow_key'
+                print(f" display_data_policy info_str: {info_str}, val : {val} type(val) {type(val)}  - type pickle.loads(val) {type(pickle.loads(val))}")
+                info_str += ' : ' + str(pickle.loads(val))
+                session_info_string += info_str + ' \n '
+            
+
+
+            # BEFORE
+            # with session bliss object : ISSUES WHEN EXECUTING session.setup()
+            # session = static.get_config().get(new_session)
+            # try:
+            #     # from PyQt5.QtCore import pyqtRemoveInputHook
+            #     # pyqtRemoveInputHook()
+            #     # import pdb
+            #     # pdb.set_trace()
+            #     session.setup()
+            #     session_info_string = session.scan_saving.__info__()
+            #     self.data_policy_full_info = session_info_string
+            #     self.data_policy_base_path = session.scan_saving.base_path
+            #     print(f"ID13CONGI : session_info_string {session_info_string}")
+            #     print(f"ID13CONGI : self.data_policy_base_path {self.data_policy_base_path}")
+            #     self.data_path_base_changed.emit(self.data_policy_base_path)
+            #     self.data_policy_changed.emit(session.scan_saving)
                 
-            except RuntimeError:
-                logging.getLogger("HWR").error("Exception on Bliss session setup")
+            # except RuntimeError:
+            #     logging.getLogger("HWR").error("Exception on Bliss session setup")
 
             self.ui_widgets_manager.data_policy_label.setText(
                 session_info_string
