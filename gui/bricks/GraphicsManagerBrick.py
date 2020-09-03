@@ -561,14 +561,15 @@ class GraphicsManagerBrick(BaseWidget):
                 shape.setSelected(False)
     
     def centring_in_progress_changed(self, centring_in_progress):
-        if centring_in_progress:
-            self.manager_widget.create_point_start_button.setIcon(
-                Icons.load_icon("Delete")
-            )
-        else:
-            self.manager_widget.create_point_start_button.setIcon(
-                Icons.load_icon("VCRPlay2")
-            )
+        # if centring_in_progress:
+        #     self.manager_widget.create_point_start_button.setIcon(
+        #         Icons.load_icon("Delete")
+        #     )
+        # else:
+        #     self.manager_widget.create_point_start_button.setIcon(
+        #         Icons.load_icon("VCRPlay2")
+        #     )
+        pass
 
     def main_groupbox_toggled(self, is_on):
         if is_on:

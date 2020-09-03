@@ -1025,7 +1025,7 @@
         <string>Select all Squares</string>
        </property>
        <property name="text">
-        <string>Square</string>
+        <string/>
        </property>
        <property name="icon">
         <iconset>
