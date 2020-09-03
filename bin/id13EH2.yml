@@ -36,7 +36,7 @@
           - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
             name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
           - {comment: '', default_value: /graphics, hidden: false, name: mnemonic,
-            old_value: /graphics, type: string, value: /graphicsID13EH2}
+              old_value: /graphics, type: string, value: /graphicsID13EH2}
           type: CameraBrick
         - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick1}
           children: []
