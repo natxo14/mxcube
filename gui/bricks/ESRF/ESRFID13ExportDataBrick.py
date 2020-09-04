@@ -67,6 +67,7 @@ import copy
 import datetime
 from datetime import date
 import logging
+import pprint
 
 from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
@@ -100,8 +101,9 @@ class ESRFID13ExportDataBrick(BaseWidget):
         self.ui_widgets_manager = QtImport.load_ui_file("export_data_layout.ui")
 
         # Internal values -----------------------------------------------------
-        self.__data_policy_scan_saving = None
+        # self.__data_policy_scan_saving = None
         self.__current_sample = None
+        self.__data_policy_info_dict = {}
 
         # Layout --------------------------------------------------------------
         _groupbox_vlayout = QtImport.QVBoxLayout(self)
@@ -131,19 +133,16 @@ class ESRFID13ExportDataBrick(BaseWidget):
             self.select_file_path_button_clicked
         )
 
-    def data_policy_changed(self, data_policy_scan_saving):
+    def data_policy_changed(self, data_policy_info_dict):
         """
-        param : data_policy_scan_saving
+        param : data_policy_info_dict
             data policy object as given by bliss' SCAN_SAVING
         """
-        
-        self.__data_policy_scan_saving = data_policy_scan_saving
+        self.__data_policy_info_dict = data_policy_info_dict
+        # self.__data_policy_scan_saving = data_policy_scan_saving
 
-        info_list = self.__data_policy_scan_saving.__info__()
-
-        info_list = info_list.split('\n')
         print("data_policy_changed!!!")
-        print(info_list)
+        pprint.pprint(self.__data_policy_info_dict)
 
         self.set_export_file_path()
 
@@ -153,20 +152,18 @@ class ESRFID13ExportDataBrick(BaseWidget):
         (changes from bliss console)
         """
 
-        try:
-            self.__current_sample = self.__data_policy_scan_saving.sample
-        except AttributeError:
-            self.__current_sample = "no_sample"
-            print(f"no sample defined in data policy")
-
+        self.__current_sample = self.__data_policy_info_dict.get('sample', "no_sample_defined")
         self.ui_widgets_manager.sample_name_tbox.setText(self.__current_sample)
         
-        try:
-            path = self.__data_policy_scan_saving.get_path()
-        except AttributeError:
-            path = "no_data_path"
+        base_path = self.__data_policy_info_dict.get('base_path', "no_data_path")
+        
+        extra_path_template = self.__data_policy_info_dict.get('template', "no_template")
 
-        self.ui_widgets_manager.export_folder_path_tbox.setText(path)
+        for k, v in self.__data_policy_info_dict.items():
+            extra_path_template = extra_path_template.replace('{' + k + '}' , v)
+
+        full_path = os.path.join(base_path, extra_path_template, "")
+        self.ui_widgets_manager.export_folder_path_tbox.setText(full_path)
 
     def set_export_file_name(self):
         """

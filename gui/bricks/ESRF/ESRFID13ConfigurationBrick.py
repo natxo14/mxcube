@@ -86,6 +86,7 @@ from HardwareRepository import HardwareRepository as HWR
 from bliss.config import get_sessions_list
 from bliss.config.conductor.client import get_redis_connection
 import pickle
+import pprint
 
 try:
     from xml.etree import cElementTree  # python2.5
@@ -104,7 +105,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
     operation_modes_saved = QtImport.pyqtSignal(list)
     # TODO : delete data_path_base_changed
     data_path_base_changed = QtImport.pyqtSignal(str)
-    data_policy_changed = QtImport.pyqtSignal(object)
+    data_policy_changed = QtImport.pyqtSignal(dict)
     
     def __init__(self, *args):
 
@@ -222,6 +223,10 @@ class ESRFID13ConfigurationBrick(BaseWidget):
 
         self.ui_widgets_manager.label_list.itemSelectionChanged.connect(
             self.label_list_selection_changed
+        )
+
+        self.ui_widgets_manager.reload_data_policy_button.clicked.connect(
+            self.reload_data_policy
         )
 
         # Other hardware object connections --------------------------
@@ -560,6 +565,12 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
         print(f"ID13CONGI : load_sessions {self.bliss_session_list}")
             
+    def reload_data_policy(self):
+        
+        self.display_data_policy(
+            self.ui_widgets_manager.bliss_session_combo_box.currentIndex()
+        )
+
     def display_data_policy(self, index):
         """
         Display data policy of selected session in combobox
@@ -567,7 +578,6 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         
         if index > -1:
             new_session = self.bliss_session_list[index]
-            session_info_string = f"Error loading Bliss session {new_session} configuration"
             print(f"ID13CONGI : display_data_policy new_session {new_session}")
             
             redis_connection = get_redis_connection()
@@ -576,38 +586,16 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             request_dict = redis_connection.hgetall(f"parameters:scan_saving:{new_session}:default")
 
             session_info_string = ''
+            session_info_dict = {}
+            session_info_dict['session'] = new_session
             for key, val in request_dict.items():
-                print(f" display_data_policy key, val : {key} , {val}")
                 info_str = ''
-                #try:
-                info_str = pickle.loads(key)
-                #except pickle.PickleError:
-                #    info_str = 'unknow_key'
-                print(f" display_data_policy info_str: {info_str}, val : {val} type(val) {type(val)}  - type pickle.loads(val) {type(pickle.loads(val))}")
+                info_str = key.decode()
+                
+                session_info_dict[info_str] = str(pickle.loads(val))
                 info_str += ' : ' + str(pickle.loads(val))
                 session_info_string += info_str + ' \n '
-            
-
-
-            # BEFORE
-            # with session bliss object : ISSUES WHEN EXECUTING session.setup()
-            # session = static.get_config().get(new_session)
-            # try:
-            #     # from PyQt5.QtCore import pyqtRemoveInputHook
-            #     # pyqtRemoveInputHook()
-            #     # import pdb
-            #     # pdb.set_trace()
-            #     session.setup()
-            #     session_info_string = session.scan_saving.__info__()
-            #     self.data_policy_full_info = session_info_string
-            #     self.data_policy_base_path = session.scan_saving.base_path
-            #     print(f"ID13CONGI : session_info_string {session_info_string}")
-            #     print(f"ID13CONGI : self.data_policy_base_path {self.data_policy_base_path}")
-            #     self.data_path_base_changed.emit(self.data_policy_base_path)
-            #     self.data_policy_changed.emit(session.scan_saving)
-                
-            # except RuntimeError:
-            #     logging.getLogger("HWR").error("Exception on Bliss session setup")
+                self.data_policy_changed.emit(session_info_dict)
 
             self.ui_widgets_manager.data_policy_label.setText(
                 session_info_string
