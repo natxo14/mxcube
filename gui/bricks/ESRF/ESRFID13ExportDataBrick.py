@@ -240,8 +240,8 @@ class ESRFID13ExportDataBrick(BaseWidget):
 
         folder_path = self.ui_widgets_manager.export_folder_path_tbox.text().strip()
         filename = self.ui_widgets_manager.export_filename_tbox.text().strip()
-        file_full_path = folder_path + '/' + filename
-        
+        file_full_path = os.path.join(folder_path, filename)
+                
         # file exists?? overwrite ??
         if self.ui_widgets_manager.overwrite_warn_cbbox.isChecked():
             # get full filename and check if file already exists
