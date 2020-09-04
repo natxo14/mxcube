@@ -129,8 +129,8 @@
                 value: default
               - {comment: '', default_value: '', hidden: false, name: icon, old_value: null,
                 type: string, value: ''}
-              - {comment: '', default_value: Graphic Items & Data, hidden: false,
-                name: label, old_value: null, type: string, value: Graphic Items &
+              - {comment: '', default_value: Graphic Items and Data, hidden: false,
+                name: label, old_value: null, type: string, value: Graphic Items and
                   Data}
               - {comment: '', default_value: 2, hidden: false, name: margin, old_value: null,
                 type: integer, value: 2}
@@ -379,7 +379,7 @@
               old_value: null, type: boolean, value: 0}
             - {comment: '', default_value: 0, hidden: false, name: closable_Centring,
               old_value: null, type: boolean, value: 0}
-            - {comment: '', default_value: 0, hidden: false, name: closable_Graphic_Items_&_Data,
+            - {comment: '', default_value: 0, hidden: false, name: closable_Graphic_Items_and_Data,
               old_value: null, type: boolean, value: 0}
             - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
               type: color, value: null}
@@ -387,7 +387,7 @@
               type: integer, value: -1}
             - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: null,
               type: integer, value: -1}
-            - {comment: '', default_value: 0, hidden: false, name: fontSize, old_value: 0,
+            - {comment: '', default_value: 9, hidden: false, name: fontSize, old_value: null,
               type: integer, value: 9}
             - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
               comment: ''
@@ -415,7 +415,7 @@
               old_value: null, type: boolean, value: 0}
             - {comment: '', default_value: 0, hidden: false, name: newdialog_Centring,
               old_value: null, type: boolean, value: 0}
-            - {comment: '', default_value: 0, hidden: false, name: newdialog_Graphic_Items_&_Data,
+            - {comment: '', default_value: 0, hidden: false, name: newdialog_Graphic_Items_and_Data,
               old_value: null, type: boolean, value: 0}
             - choices: [plain, raised, sunken, default]
               comment: ''
@@ -859,8 +859,8 @@
         value: default
       - {comment: '', default_value: '', hidden: false, name: icon, old_value: null,
         type: string, value: ''}
-      - {comment: '', default_value: Live, hidden: false, name: label, old_value: null,
-        type: string, value: Live}
+      - {comment: '', default_value: Live22, hidden: false, name: label, old_value: Live22,
+        type: string, value: ''}
       - {comment: '', default_value: 2, hidden: false, name: margin, old_value: null,
         type: integer, value: 2}
       - choices: [plain, raised, sunken, default]
@@ -949,8 +949,8 @@
         value: default
       - {comment: '', default_value: '', hidden: false, name: icon, old_value: null,
         type: string, value: ''}
-      - {comment: '', default_value: Configuration, hidden: false, name: label, old_value: null,
-        type: string, value: Configuration}
+      - {comment: '', default_value: Configuration, hidden: false, name: label, old_value: Configuration,
+        type: string, value: ''}
       - {comment: '', default_value: 2, hidden: false, name: margin, old_value: null,
         type: integer, value: 2}
       - choices: [plain, raised, sunken, default]
@@ -984,9 +984,7 @@
       old_value: null
       type: combo
       value: none
-    - {comment: '', default_value: 0, hidden: false, name: closable_Configuration,
-      old_value: null, type: boolean, value: 0}
-    - {comment: '', default_value: 0, hidden: false, name: closable_Live, old_value: null,
+    - {comment: '', default_value: 0, hidden: false, name: closable_, old_value: null,
       type: boolean, value: 0}
     - {comment: '', default_value: null, hidden: false, name: color, old_value: null,
       type: color, value: null}
@@ -994,7 +992,7 @@
       type: integer, value: -1}
     - {comment: '', default_value: -1, hidden: false, name: fixedwidth, old_value: null,
       type: integer, value: -1}
-    - {comment: '', default_value: 0, hidden: false, name: fontSize, old_value: 0,
+    - {comment: '', default_value: 9, hidden: false, name: fontSize, old_value: null,
       type: integer, value: 9}
     - choices: [Box, Panel, StyledPanel, HLine, VLine, default]
       comment: ''
@@ -1014,13 +1012,11 @@
       value: default
     - {comment: '', default_value: '', hidden: false, name: icon, old_value: null,
       type: string, value: ''}
-    - {comment: '', default_value: '', hidden: false, name: label, old_value: null,
+    - {comment: '', default_value: Live3, hidden: false, name: label, old_value: Live3,
       type: string, value: ''}
     - {comment: '', default_value: 2, hidden: false, name: margin, old_value: null,
       type: integer, value: 2}
-    - {comment: '', default_value: 0, hidden: false, name: newdialog_Configuration,
-      old_value: null, type: boolean, value: 0}
-    - {comment: '', default_value: 0, hidden: false, name: newdialog_Live, old_value: null,
+    - {comment: '', default_value: 0, hidden: false, name: newdialog_, old_value: null,
       type: boolean, value: 0}
     - choices: [plain, raised, sunken, default]
       comment: ''

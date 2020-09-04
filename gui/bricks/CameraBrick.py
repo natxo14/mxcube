@@ -374,6 +374,7 @@ class CameraBrick(BaseWidget):
         self.info_widget.setLayout(_info_widget_hlayout)
 
         self.main_layout = QtImport.QVBoxLayout(self)
+        self.intern_main_layout = QtImport.QHBoxLayout()
         #self.main_layout.setSpacing(0)
         #self.main_layout.setContentsMargins(0, 0, 0, 0)
 
@@ -387,7 +388,8 @@ class CameraBrick(BaseWidget):
 
         # Scene elements ------------------------------------------------------
         self.setMouseTracking(True)
-        self.main_layout.addWidget(self.toolbar)
+        self.toolbar.setOrientation(QtImport.Qt.Vertical)
+        # self.main_layout.addWidget(self.toolbar)
                 
 
     def property_changed(self, property_name, old_value, new_value):
@@ -422,7 +424,9 @@ class CameraBrick(BaseWidget):
 
                 self.graphics_view = self.graphics_manager_hwobj.get_graphics_view()
                 # self.graphics_camera_frame = self.graphics_manager_hwobj.get_camera_frame()
-                self.main_layout.addWidget(self.graphics_view)
+                self.intern_main_layout.addWidget(self.graphics_view)
+                self.intern_main_layout.addWidget(self.toolbar)
+                self.main_layout.addLayout(self.intern_main_layout)
                 self.main_layout.addWidget(self.info_widget)
                 self.set_fixed_size()
                 self.init_image_scale_list()
