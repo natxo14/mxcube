@@ -402,7 +402,10 @@ class MotorSpinBoxBrick(BaseWidget):
             self.move_left_button.setEnabled(True)
             self.move_right_button.setEnabled(True)
             self.step_combo.setEnabled(True)
-        elif state == self.motor_hwobj.STATES.FAULT:
+        elif state in (
+            self.motor_hwobj.STATES.FAULT,
+            self.motor_hwobj.STATES.OFF
+        ):
             self.position_spinbox.setEnabled(False)
             self.stop_button.setEnabled(False)
             self.move_left_button.setEnabled(False)
@@ -550,6 +553,9 @@ class MotorSpinBoxBrick(BaseWidget):
                 self.state_changed,
                 instance_filter=True,
             )
+        # set GUI according to motor state
+        state = self.motor_hwobj.get_state()
+        self.state_changed(state)
 
         # get motor position and set to brick
         self.position_changed(self.motor_hwobj.get_value())
