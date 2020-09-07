@@ -418,8 +418,8 @@ class MotorSpinBoxBrick(BaseWidget):
             self.move_right_button.setEnabled(False)
             self.step_combo.setEnabled(False)
         elif state in (
-            self.motor_hwobj.STATES.LOWLIMIT,
-            self.motor_hwobj.STATES.HIGHLIMIT,
+            #self.motor_hwobj.STATES.LOWLIMIT,
+            #self.motor_hwobj.STATES.HIGHLIMIT,
             self.motor_hwobj.STATES.READY,
         ):
             self.position_spinbox.setEnabled(True)
@@ -465,7 +465,6 @@ class MotorSpinBoxBrick(BaseWidget):
                 logging.getLogger("user_level_log").exception(
                     "%s: could not get motor state", self.objectName()
                 )
-
                 state = self.motor_hwobj.STATES.FAULT
 
             try:
@@ -476,6 +475,7 @@ class MotorSpinBoxBrick(BaseWidget):
                     "%s: could not get motor limits", self.objectName()
                 )
                 limits = None
+
             try:
                 state_str = state.name
             except IndexError:
