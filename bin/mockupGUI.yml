@@ -3,7 +3,9 @@
     - children:
       - brick: {class: CameraBrick, name: CameraBrick0}
         children: []
-        connections: []
+        connections:
+        - {receiver: GraphicsManagerBrick0, receiverWindow: window0, signal: create_centring_point_button_toggled,
+          slot: toggle_create_point_start_button}
         name: CameraBrick0
         properties:
         - {comment: '', default_value: 0, hidden: false, name: beamDefiner, old_value: 0,
@@ -21,7 +23,7 @@
         - {comment: '', default_value: '', hidden: false, name: fixedSize, old_value: '',
           type: string, value: ''}
         - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-          old_value: -1, type: integer, value: 700}
+          old_value: 700, type: integer, value: 800}
         - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
           type: string, value: '9'}
         - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
@@ -62,10 +64,8 @@
       - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick0}
         children: []
         connections:
-        - {receiver: ESRFID13ConfigurationBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
-          slot: return_operational_modes_list}
-        - {receiver: ESRFID13ConfigurationBrick0, receiverWindow: window0, signal: get_operational_modes_list_signal,
-          slot: return_operational_modes_list}
+        - {receiver: CameraBrick0, receiverWindow: window0, signal: create_centring_point_button_toggled,
+          slot: toggle_create_point_start_button}
         name: GraphicsManagerBrick0
         properties:
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
@@ -93,7 +93,7 @@
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
           name: fixedHeight, old_value: -1, type: integer, value: -1}
         - {comment: Set fixed width in pixels, default_value: -1, hidden: false, name: fixedWidth,
-          old_value: -1, type: integer, value: -1}
+          old_value: -1, type: integer, value: 700}
         - {comment: '', default_value: '9', hidden: false, name: fontSize, old_value: '9',
           type: string, value: '9'}
         - {comment: Draw a frame around the widget, default_value: 0, hidden: false,
@@ -306,6 +306,8 @@
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
             type: boolean, value: 0}
+          - {comment: '', default_value: 1, hidden: false, name: showSpinBoxButtons,
+            old_value: 1, type: boolean, value: 1}
           - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
@@ -367,6 +369,8 @@
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
             type: boolean, value: 0}
+          - {comment: '', default_value: 1, hidden: false, name: showSpinBoxButtons,
+            old_value: 1, type: boolean, value: 1}
           - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
@@ -428,6 +432,8 @@
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
             type: boolean, value: 0}
+          - {comment: '', default_value: 1, hidden: false, name: showSpinBoxButtons,
+            old_value: 1, type: boolean, value: 1}
           - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
@@ -489,6 +495,8 @@
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
             type: boolean, value: 0}
+          - {comment: '', default_value: 1, hidden: false, name: showSpinBoxButtons,
+            old_value: 1, type: boolean, value: 1}
           - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
@@ -550,6 +558,8 @@
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
             type: boolean, value: 0}
+          - {comment: '', default_value: 1, hidden: false, name: showSpinBoxButtons,
+            old_value: 1, type: boolean, value: 1}
           - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
@@ -611,6 +621,8 @@
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showSlider, old_value: 0,
             type: boolean, value: 0}
+          - {comment: '', default_value: 1, hidden: false, name: showSpinBoxButtons,
+            old_value: 1, type: boolean, value: 1}
           - {comment: '', default_value: 1, hidden: false, name: showStep, old_value: 1,
             type: boolean, value: 1}
           - {comment: '', default_value: 0, hidden: false, name: showStepList, old_value: 0,
