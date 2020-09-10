@@ -370,11 +370,18 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         if xml_tree.find("operational_modes") is not None:
             #print(f"xml_tree.find(operational_modes) is not None:")
             mode_list = xml_tree.find("operational_modes").text
-
-        print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
-        self.list_of_operational_modes = eval(mode_list)
+            print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
+            self.list_of_operational_modes = eval(mode_list)
         #print(f"list_of_operational_modes :mode_list {self.list_of_operational_modes} - {type(self.list_of_operational_modes)} - {type(self.list_of_operational_modes[0])}")
-    
+        else:
+            #if no operational_mode, hide all related controls
+            self.ui_widgets_manager.add_label_button.hide()
+            self.ui_widgets_manager.delete_label_button.hide()
+            self.ui_widgets_manager.label_list.hide()
+            self.ui_widgets_manager.label_3.hide()
+            self.ui_widgets_manager.new_label_edit.hide()
+            self.ui_widgets_manager.save_labels_button.hide()
+        
     def property_changed(self, property_name, old_value, new_value):
         # if property_name == "configfile":
         #     print(f"################ cameraCalibBrick property_name  new_value {new_value}")
