@@ -26,6 +26,12 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>500</width>
+           <height>0</height>
+          </size>
+         </property>
          <column>
           <property name="text">
            <string>Zoom Position</string>
