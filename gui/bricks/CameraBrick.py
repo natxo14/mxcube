@@ -1084,6 +1084,7 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         
         self._slider = QtImport.QSlider(QtImport.Qt.Horizontal)
         self._spinbox = QtImport.QDoubleSpinBox()
+        #self._spinbox.setDecimals(6)
 
         self._spinbox.setRange(spin_min_value, spin_max_value)
         print(f"_spinbox.setRange : {spin_min_value} {spin_max_value}")
@@ -1117,6 +1118,12 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
     def set_value_from_spin(self, spin_value):
         print(f"set_value_from_spin : spin_value {spin_value} - limits {self._slider.minimum()}, {self._slider.maximum()}")
         
+        # #limit spin_value
+        # if spin_value < self._spinbox.minimum():
+        #     spin_value = self._spinbox.minimum()
+        # elif spin_value > self._spinbox.maximum():
+        #     spin_value = self._spinbox.maximum()
+        
         slider_val = ((spin_value - self._spinbox.minimum()) * 100.0) / self._spinbox.maximum()
         self._slider.setValue(slider_val)
         self.value_changed.emit(spin_value)
@@ -1128,6 +1135,9 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         
         self._spinbox.valueChanged.disconnect(self.set_value_from_spin)
 
+        if min_value < 0.01:
+            min_value = 0.01
+            
         self._spinbox.setRange(min_value, max_value)
         spin_step = (max_value - min_value)/100.0
         if spin_step < 0.01:
@@ -1137,6 +1147,8 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self._spinbox.valueChanged.connect(self.set_value_from_spin)
 
         print(f"_spinbox.set_limits : {min_value} {max_value}")
-        print(f"_spinbox.setSingleStep : {(max_value - min_value)/100.0}")
+        print(f"_spinbox.setSingleStep calculated (max_value - min_value)/100.0 =: {(max_value - min_value)/100.0}")
+        print(f"_spinbox.setSingleStep real self._spinbox.singleStep() {self._spinbox.singleStep()}")
+        print(f"_spinbox.set_limits : minimum : {self._spinbox.minimum()} - max : {self._spinbox.maximum()}")
     
         
