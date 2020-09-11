@@ -144,16 +144,16 @@
               - {comment: Allow to control brick in slave mode, default_value: 0,
                 hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                 value: 0}
-              - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: /multiple-positions,
-                type: string, value: /multiple-positions-zoom}
+              - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
+                type: string, value: /multiple-positions}
               type: MultiplePositionsBrick
-            - brick: {class: MultiplePositionsBrick, name: MultiplePositionsBrick3}
+            - brick: {class: GraphicsManagerBrick, name: GraphicsManagerBrick0}
               children: []
               connections: []
-              name: MultiplePositionsBrick3
+              name: GraphicsManagerBrick0
               properties:
-              - {comment: '', default_value: 0, hidden: false, name: check, old_value: 0,
-                type: boolean, value: 0}
+              - {comment: '', default_value: '', hidden: false, name: beam_cal_data_file,
+                old_value: null, type: string, value: ''}
               - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
                 name: fixedHeight, old_value: -1, type: integer, value: -1}
               - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
@@ -169,9 +169,7 @@
               - {comment: Allow to control brick in slave mode, default_value: 0,
                 hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                 value: 0}
-              - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: /multiple-positions-backlight,
-                type: string, value: /multiple-positions-blight}
-              type: MultiplePositionsBrick
+              type: GraphicsManagerBrick
             connections: []
             name: hbox0
             properties:
