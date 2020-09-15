@@ -241,10 +241,12 @@ class CameraBrick(BaseWidget):
         )
         # self.move_beam_mark_auto_action.setEnabled(False)
         self.display_beam_size_action = beam_mark_menu.addAction(
-            "Display size", self.display_beam_size_toggled
+            "Display beam size",
         )
         self.display_beam_size_action.setCheckable(True)
-
+        self.display_beam_size_action.toggled.connect(
+            self.display_beam_size_toggled
+        )
         self.display_beam_action = beam_mark_menu.addAction(
             "Display beam mark", self.display_beam_toggled
         )
@@ -486,7 +488,11 @@ class CameraBrick(BaseWidget):
         """
         self.select_button.setChecked(True)
         
-    def display_beam_size_toggled(self):
+    def display_beam_size_toggled(self, state):
+
+        self.display_beam_size_action.setChecked(state)
+        self.display_beam_size_cbox.setChecked(state)
+
         self.graphics_manager_hwobj.display_beam_size(
             self.display_beam_size_action.isChecked()
         )
