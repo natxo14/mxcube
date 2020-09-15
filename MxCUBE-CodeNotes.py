@@ -224,6 +224,47 @@ On xml files : differences between: device/equipment/object
 
 METTRE OBJECT PARTOUT!!
 
+
+########################################
+BEAM SIZE AND BEAM SHAPE
+########################################
+    <defaultBeamDivergence>(12.0, 5.0)</defaultBeamDivergence>
+    <beam_position>330 241</beam_position> -> units pixels
+    <beam_size>0.015 0.015</beam_size> -> units mm !!
+    <beam_shape>ellipse</beam_shape> -> "ellipse" | "rectangular"
+
+in ESRFBeam:
+beam_size = self.getProperty("beam_size")
+self._beam_info_dict["size_x"] = self._beam_width | self._beam_width = float(beam_size.split()[0])
+self._beam_info_dict["size_y"] = self._beam_height | self._beam_height = float(beam_size.split()[1])
+
+            
+beam_size units:
+
+when drawing beam in class GraphicsItemBeam(GraphicsItem):
+
+def paint
+( self.scene().image_scale = 1 )
+painter.drawEllipse(
+                self.beam_position[0] * self.scene().image_scale
+                - self.beam_size_pix[0] / 2 * self.scene().image_scale,
+                self.beam_position[1] * self.scene().image_scale
+                - self.beam_size_pix[1] / 2 * self.scene().image_scale,
+                self.beam_size_pix[0] * self.scene().image_scale,
+                self.beam_size_pix[1] * self.scene().image_scale,
+            )
+
+
+in ESRF.ESRFBeam init()
+beam_shape = self.getProperty("beam_shape")
+        print(f"################################ESRBEAM {beam_shape}" )
+        if beam_shape == "rectangular":
+            self._beam_shape = BeamShape.RECTANGULAR
+        elif beam_shape == "ellipse":
+            self._beam_shape = BeamShape.ELIPTICAL
+        else:
+            self._beam_shape = BeamShape.UNKNOWN
+
 ########################################
 INSTALL EXTERNAL PACKAGE DEPENDENCIES
 ########################################
