@@ -30,6 +30,8 @@ class MultiplePositionsBrick(BaseWidget):
     """
     TODO: Class documentation
     """
+
+    clicked = QtImport.pyqtSignal(object)
     
     colorState = {
         'NOTINITIALIZED': 'gray', 
@@ -231,6 +233,7 @@ class MultiplePositionsBrick(BaseWidget):
 
     def position_clicked(self):
         name = self.button_group.checkedButton().text()
+        finally_move = False
         if self.multipos_hwrobj is not None:
             #print(f"MultiplePosBrick buttonClicked. id : {name} - {self.button_group.checkedId()}")
             if self.check_move:
@@ -239,13 +242,19 @@ class MultiplePositionsBrick(BaseWidget):
                 ret = QtImport.QMessageBox.warning(None, "Move to position", msgstr,
                                     QtImport.QMessageBox.Ok,
                                     QtImport.QMessageBox.Cancel,
-                                    QtImport.QMessageBox.NoButton)     
+                                    QtImport.QMessageBox.NoButton)
                 if ret == QtImport.QMessageBox.Ok:
                     self.multipos_hwrobj.move_to_position(name)
+                    finally_move = True
                 else:
                     self.multipos_hwrobj.checkPosition()
             else:
                 self.multipos_hwrobj.move_to_position(name)
+                finally_move = True
+        
+        if finally_move:
+            print(f"MULTIPOS CLICKED SIGNAL : sending self.multipos_hwrobj.get_position({name}) : {self.multipos_hwrobj.get_position(name)}")
+            self.clicked.emit(self.multipos_hwrobj.get_position(name))
 
     def state_changed(self, state):
         """Enables/disables controls based on the state

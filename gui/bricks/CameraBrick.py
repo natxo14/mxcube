@@ -45,6 +45,7 @@ class CameraBrick(BaseWidget):
         self.define_signal("create_centring_point_button_toggled", ())
         # Slots ---------------------------------------------------------------
         self.define_slot("toggle_create_point_start_button", ())
+        self.define_slot("set_camera_expo_and_gain_sliders", ())
 
         # Internal values -----------------------------------------------------
         self.graphics_scene_size = None
@@ -332,7 +333,7 @@ class CameraBrick(BaseWidget):
 
         self._camera_expo_spin_slider = SpinAndSliderAction(0.05, 60, "Camera Exposition")
         self._camera_expo_spin_slider.value_changed.connect(
-            self.set_camera_exposure_time
+            self._set_camera_exposure_time
         )
         camera_expo_gain_menu.addAction(
             self._camera_expo_spin_slider
@@ -340,7 +341,7 @@ class CameraBrick(BaseWidget):
 
         self._camera_gain_spin_slider = SpinAndSliderAction(0, 1.0, "Camera Gain")
         self._camera_gain_spin_slider.value_changed.connect(
-            self.set_camera_gain
+            self._set_camera_gain
         )
         camera_expo_gain_menu.addAction(
             self._camera_gain_spin_slider
@@ -576,6 +577,18 @@ class CameraBrick(BaseWidget):
             self.display_histogram_action.isChecked()
         )
 
+    def set_camera_expo_and_gain_sliders(self, new_zoom_pos_dict):
+        """
+        slot connected to multiple positions brick
+        adjust gain and expo automatically when changing zoom
+        """
+        new_expo = new_zoom_pos_dict["exposure"]
+        new_gain = new_zoom_pos_dict["gain"]
+        if new_expo:
+            self.set_camera_exposure_time_slider(new_expo)
+        if new_gain:
+            self.set_camera_gain_slider(new_gain)
+
     def toggle_create_point_start_button(self,check):
         """
         slot connected to GraphicsManagerBrick
@@ -692,17 +705,26 @@ class CameraBrick(BaseWidget):
                 logging.getLogger().exception("CameraBrick: error saving snapshot!")
 
 
-    def set_camera_exposure_time(self, expo_value):
-        print(f" set_camera_exposure_time {expo_value}", type(expo_value))
+    def _set_camera_exposure_time(self, expo_value):
+        print(f" _set_camera_exposure_time {expo_value}", type(expo_value))
         self.graphics_manager_hwobj.camera.set_exposure_time(
             float(expo_value)
-        )  
-        
-    def set_camera_gain(self, gain_value):
+        )
+
+    def set_camera_exposure_time_slider(self, expo_value):
+        print(f" set_camera_exposure_time_slider {expo_value}", type(expo_value))
+        self._camera_expo_spin_slider.set_value(expo_value)
+    
+    def _set_camera_gain(self, gain_value):
+        print(f" _set_camera_gain {gain_value}", type(gain_value))
         self.graphics_manager_hwobj.camera.set_gain(
             gain_value
-        ) 
+        )
 
+    def set_camera_gain_slider(self, gain_value):
+        print(f" set_camera_gain_slider {gain_value}", type(gain_value))
+        self._camera_gain_spin_slider.set_value(gain_value)
+    
     def set_visible_mode(self, checked=False):
         
         pass
