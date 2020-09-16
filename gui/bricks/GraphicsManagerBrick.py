@@ -282,10 +282,12 @@ class GraphicsManagerBrick(BaseWidget):
                 HWR.getHardwareRepositoryConfigPath(),
                 new_value + ".xml")
 
-            self.load_list_of_operational_modes()
-            self.create_operational_modes_checkboxes()
+            if (os.path.isfile(self.__op_modes_file_path)):
+                self.load_list_of_operational_modes()
+                self.create_operational_modes_checkboxes()
         else:
             BaseWidget.property_changed(self, property_name, old_value, new_value)
+    
     def escape_pressed(self):
         """
 
@@ -389,8 +391,12 @@ class GraphicsManagerBrick(BaseWidget):
         treewidget of all points/lines/grids
         """
 
+        if self.__list_of_tags:
+            op_mode = self.mutual_exclusive_op_mode.checkedButton().text()
+        else:
+            op_mode = "default"    
         # get shape's operational mode
-        op_mode = self.mutual_exclusive_op_mode.checkedButton().text()
+        
         info_str_list = (
             str(self.manager_widget.shapes_treewidget.topLevelItemCount() + 1),
             shape.get_display_name(),
