@@ -377,6 +377,11 @@ def connect_hwobj(
         self, sender, signal, slot, instance_filter=False, should_cache=True
     ):
 
+TO EMIT THE SIGNAL, just:
+
+@AbstractActuator ( AbstractMotor (BlissMotor))
+self.emit("limitsChanged", (self._nominal_limits,))
+
 
 
 ##########################
