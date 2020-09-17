@@ -92,8 +92,23 @@ class CameraBrick(BaseWidget):
         self.popup_menu = QtImport.QMenu(self)
         self.popup_menu.menuAction().setIconVisibleInMenu(True)
 
+        icon = QtImport.QIcon()
+        qpixmap_inactive = Icons.load_pixmap("select")
+        qpixmap_active = Icons.load_pixmap("select-pressed")
+        
+        icon.addPixmap(
+            qpixmap_active,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.On,
+        )
+        icon.addPixmap(
+            qpixmap_inactive,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.Off,
+        )
+
         self.select_button = self.popup_menu.addAction(
-            Icons.load_icon("select"),
+            icon,
             "Select items in image",
         )
         self.select_button.setCheckable(True)
@@ -645,8 +660,18 @@ class CameraBrick(BaseWidget):
     def move_beam_mark_auto(self):
         self.graphics_manager_hwobj.move_beam_mark_auto()
 
-    def mouse_moved(self, x, y):
-        self.coord_label.setText("X: <b>%d</b> Y: <b>%d</b>" % (x, y))
+    def mouse_moved(self, x, y, scene_pixel_QRgb):
+        self.coord_label.setText(
+            """X: <b>%d</b> Y: <b>%d</b> - QRgb : <b>%d</b>, <b>%d</b>, <b>%d</b>, <b>%d</b>"""
+            % (
+                x,
+                y,
+                QtImport.qRed(scene_pixel_QRgb),
+                QtImport.qGreen(scene_pixel_QRgb),
+                QtImport.qBlue(scene_pixel_QRgb),
+                QtImport.qAlpha(scene_pixel_QRgb),
+            )
+        )
 
     def select_all_points_clicked(self):
         self.graphics_manager_hwobj.select_all_points()
