@@ -290,6 +290,8 @@ blissadm@lid13eh22:~/local/id13.git(master)$ pip install --no-deps -e .
 ex: could be "bliss.common.mapping"
 Then set log level (DEBUG, INFO, WARNING, ERROR...)
 
+example on BlissMotor.py file :
+to be included BEFORE the class definition, with imports
 
 logger = logging.getLogger("global")
 logger.setLevel(logging.DEBUG+100)
