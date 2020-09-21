@@ -252,7 +252,7 @@ class ESRFID13ExportDataBrick(BaseWidget):
                     QtImport.QMessageBox.warning(
                         None,
                         "File already exists!",
-                        f"Are you sure you want to overwrite existing file ?",
+                        "Are you sure you want to overwrite existing file ?",
                         QtImport.QMessageBox.Yes,
                         QtImport.QMessageBox.No,
                     )
@@ -269,7 +269,6 @@ class ESRFID13ExportDataBrick(BaseWidget):
         # take snapshots
         file_full_path_no_extension = file_full_path[0:file_full_path.rfind('.')]
         if HWR.beamline.sample_view is not None:
-            snapshot_file_path = file_full_path_no_extension + ".png"
             file_full_path_no_extension_no_index = file_full_path_no_extension[0:-4]
             raw_snapshot_file_path = (
                 file_full_path_no_extension_no_index +
@@ -277,7 +276,13 @@ class ESRFID13ExportDataBrick(BaseWidget):
                 self.ui_widgets_manager.file_index_tbox.text() +
                 ".png"
             )
-
+            snapshot_file_path = (
+                file_full_path_no_extension_no_index +
+                "_ano_" +
+                self.ui_widgets_manager.file_index_tbox.text() +
+                ".png"
+            )
+            
             HWR.beamline.sample_view.save_scene_snapshot(snapshot_file_path)
             HWR.beamline.sample_view.save_raw_scene_snapshot(raw_snapshot_file_path)
 

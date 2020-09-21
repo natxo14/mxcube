@@ -281,8 +281,22 @@ blissadm@lid13eh22:~/local/id13.git(master)$ pip install --no-deps -e .
     Install a project in editable mode (i.e. setuptools “develop mode”) from a local project path or a VCS url.
 
 
+##############################################
+    LOGGING: SET LOGGER LEVELS 
+ ##############################################
 
+ 1st get logger by its name.
+ Usually names respect the module full name hierarchy
+ex: could be "bliss.common.mapping"
+Then set log level (DEBUG, INFO, WARNING, ERROR...)
 
+example on BlissMotor.py file :
+to be included BEFORE the class definition, with imports
+
+logger = logging.getLogger("global")
+logger.setLevel(logging.DEBUG+100)
+logger = logging.getLogger("bliss")
+logger.setLevel(logging.DEBUG+100)
 
 
 ##############################################

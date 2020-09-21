@@ -206,6 +206,24 @@
                 - {comment: '', default_value: '', hidden: false, name: zoom, old_value: '',
                   type: string, value: /multiple-positions-zoom}
                 type: ESRFCameraBeamBrick
+              - children: []
+                connections: []
+                name: hspacer0
+                properties:
+                - choices: [none, top center, top left, top right, bottom center,
+                    bottom left, bottom right, center, hcenter, vcenter, left, right]
+                  comment: ''
+                  default_value: none
+                  hidden: false
+                  name: alignment
+                  old_value: null
+                  type: combo
+                  value: none
+                - {comment: '', default_value: 0, hidden: false, name: fixed_size,
+                  old_value: null, type: boolean, value: 0}
+                - {comment: '', default_value: 100, hidden: false, name: size, old_value: null,
+                  type: integer, value: 100}
+                type: hspacer
               connections: []
               name: hgroupbox3
               properties:
@@ -301,6 +319,24 @@
                 - {comment: '', default_value: 0, hidden: false, name: table_z_inverted,
                   old_value: 0, type: boolean, value: 0}
                 type: ESRFCenteringBrick
+              - children: []
+                connections: []
+                name: hspacer1
+                properties:
+                - choices: [none, top center, top left, top right, bottom center,
+                    bottom left, bottom right, center, hcenter, vcenter, left, right]
+                  comment: ''
+                  default_value: none
+                  hidden: false
+                  name: alignment
+                  old_value: null
+                  type: combo
+                  value: none
+                - {comment: '', default_value: 0, hidden: false, name: fixed_size,
+                  old_value: null, type: boolean, value: 0}
+                - {comment: '', default_value: 100, hidden: false, name: size, old_value: null,
+                  type: integer, value: 100}
+                type: hspacer
               connections: []
               name: hgroupbox4
               properties:
@@ -777,6 +813,24 @@
             - {comment: '', default_value: 1, hidden: false, name: showStop, old_value: 1,
               type: boolean, value: 1}
             type: MotorSpinBoxBrick
+          - children: []
+            connections: []
+            name: hspacer2
+            properties:
+            - choices: [none, top center, top left, top right, bottom center, bottom
+                  left, bottom right, center, hcenter, vcenter, left, right]
+              comment: ''
+              default_value: none
+              hidden: false
+              name: alignment
+              old_value: null
+              type: combo
+              value: none
+            - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: null,
+              type: boolean, value: 0}
+            - {comment: '', default_value: 100, hidden: false, name: size, old_value: null,
+              type: integer, value: 100}
+            type: hspacer
           connections: []
           name: hbox1
           properties:
@@ -985,6 +1039,24 @@
         - {comment: '', default_value: /multiple-positions, hidden: false, name: mnemonic,
           old_value: /multiple-positions, type: string, value: /multiple-positions-zoom}
         type: ESRFID13ConfigurationBrick
+      - children: []
+        connections: []
+        name: hspacer3
+        properties:
+        - choices: [none, top center, top left, top right, bottom center, bottom left,
+            bottom right, center, hcenter, vcenter, left, right]
+          comment: ''
+          default_value: none
+          hidden: false
+          name: alignment
+          old_value: null
+          type: combo
+          value: none
+        - {comment: '', default_value: 0, hidden: false, name: fixed_size, old_value: null,
+          type: boolean, value: 0}
+        - {comment: '', default_value: 100, hidden: false, name: size, old_value: null,
+          type: integer, value: 100}
+        type: hspacer
       connections: []
       name: hgroupbox1
       properties:
