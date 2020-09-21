@@ -86,11 +86,10 @@ class CameraBrick(BaseWidget):
 
         # populate QMenu and QToolBar
         
-        tmp_menu = QtImport.QMenu("Create", self.toolbar)
-        tmp_menu.setIcon(Icons.load_icon("draw-black-white"))
-
         self.popup_menu = QtImport.QMenu(self)
         self.popup_menu.menuAction().setIconVisibleInMenu(True)
+
+        # Select press button
 
         icon = QtImport.QIcon()
         qpixmap_inactive = Icons.load_pixmap("select")
@@ -119,11 +118,10 @@ class CameraBrick(BaseWidget):
         self.toolbar.addAction(self.select_button)
 
         create_menu = self.popup_menu.addMenu(
-            Icons.load_icon("Draw"),
-            "Create"
+            Icons.load_icon("draw"),
+            "Draw"
         )
-        # create_menu.menuAction().setIconVisibleInMenu(True)
-
+        
         # CENTRING out of menus : only in centring brick
         # temp_action = create_menu.addAction(
         #     Icons.load_icon("VCRPlay2"),
@@ -133,6 +131,30 @@ class CameraBrick(BaseWidget):
         # temp_action.setShortcut("Ctrl+1")
 
         # tmp_menu.addAction(temp_action)
+
+        # Draw Menu:
+        # Centring point in beam position
+        # Centring point on click
+        # Helical Line and Square
+
+        tmp_menu = QtImport.QMenu("Draw", self.toolbar)
+
+        icon = QtImport.QIcon()
+        qpixmap_inactive = Icons.load_pixmap("draw")
+        qpixmap_active = Icons.load_pixmap("draw-pressed")
+        
+        icon.addPixmap(
+            qpixmap_active,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.On,
+        )
+        icon.addPixmap(
+            qpixmap_inactive,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.Off,
+        )
+
+        tmp_menu.setIcon(icon)
 
         temp_action = create_menu.addAction(
             Icons.load_icon("beam2"),
@@ -200,6 +222,14 @@ class CameraBrick(BaseWidget):
 
         self.toolbar.addAction(tmp_menu.menuAction())
 
+        # move to pos menu
+        # move_to_pos_menu = self.
+
+        # Move to Position Menu:
+        # Move to Position Y and Z
+        # Move to Position on Horizontal
+        # Move to Position on Vertical
+
         icon = QtImport.QIcon()
         qpixmap_inactive = Icons.load_pixmap("movetopos")
         qpixmap_active = Icons.load_pixmap("movetopos-pressed")
@@ -214,8 +244,11 @@ class CameraBrick(BaseWidget):
             QtImport.QIcon.Normal,
             QtImport.QIcon.Off,
         )
+
+        move_to_pos_menu = QtImport.QMenu("Move to Position", self.toolbar)
+        move_to_pos_menu.setIcon(icon)
         
-        self.move_center_to_clicked_point_button = self.popup_menu.addAction(
+        self.move_center_to_clicked_point_button = QtImport.QAction(
             icon,
             "Move point to beam",
         )
@@ -224,7 +257,63 @@ class CameraBrick(BaseWidget):
             self.move_center_to_clicked_point
         )
         
-        self.toolbar.addAction(self.move_center_to_clicked_point_button)
+        # self.toolbar.addAction(self.move_center_to_clicked_point_button)
+        move_to_pos_menu.addAction(self.move_center_to_clicked_point_button)
+
+        icon = QtImport.QIcon()
+        qpixmap_inactive = Icons.load_pixmap("movetoposhorizontal")
+        qpixmap_active = Icons.load_pixmap("movetoposhorizontal-pressed")
+        
+        icon.addPixmap(
+            qpixmap_active,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.On,
+        )
+        icon.addPixmap(
+            qpixmap_inactive,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.Off,
+        )
+
+        self.move_hor_center_to_clicked_point_button = QtImport.QAction(
+            icon,
+            "Move horizontally point to beam",
+        )
+        self.move_hor_center_to_clicked_point_button.setCheckable(True)
+        self.move_hor_center_to_clicked_point_button.toggled.connect(
+            self.move_hor_center_to_clicked_point
+        )
+
+        move_to_pos_menu.addAction(self.move_hor_center_to_clicked_point_button)
+
+        icon = QtImport.QIcon()
+        qpixmap_inactive = Icons.load_pixmap("movetoposvertical")
+        qpixmap_active = Icons.load_pixmap("movetoposvertical-pressed")
+        
+        icon.addPixmap(
+            qpixmap_active,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.On,
+        )
+        icon.addPixmap(
+            qpixmap_inactive,
+            QtImport.QIcon.Normal,
+            QtImport.QIcon.Off,
+        )
+
+        self.move_ver_center_to_clicked_point_button = QtImport.QAction(
+            icon,
+            "Move verticallly point to beam",
+        )
+        self.move_ver_center_to_clicked_point_button.setCheckable(True)
+        self.move_ver_center_to_clicked_point_button.toggled.connect(
+            self.move_ver_center_to_clicked_point
+        )
+
+        move_to_pos_menu.addAction(self.move_ver_center_to_clicked_point_button)
+
+        self.toolbar.addAction(move_to_pos_menu.menuAction())
+        self.popup_menu.addMenu(move_to_pos_menu)
 
         measure_menu = self.popup_menu.addMenu(
             Icons.load_icon("measure_icon"),
@@ -375,6 +464,12 @@ class CameraBrick(BaseWidget):
             self.move_center_to_clicked_point_button
         )
         self.exclusive_action_group.addAction(
+            self.move_hor_center_to_clicked_point_button
+        )
+        self.exclusive_action_group.addAction(
+            self.move_ver_center_to_clicked_point_button
+        )
+        self.exclusive_action_group.addAction(
             self.create_centring_point_button
         )
         self.exclusive_action_group.addAction(
@@ -408,8 +503,7 @@ class CameraBrick(BaseWidget):
         self.setMouseTracking(True)
         self.toolbar.setOrientation(QtImport.Qt.Vertical)
         # self.main_layout.addWidget(self.toolbar)
-                
-
+        
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "mnemonic":
             if self.graphics_manager_hwobj is not None:
@@ -468,6 +562,8 @@ class CameraBrick(BaseWidget):
                     print(f"CAMERABRICK ========================================")
                     print(f"camera_expo_limits : {camera_expo_limits} - camera_gain {camera_gain} - camera_expo {camera_expo}")
 
+                # Init gui -------------------------------------------------------------
+                self.select_button.setChecked(True)
                     
         elif property_name == "fixedSize":
             try:
@@ -604,7 +700,7 @@ class CameraBrick(BaseWidget):
         if new_gain:
             self.set_camera_gain_slider(new_gain)
 
-    def toggle_create_point_start_button(self,check):
+    def toggle_create_point_start_button(self, check):
         """
         slot connected to GraphicsManagerBrick
         if check is false => check select_item checkbutton
@@ -635,6 +731,16 @@ class CameraBrick(BaseWidget):
         print(f"CAMERABRICK move_center_to_clicked_point_button_toggled checked {checked}")
         self.move_center_to_clicked_point_button_toggled.emit(checked)
         self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
+
+    def move_hor_center_to_clicked_point(self, checked):
+        print(f"CAMERABRICK move_hor_center_to_clicked_point checked {checked}")
+        # self.move_center_to_clicked_point_button_toggled.emit(checked)
+        # self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
+    
+    def move_ver_center_to_clicked_point(self, checked):
+        print(f"CAMERABRICK move_ver_center_to_clicked_point checked {checked}")
+        # self.move_center_to_clicked_point_button_toggled.emit(checked)
+        # self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
 
     def create_point_current_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=False)
@@ -760,13 +866,13 @@ class CameraBrick(BaseWidget):
     def set_background_mode(self, checked=False):
         pass
 
-    def uncheck_exclusive_actions(self):
+    # def uncheck_exclusive_actions(self):
 
-        self.exclusive_action_group.setExclusive(False)
+    #     self.exclusive_action_group.setExclusive(False)
 
-        if self.exclusive_action_group.checkedAction() is not None:
-            self.exclusive_action_group.checkedAction().setChecked(False)
-        self.exclusive_action_group.setExclusive(True)
+    #     if self.exclusive_action_group.checkedAction() is not None:
+    #         self.exclusive_action_group.checkedAction().setChecked(False)
+    #     self.exclusive_action_group.setExclusive(True)
 
 
 class CameraControlDialog(QtImport.QDialog):
