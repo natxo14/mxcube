@@ -31,7 +31,7 @@ __category__ = "Graphics"
 
 class CameraBrick(BaseWidget):
 
-    move_center_to_clicked_point_button_toggled = QtImport.pyqtSignal(bool)
+    #move_center_to_clicked_point_button_toggled = QtImport.pyqtSignal(bool)
     create_centring_point_button_toggled = QtImport.pyqtSignal(bool)
     
     def __init__(self, *args):
@@ -41,7 +41,7 @@ class CameraBrick(BaseWidget):
         self.graphics_manager_hwobj = None
 
         # Signals ------------------------------------------------------------
-        self.define_signal("move_center_to_clicked_point_button_toggled", ())
+        #self.define_signal("move_center_to_clicked_point_button_toggled", ())
         self.define_signal("create_centring_point_button_toggled", ())
         # Slots ---------------------------------------------------------------
         self.define_slot("toggle_create_point_start_button", ())
@@ -230,26 +230,26 @@ class CameraBrick(BaseWidget):
         # Move to Position on Horizontal
         # Move to Position on Vertical
 
-        icon = QtImport.QIcon()
+        icon1 = QtImport.QIcon()
         qpixmap_inactive = Icons.load_pixmap("movetopos")
         qpixmap_active = Icons.load_pixmap("movetopos-pressed")
         
-        icon.addPixmap(
+        icon1.addPixmap(
             qpixmap_active,
             QtImport.QIcon.Normal,
             QtImport.QIcon.On,
         )
-        icon.addPixmap(
+        icon1.addPixmap(
             qpixmap_inactive,
             QtImport.QIcon.Normal,
             QtImport.QIcon.Off,
         )
 
         move_to_pos_menu = QtImport.QMenu("Move to Position", self.toolbar)
-        move_to_pos_menu.setIcon(icon)
+        move_to_pos_menu.setIcon(icon1)
         
         self.move_center_to_clicked_point_button = QtImport.QAction(
-            icon,
+            icon1,
             "Move point to beam",
         )
         self.move_center_to_clicked_point_button.setCheckable(True)
@@ -312,8 +312,16 @@ class CameraBrick(BaseWidget):
 
         move_to_pos_menu.addAction(self.move_ver_center_to_clicked_point_button)
 
-        self.toolbar.addAction(move_to_pos_menu.menuAction())
         self.popup_menu.addMenu(move_to_pos_menu)
+        
+        move_beam_menu = MultiModeAction(self.toolbar)
+        move_beam_menu.addAction(self.move_center_to_clicked_point_button)
+        move_beam_menu.addAction(self.move_hor_center_to_clicked_point_button)
+        move_beam_menu.addAction(self.move_ver_center_to_clicked_point_button)
+
+        self.toolbar.addAction(move_beam_menu)
+
+        ##################################################
 
         measure_menu = self.popup_menu.addMenu(
             Icons.load_icon("measure_icon"),
@@ -700,15 +708,18 @@ class CameraBrick(BaseWidget):
         if new_gain:
             self.set_camera_gain_slider(new_gain)
 
-    def toggle_create_point_start_button(self, check):
+    def toggle_create_point_start_button(self, checked):
         """
         slot connected to GraphicsManagerBrick
-        if check is false => check select_item checkbutton
+        if checked is false => check select_item checkbutton
         """
-        if check:
-            self.create_centring_point_button.setChecked(check)
+        print(f"CAMERABRICK toggle_create_point_start_button checked {checked}")
+        if checked:
+            self.create_centring_point_button.setChecked(checked)
         else:
-            self.select_button.setChecked(True)
+            # check if any of the exclusive action group is checked:
+            if self.exclusive_action_group.checkedAction() == self.create_centring_point_button:
+                self.select_button.setChecked(True)
 
     def create_point_click_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=True)
@@ -718,7 +729,6 @@ class CameraBrick(BaseWidget):
             self.graphics_manager_hwobj.stop_current_state()
 
     def create_points_one_click_clicked(self, checked):
-        
         print(f"CAMERABRICK create_points_one_click_clicked checked {checked}")
         if checked:
             self.graphics_manager_hwobj.start_one_click_centring()
@@ -729,18 +739,22 @@ class CameraBrick(BaseWidget):
         
     def move_center_to_clicked_point(self, checked):
         print(f"CAMERABRICK move_center_to_clicked_point_button_toggled checked {checked}")
-        self.move_center_to_clicked_point_button_toggled.emit(checked)
+        #self.move_center_to_clicked_point_button_toggled.emit(checked)
         self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
 
     def move_hor_center_to_clicked_point(self, checked):
         print(f"CAMERABRICK move_hor_center_to_clicked_point checked {checked}")
-        # self.move_center_to_clicked_point_button_toggled.emit(checked)
-        # self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
-    
+        #self.move_center_to_clicked_point_button_toggled.emit(checked)
+        self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(
+            checked, direction="horizontal"
+        )
+   
     def move_ver_center_to_clicked_point(self, checked):
         print(f"CAMERABRICK move_ver_center_to_clicked_point checked {checked}")
-        # self.move_center_to_clicked_point_button_toggled.emit(checked)
-        # self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
+        #self.move_center_to_clicked_point_button_toggled.emit(checked)
+        self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(
+            checked, direction="vertical"
+        )
 
     def create_point_current_clicked(self):
         self.graphics_manager_hwobj.start_centring(tree_click=False)
@@ -1310,4 +1324,58 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         print(f"_spinbox.setSingleStep real self._spinbox.singleStep() {self._spinbox.singleStep()}")
         print(f"_spinbox.set_limits : minimum : {self._spinbox.minimum()} - max : {self._spinbox.maximum()}")
     
-        
+
+class MultiModeAction(QtImport.QWidgetAction):
+    """This action provides a default checkable action from a list of checkable
+    actions.
+    The default action can be selected from a drop down list. The last one used
+    became the default one.
+    The default action is directly usable without using the drop down list.
+    """
+
+    def __init__(self, parent=None, head_icon=None):
+        assert isinstance(parent, QtImport.QWidget)
+        QtImport.QWidgetAction.__init__(self, parent)
+        button = QtImport.QToolButton(parent)
+        button.setPopupMode(QtImport.QToolButton.MenuButtonPopup)
+        self.setDefaultWidget(button)
+        self.__button = button
+        self.__head_icon = head_icon
+
+    def getMenu(self):
+        """Returns the menu.
+        :rtype: qt.QMenu
+        """
+        button = self.__button
+        menu = button.menu()
+        if menu is None:
+            menu = QtImport.QMenu(button)
+            button.setMenu(menu)
+        return menu
+
+    def addAction(self, action):
+        """Add a new action to the list.
+        :param qt.QAction action: New action
+        """
+        menu = self.getMenu()
+        button = self.__button
+        menu.addAction(action)
+        if button.defaultAction() is None:
+            button.setDefaultAction(action)
+        if action.isCheckable():
+            action.toggled.connect(self._toggled)
+        if self.__head_icon is None:
+            self.__head_icon = action.icon()
+
+    def _toggled(self, checked):
+        if checked:
+            action = self.sender()
+            button = self.__button
+            button.setDefaultAction(action)
+        else:
+            print(f"_toggled checked false")
+            #if all actions unchecked => display head_icon
+            if not any(action.isChecked() for action in self.getMenu().actions()):
+                print(f"_toggled not any checked")
+                self.__button.setIcon(self.__head_icon)
+                
