@@ -259,7 +259,7 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         else:
             BaseWidget.property_changed(self, property_name, old_value, new_value)
 
-    def beam_cal_pos_data_changed(self, who_changed):
+    def beam_cal_pos_data_changed(self, who_changed, new_data_dict):
         # TODO : identify changed data and set cell background to yellow
         print(f"################ cameraCalibBrick beam_cal_pos_data_changed who_changed {who_changed}")
         if who_changed == 0:
@@ -268,7 +268,11 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         print(f"################ cameraCalibBrick beam_cal_pos_data_changed update_gui")
         self.update_gui()
 
-        pos_name = self.multipos_hwobj.get_value()
+        if new_data_dict:
+            pos_name = new_data_dict["zoom_tag"]
+        else:
+            pos_name = self.multipos_hwobj.get_value()
+        
         table = self.ui_widgets_manager.calibration_table
 
         print(f"################ cameraCalibBrick beam_cal_pos_data_changed pos_name {pos_name}")

@@ -262,17 +262,26 @@ class ESRFCameraBeamBrick(BaseWidget):
         clean cell background
         reload data from hardware object
         """
+        print(f"beam_cal_pos_data_cancelled")
         self.clean_cells_background()
         self.init_interface()
-        
-    def beam_cal_pos_data_changed(self, who_changed):
+                
+    def beam_cal_pos_data_changed(self, who_changed, new_data_dict):
+        """
+        if who_changed == 1 : changes from calibration
+        if who_changed == 0 : changes from beam position
+        """
 
         if who_changed == 1:
             return
         # TODO : identify changed data and set cell background to yellow
         self.init_interface()
 
-        pos_name = self.multipos_hwobj.get_value()
+        if new_data_dict:
+            pos_name = new_data_dict["zoom_tag"]
+        else:
+            pos_name = self.multipos_hwobj.get_value()
+        
         table = self.ui_widgets_manager.beam_positions_table
 
         print(f"################ cameraBeamBrick beam_cal_pos_data_changed - PRINT BACKGROUND {pos_name} ")

@@ -280,8 +280,8 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         edited_key = table.item(item_row, 0).text()
 
         dict_elem = {}
-            
-        pos_name = table.item(item_row, 0).text()
+        
+        dict_elem["zoom_tag"] = edited_key
         dict_elem["beam_pos_x"] = int(self.validate_cell_value(table.item(item_row, 1).text()))
         dict_elem["beam_pos_y"] = int(self.validate_cell_value(table.item(item_row, 2).text()))
         
@@ -293,7 +293,6 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         
         dict_elem["light"] = int(self.validate_cell_value(table.item(item_row, 5).text()))
         dict_elem["zoom"] = int(self.validate_cell_value(table.item(item_row, 6).text()))
-
         
         self.multipos_hwobj.edit_data(dict_elem, edited_key, who_changed)
     
@@ -436,11 +435,14 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         else:
             BaseWidget.property_changed(self, property_name, old_value, new_value)
 
-    def beam_cal_pos_data_changed(self, who_changed):
+    def beam_cal_pos_data_changed(self, who_changed, new_data_dict):
         print(f"ID13ConfTabBrick : beam_cal_pos_data_changed")
         self.fill_config_table()
 
-        current_pos_name = self.multipos_hwobj.get_value()
+        if new_data_dict:
+            current_pos_name = new_data_dict["zoom_tag"]
+        else:
+            current_pos_name = self.multipos_hwobj.get_value()
 
         table = self.ui_widgets_manager.configuration_table
 
