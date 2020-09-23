@@ -330,16 +330,42 @@ class CameraBrick(BaseWidget):
         self.measure_distance_action = measure_menu.addAction(
             Icons.load_icon("measure_distance"),
             "Distance",
-            self.measure_distance_clicked,
         )
-        self.measure_angle_action = measure_menu.addAction(
-            Icons.load_icon("measure_angle"), "Angle", self.measure_angle_clicked
-        )
-        self.measure_area_action = measure_menu.addAction(
-            Icons.load_icon("measure_area"), "Area", self.measure_area_clicked
+        self.measure_distance_action.setCheckable(True)
+        self.measure_distance_action.toggled.connect(
+            self.measure_distance_clicked
         )
 
-        self.toolbar.addAction(measure_menu.menuAction())
+        self.measure_angle_action = measure_menu.addAction(
+            Icons.load_icon("measure_angle"),
+            "Angle",
+        )
+        self.measure_angle_action.setCheckable(True)
+        self.measure_angle_action.toggled.connect(
+            self.measure_angle_clicked
+        )
+
+        self.measure_area_action = measure_menu.addAction(
+            Icons.load_icon("measure_area"),
+            "Area",
+        )
+        self.measure_area_action.setCheckable(True)
+        self.measure_area_action.toggled.connect(
+            self.measure_area_clicked
+        )
+
+        # self.toolbar.addAction(measure_menu.menuAction())
+
+        toolbar_measure_menu = MultiModeAction(self.toolbar, Icons.load_icon("measure_icon"))
+        toolbar_measure_menu.addAction(self.measure_distance_action)
+        toolbar_measure_menu.addAction(self.measure_angle_action)
+        toolbar_measure_menu.addAction(self.measure_area_action)
+        toolbar_measure_menu.init_display()
+
+        self.toolbar.addAction(toolbar_measure_menu)
+
+        ##################################################
+
 
         beam_mark_menu = self.popup_menu.addMenu(
             Icons.load_icon("beam2"),
@@ -482,6 +508,15 @@ class CameraBrick(BaseWidget):
         )
         self.exclusive_action_group.addAction(
             self.select_button
+        )
+        self.exclusive_action_group.addAction(
+            self.measure_distance_action
+        )
+        self.exclusive_action_group.addAction(
+            self.measure_angle_action
+        )
+        self.exclusive_action_group.addAction(
+            self.measure_area_action
         )
         
         # Layout --------------------------------------------------------------
@@ -682,15 +717,24 @@ class CameraBrick(BaseWidget):
     def contextMenuEvent(self, event):
         self.popup_menu.popup(QtImport.QCursor.pos())
 
-    def measure_distance_clicked(self):
-        self.graphics_manager_hwobj.start_measure_distance(wait_click=True)
+    def measure_distance_clicked(self, checked):
+        if checked:
+            self.graphics_manager_hwobj.start_measure_distance(wait_click=True)
+        else:
+            self.graphics_manager_hwobj.stop_measure_distance()
 
-    def measure_angle_clicked(self):
-        self.graphics_manager_hwobj.start_measure_angle(wait_click=True)
-
-    def measure_area_clicked(self):
-        self.graphics_manager_hwobj.start_measure_area(wait_click=True)
-
+    def measure_angle_clicked(self, checked):
+        if checked:
+            self.graphics_manager_hwobj.start_measure_angle(wait_click=True)
+        else:
+            self.graphics_manager_hwobj.stop_measure_angle()
+        
+    def measure_area_clicked(self, checked):
+        if checked:
+            self.graphics_manager_hwobj.start_measure_area(wait_click=True)
+        else:
+            self.graphics_manager_hwobj.stop_measure_area(wait_click=True)
+        
     def display_histogram_toggled(self):
         self.graphics_manager_hwobj.display_histogram(
             self.display_histogram_action.isChecked()
@@ -1373,9 +1417,12 @@ class MultiModeAction(QtImport.QWidgetAction):
             button = self.__button
             button.setDefaultAction(action)
         else:
-            print(f"_toggled checked false")
             #if all actions unchecked => display head_icon
             if not any(action.isChecked() for action in self.getMenu().actions()):
-                print(f"_toggled not any checked")
                 self.__button.setIcon(self.__head_icon)
-                
+    
+    def init_display(self):
+        if self.__head_icon is not None:
+            self.__button.setDefaultAction(None)
+            self.__button.setIcon(self.__head_icon)
+            
