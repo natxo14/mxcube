@@ -77,7 +77,7 @@ class ESRFCenteringBrick(BaseWidget):
         
         #match default values in .ui file
         self.points_for_aligment = 3
-        self.delta_phi = 0.3
+        self.delta_phi = 5
 
         # Properties ----------------------------------------------------------
         self.add_property("mnemonic", "string", "")
@@ -161,6 +161,9 @@ class ESRFCenteringBrick(BaseWidget):
         self.connect(HWR.beamline.diffractometer, "centring_image_clicked", self.image_clicked)
  
         self.change_point_number(self.points_for_aligment)
+
+        # init delta_phi var value
+        self.delta_phi_changed()
 
     def centring_started(self):
         #clean point table
@@ -268,7 +271,14 @@ class ESRFCenteringBrick(BaseWidget):
 
     def delta_phi_changed(self):
         delta_phi_str = self.ui_widgets_manager.delta_phi_textbox.text()
-        self.delta_phi = float(delta_phi_str.replace(" ", ""))
+        try:
+            self.delta_phi = float(delta_phi_str.replace(" ", ""))
+        except ValueError as error:
+            logging.getLogger().error(
+                f"""Sorry, could not transform {delta_phi_str} into a float var.
+                Using default {self.delta_phi} value"""
+            )
+        
         self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
         if HWR.beamline.diffractometer is not None:
             HWR.beamline.diffractometer.set_centring_parameters(
