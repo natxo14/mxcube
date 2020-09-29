@@ -75,7 +75,7 @@
                 - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
                   name: fixedHeight, old_value: -1, type: integer, value: -1}
                 - {comment: Set fixed width in pixels, default_value: -1, hidden: false,
-                  name: fixedWidth, old_value: -1, type: integer, value: 500}
+                  name: fixedWidth, old_value: -1, type: integer, value: 575}
                 - {comment: '', default_value: '9', hidden: false, name: fontSize,
                   old_value: '9', type: string, value: '9'}
                 - {comment: Draw a frame around the widget, default_value: 0, hidden: false,

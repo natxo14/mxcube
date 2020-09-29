@@ -918,6 +918,123 @@ self.centring_status = {
             "sampx": float(sampx),
             "sampy": float(sampy),
 }
+""" 
+CODE EXPLAINED
+""" 
+def center(
+    phi,
+    phiy,
+    phiz,
+    sampx,
+    sampy,
+    pixelsPerMm_Hor,
+    pixelsPerMm_Ver,
+    beam_xc,
+    beam_yc,
+    chi_angle,
+    n_points,
+    phi_range=180,
+):
+    global USER_CLICKED_EVENT
+    X, Y, phi_positions = [], [], []
+
+    phi_angle = phi_range / (n_points - 1)
+
+    try:
+        i = 0
+        # N CLICKS : GET CLICKED POINT X,Y coordinates ( upper left corner (0,0) origin )
+        while i < n_points:
+            try:
+                x, y = USER_CLICKED_EVENT.get()
+            except BaseException:
+                raise RuntimeError("Aborted while waiting for point selection")
+            USER_CLICKED_EVENT = gevent.event.AsyncResult()
+            X.append(x / float(pixelsPerMm_Hor))
+            Y.append(y / float(pixelsPerMm_Ver))
+            phi_positions.append(phi.direction * math.radians(phi.get_value()))
+            if i != n_points - 1:
+                phi.set_value_relative(phi.direction * phi_angle, timeout=10)
+            READY_FOR_NEXT_POINT.set()
+            i += 1
+    except BaseException:
+        logging.exception("Exception while centring")
+        move_motors(SAVED_INITIAL_POSITIONS)
+        raise
+
+    # CHI ANGLE ?? WHAT IS THIS?? WHAT FOR ??
+    chi_angle = math.radians(chi_angle)
+    chiRotMatrix = numpy.matrix(
+        [
+            [math.cos(chi_angle), -math.sin(chi_angle)],
+            [math.sin(chi_angle), math.cos(chi_angle)],
+        ]
+    )
+    # CODE CHANGES WHETHER HORIZONTAL SETUP OR VERTICAL
+    Z = chiRotMatrix * numpy.matrix([X, Y])
+
+    
+    if horizontal_setup: 
+        # MXCuBE SETUP
+        z = Z[1]
+        avg_pos = Z[0].mean()
+    else:
+        # ID10 / ID13 setup
+        z = Z[0]
+        avg_pos = Z[1].mean()
+
+    # this following calculates 
+    # the radius (amplitude of the wave )
+    # the angle : the phase of the wave
+    # the offset : the amplitude of the mean value of the wave :
+    # the 'medium' positions of the clicked points
+    # they correspond to p1, p2 and p3 in the fitfunc function: (in multiPointCentre)
+    # p[0] * numpy.sin(x + p[1]) + p[2]
+    # iterations in optimize.leastsqr start with [1.0, 0.0, 0.0]
+    r, a, offset = multiPointCentre(numpy.array(z).flatten(), phi_positions)
+
+    # DON'T KNOW EXACTLY IF THIS CHANGES WITH VERTICAL/HORIZONTAL SETUP
+    # these are the deltas of the sample motors : the ones on top of setup
+    dy = r * numpy.sin(a)
+    dx = r * numpy.cos(a)
+
+    # Positions of motors in offset and avg_pos
+    if horizontal_setup: 
+        d = chiRotMatrix.transpose() * numpy.matrix([[avg_pos], [offset]])
+    else
+        d = chiRotMatrix.transpose() * numpy.matrix([[offset], [avg_pos]])
+
+
+    # The deltas with beam position: 
+    # make phiz and phiy move the center of the rotation to the beam position
+    d_horizontal = d[0] - (beam_xc / float(pixelsPerMm_Hor))
+    d_vertical = d[1] - (beam_yc / float(pixelsPerMm_Ver))
+    
+    # WHAT THIS FOR ??
+    phi_pos = math.radians(phi.direction * phi.get_value())
+    phiRotMatrix = numpy.matrix(
+        [
+            [math.cos(phi_pos), -math.sin(phi_pos)],
+            [math.sin(phi_pos), math.cos(phi_pos)],
+        ]
+    )
+
+    centred_pos = SAVED_INITIAL_POSITIONS.copy()
+    centred_pos.update(
+        {
+            sampx.motor: float(sampx.get_value() + sampx.direction * dx),
+            sampy.motor: float(sampy.get_value() + sampy.direction * dy),
+            phiz.motor: float(phiz.get_value() + phiz.direction * d_vertical[0, 0])
+            if phiz.__dict__.get("reference_position") is None
+            else phiz.reference_position,
+            phiy.motor: float(phiy.get_value() + phiy.direction * d_horizontal[0, 0])
+            if phiy.__dict__.get("reference_position") is None
+            else phiy.reference_position,
+        }
+    )
+
+return centred_pos
+
+
 """
 
 ID10 and ID13 : VERTICAL SAMPLE STAGE!! NOT HORIZONTAL!!
