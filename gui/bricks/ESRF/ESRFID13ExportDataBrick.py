@@ -160,7 +160,10 @@ class ESRFID13ExportDataBrick(BaseWidget):
         extra_path_template = self.__data_policy_info_dict.get('template', "no_template")
 
         for k, v in self.__data_policy_info_dict.items():
-            extra_path_template = extra_path_template.replace('{' + k + '}' , v)
+            extra_path_template = extra_path_template.replace('{' + k + '}', v)
+
+        # take off the last folder from the path : convention with ID13 staff
+        extra_path_template = extra_path_template[0:extra_path_template.rfind('/')]
 
         full_path = os.path.join(base_path, extra_path_template, "")
         self.ui_widgets_manager.export_folder_path_tbox.setText(full_path)
