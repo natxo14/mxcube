@@ -177,8 +177,8 @@ class ESRFCenteringBrick(BaseWidget):
         
         # Other ---------------------------------------------------------------
 
-        self.data_X = []
-        self.data_Y = []
+        self.plot_data_X = []
+        self.plot_data_Y = []
         self.connect(HWR.beamline.sample_view, "centringStarted", self.centring_started)
         self.connect(HWR.beamline.sample_view, "centringFailed", self.centring_failed)
         self.connect(
@@ -245,19 +245,19 @@ class ESRFCenteringBrick(BaseWidget):
         print(f"CenteringBrick - image_clicked {x},{y} - num click {self.num_clicked_centring_pos}")
         table = self.ui_widgets_manager.aligment_table
         print(f"CenteringBrick - image_clicked table rows, cols : {table.rowCount()} {table.columnCount()}")
-        self.data_Y.append(x)
-        self.data_X.append(math.radians(self.delta_phi) * self.num_clicked_centring_pos)
+        self.plot_data_Y.append(x)
+        self.plot_data_X.append(math.radians(self.delta_phi) * self.num_clicked_centring_pos)
         table.item(self.num_clicked_centring_pos, 1).setText(str(x))
         table.item(self.num_clicked_centring_pos, 2).setText(str(y))
         table.item(self.num_clicked_centring_pos, 0).setText(str(self.delta_phi * self.num_clicked_centring_pos))
 
         self.num_clicked_centring_pos += 1
-
+ 
         # instead of ax.hold(False)
         self.figure.clear()
         # plot data
         ax = self.figure.add_subplot()
-        ax.plot(self.data_X, self.data_Y , 'ro')
+        ax.plot(self.plot_data_X, self.plot_data_Y , 'ro')
         self.canvas.draw()
 
     def show_centring_paremeters(self, parameter_dict):
@@ -268,14 +268,16 @@ class ESRFCenteringBrick(BaseWidget):
         amplitude = parameter_dict['r']
         phase = parameter_dict['alpha']
         offset = parameter_dict['offset']
-        
-        pixels_per_mm_ver = parameter_dict['pixelsPerMm_Ver']
+        d_horizontal = parameter_dict['d_horizontal']
+        image_width_pix = HWR.beamline.sample_view.get_image_size()[0]
+        beam_position_x = HWR.beamline.beam.get_beam_position_on_screen()[0]
+        pixels_per_mm_hor = parameter_dict['pixelsPerMm_Hor']
         
         sinus_signal = amplitude * numpy.sin(x_angle + phase) + offset
         
         print(f"""CenteringBrick - PLOT :
-        self.data_X  {self.data_X}
-        self.data_Y  {self.data_Y}
+        self.plot_data_X  {self.plot_data_X}
+        self.plot_data_Y  {self.plot_data_Y}
         """)
         # clear data
         self.figure.clear()
@@ -283,9 +285,14 @@ class ESRFCenteringBrick(BaseWidget):
         ax = self.figure.add_subplot()
         ax.plot(x_angle, sinus_signal)
         ax.plot(
-            numpy.array(self.data_X),
-            numpy.array(self.data_Y) / float(pixels_per_mm_ver) , 'ro'
+            numpy.array(self.plot_data_X),
+            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor) , 'ro'
         )
+        ax.axhspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
+        ax.axhline(y=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
+
+        ax.axhspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
+        ax.axhline(y=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
 
         self.canvas.draw()
 
@@ -308,8 +315,8 @@ class ESRFCenteringBrick(BaseWidget):
         """
         Cancel aligment process
         """
-        self.data_X.clear()
-        self.data_Y.clear()
+        self.plot_data_X.clear()
+        self.plot_data_Y.clear()
         self.figure.clear()
         HWR.beamline.sample_view.reject_centring()
 
