@@ -375,7 +375,7 @@ class GraphicsManagerBrick(BaseWidget):
         """
         #print(f"selected tag : {action} -  action data {action.data()}")
         for item in self.manager_widget.shapes_treewidget.selectedItems():
-            item.setData(4, QtImport.Qt.DisplayRole, action.data())
+            item.setData(2, QtImport.Qt.DisplayRole, action.data())
         # clicked_item = self.manager_widget.shapes_treewidget.itemAt(self.__click_pos)
         # if clicked_item is None:
         #     #iterate over selected items
@@ -394,15 +394,25 @@ class GraphicsManagerBrick(BaseWidget):
         if self.__list_of_tags:
             op_mode = self.mutual_exclusive_op_mode.checkedButton().text()
         else:
-            op_mode = "default"    
+            op_mode = "default"
         # get shape's operational mode
         
+        # Shapes' TreeWidget columns:
+        # GlobalItemCounter | Display Name | Operational Mode | Width (mm) | Height (mm)
+        # Diagonal (mm) | Width (pix) | Height (pix) | Starting Pos (pix) |
+        # Selected | Visible
         info_str_list = (
             str(self.manager_widget.shapes_treewidget.topLevelItemCount() + 1),
             shape.get_display_name(),
-            str(True),
-            str(True),
             str(op_mode),
+            str(shape.get_item_width_mm()),
+            str(shape.get_item_height_mm()),
+            str(shape.get_item_diagonal_mm()),
+            str(shape.get_item_width_pix()),
+            str(shape.get_item_height_pix()),
+            str(shape.get_start_position()),
+            str(True),
+            str(True),
         )
         shape.set_operation_mode(op_mode)
 
@@ -502,7 +512,7 @@ class GraphicsManagerBrick(BaseWidget):
             #print(f"GRPHICMANAGERBRICK shape_selected shape in self.__shape_map:")
             treewidget_item = self.__shape_map[shape]
             treewidget_item.setData(
-                3, QtImport.Qt.DisplayRole, str(selected_state)
+                9, QtImport.Qt.DisplayRole, str(selected_state)
             )
             self.__shape_map[shape].setSelected(selected_state)
             if self.__point_map.get(shape):
@@ -594,7 +604,7 @@ class GraphicsManagerBrick(BaseWidget):
         for shape, treewidget_item in self.__shape_map.items():
             print(f"shape {shape} to be showed")
             shape.show()
-            treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
+            treewidget_item.setData(10, QtImport.Qt.DisplayRole, "True")
         
         self.manager_widget.display_all_cbox.setChecked(True)
     
@@ -614,16 +624,16 @@ class GraphicsManagerBrick(BaseWidget):
         for shape, treewidget_item in self.__shape_map.items():
             if shape.isSelected():
                 shape.show()
-                treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
+                treewidget_item.setData(10, QtImport.Qt.DisplayRole, "True")
             else:
                 shape.hide()
-                treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
+                treewidget_item.setData(10, QtImport.Qt.DisplayRole, "False")
 
     def hide_all(self):
         
         for shape, treewidget_item in self.__shape_map.items():
             shape.hide()
-            treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
+            treewidget_item.setData(10, QtImport.Qt.DisplayRole, "False")
 
         self.manager_widget.hide_all_cbox.setChecked(True)
     
@@ -642,7 +652,7 @@ class GraphicsManagerBrick(BaseWidget):
         
         for shape in self.__shape_map.keys():
             if shape.isSelected():
-                self.__shape_map[shape].setData(2, QtImport.Qt.DisplayRole, "False")
+                self.__shape_map[shape].setData(10, QtImport.Qt.DisplayRole, "False")
                 shape.hide()
 
         # selected_item_list = self.manager_widget.shapes_treewidget.selectedItems()
@@ -786,10 +796,10 @@ class GraphicsManagerBrick(BaseWidget):
                 print(f"display_only_type_button_clicked {treewidget_item.data(1, QtImport.Qt.DisplayRole,)}")
                 if shape_type in str(treewidget_item.data(1, QtImport.Qt.DisplayRole,)):
                     shape.show()
-                    treewidget_item.setData(2, QtImport.Qt.DisplayRole, "True")
+                    treewidget_item.setData(10, QtImport.Qt.DisplayRole, "True")
                 else:
                     shape.hide()
-                    treewidget_item.setData(2, QtImport.Qt.DisplayRole, "False")
+                    treewidget_item.setData(10, QtImport.Qt.DisplayRole, "False")
     
     def load_list_of_operational_modes(self):
         """
