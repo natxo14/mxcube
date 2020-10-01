@@ -84,7 +84,11 @@ from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
 
 from bliss.config import get_sessions_list
-from bliss.config.conductor.client import get_redis_connection
+# from bliss.config.conductor.client import get_redis_connection
+
+from bliss.scanning.scan_saving import ESRFScanSaving
+from bliss.config.settings import OrderedHashSetting, ParametersWardrobe
+
 import pickle
 import pprint
 
@@ -557,7 +561,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             self.fill_config_table()
             self.fill_op_modes_list()
             self.load_sessions()
-            self.display_data_policy(0)
+            # self.display_data_policy(0)
 
     def load_sessions(self):
         """
@@ -566,12 +570,21 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         self.bliss_session_list = get_sessions_list()
         self.ui_widgets_manager.bliss_session_combo_box.clear()
 
+        self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.disconnect(
+            self.display_data_policy
+        )
+
         for session in self.bliss_session_list:
             self.ui_widgets_manager.bliss_session_combo_box.addItem(
                 session
             )
 
         self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
+
+        self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
+            self.display_data_policy
+        )
+
         print(f"ID13CONGI : load_sessions {self.bliss_session_list}")
             
     def reload_data_policy(self):
@@ -589,23 +602,39 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             new_session = self.bliss_session_list[index]
             print(f"ID13CONGI : display_data_policy new_session {new_session}")
             
-            redis_connection = get_redis_connection()
+            # redis_connection = get_redis_connection()
             #redis_connection.keys("*scan_saving*")
 
-            request_dict = redis_connection.hgetall(f"parameters:scan_saving:{new_session}:default")
+            scan_savings = ESRFScanSaving(new_session)
+
+            # request_dict = redis_connection.hgetall(f"parameters:scan_saving:{new_session}:default")
 
             session_info_string = ''
             session_info_dict = {}
             session_info_dict['session'] = new_session
-            for key, val in request_dict.items():
-                info_str = ''
-                info_str = key.decode()
+            session_info_dict['base_path'] = scan_savings.base_path
+            session_info_dict['data_filename'] = scan_savings.data_filename
+            # session_info_dict['data_fullpath'] = scan_savings.data_fullpath
+            session_info_dict['data_path'] = scan_savings.data_path
+            session_info_dict['dataset'] = scan_savings.dataset
+            session_info_dict['date'] = scan_savings.date
+            # session_info_dict['filename'] = scan_savings.filename
+            session_info_dict['sample'] = scan_savings.sample
+            session_info_dict['proposal'] = scan_savings.proposal
+            session_info_dict['template'] = scan_savings.template
+            session_info_dict['beamline'] = scan_savings.beamline
+            
+            for key, val in session_info_dict.items():
                 
-                session_info_dict[info_str] = str(pickle.loads(val))
-                info_str += ' : ' + str(pickle.loads(val))
-                session_info_string += info_str + ' \n '
-                self.data_policy_changed.emit(session_info_dict)
+                info_str = ' ' + key + ' : ' + val
+                session_info_string += info_str + ' \n'
 
+                # info_str = key.decode()
+                # session_info_dict[info_str] = str(pickle.loads(val))
+                # info_str += ' : ' + str(pickle.loads(val))
+                # session_info_string += info_str + ' \n '
+            
+            self.data_policy_changed.emit(session_info_dict)
             self.ui_widgets_manager.data_policy_label.setText(
                 session_info_string
             )
