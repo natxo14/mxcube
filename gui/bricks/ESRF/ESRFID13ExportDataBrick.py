@@ -101,7 +101,6 @@ class ESRFID13ExportDataBrick(BaseWidget):
         self.ui_widgets_manager = QtImport.load_ui_file("export_data_layout.ui")
 
         # Internal values -----------------------------------------------------
-        # self.__data_policy_scan_saving = None
         self.__current_sample = None
         self.__data_policy_info_dict = {}
 
@@ -133,17 +132,23 @@ class ESRFID13ExportDataBrick(BaseWidget):
             self.select_file_path_button_clicked
         )
 
+        self.ui_widgets_manager.reload_policy_data_button.clicked.connect(
+            self.reload_policy_data_button_clicked
+        )
+
     def data_policy_changed(self, data_policy_info_dict):
         """
         param : data_policy_info_dict
             data policy object as given by bliss' SCAN_SAVING
         """
         self.__data_policy_info_dict = data_policy_info_dict
-        # self.__data_policy_scan_saving = data_policy_scan_saving
+        
+        self.set_export_file_path()
 
-        print("data_policy_changed!!!")
-        pprint.pprint(self.__data_policy_info_dict)
-
+    def reload_policy_data_button_clicked(self):
+        """
+        reload information recorded in self.__data_policy_info_dict
+        """
         self.set_export_file_path()
 
     def set_export_file_path(self):
