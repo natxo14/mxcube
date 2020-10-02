@@ -262,30 +262,32 @@ class ESRFCenteringBrick(BaseWidget):
 
     def show_centring_paremeters(self, parameter_dict):
 
-        x_angle = numpy.linspace(0,2*numpy.pi,360)
         # from multipointcenter
         # p[0] * numpy.sin(x + p[1]) + p[2]
         amplitude = parameter_dict['r']
         phase = parameter_dict['alpha']
         offset = parameter_dict['offset']
         d_horizontal = parameter_dict['d_horizontal']
+        phi_positions = parameter_dict['phi_positions']
         image_width_pix = HWR.beamline.sample_view.get_image_size()[0]
         beam_position_x = HWR.beamline.beam.get_beam_position_on_screen()[0]
         pixels_per_mm_hor = parameter_dict['pixelsPerMm_Hor']
         
+        
+        x_angle = numpy.linspace(phi_positions[0], 2 *numpy.pi + phi_positions[0], 360)
         sinus_signal = amplitude * numpy.sin(x_angle + phase) + offset
         
         print(f"""CenteringBrick - PLOT :
-        self.plot_data_X  {self.plot_data_X}
+        self.plot_data_X NOT DEPLACED BY phi_positions[0] {self.plot_data_X}
         self.plot_data_Y  {self.plot_data_Y}
         """)
         # clear data
         self.figure.clear()
         # plot data
         ax = self.figure.add_subplot()
-        ax.plot(x_angle, sinus_signal)
+        ax.plot(x_angle, sinus_signal )
         ax.plot(
-            numpy.array(self.plot_data_X),
+            numpy.array(phi_positions),
             numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor) , 'ro'
         )
         ax.axhspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
