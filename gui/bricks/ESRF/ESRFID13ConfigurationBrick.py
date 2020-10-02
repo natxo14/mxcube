@@ -129,6 +129,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         self.multipos_hwobj = None
 
         self.list_of_operational_modes = []
+        self.default_session = None
 
         #self.current_beam_position = None
         #self.current_zoom_pos_name = None
@@ -248,7 +249,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         #         "GraphicsManager: BeamInfo hwobj not defined"
         #     )
 
-        self.init_interface()
+        # self.init_interface()
     
     def return_operational_modes_list(self, input_list):
         #clear list
@@ -359,7 +360,18 @@ class ESRFID13ConfigurationBrick(BaseWidget):
     #         output_dict[pos.find('name').text] = dict_elem
             
     #     #self.zoom_positions_dict = copy.deepcopy(output_dict)
-
+    def load_default_session(self):
+        """
+        Parse xml file and search for 'default_session' tag
+        """
+        xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
+        xml_tree = xml_file_tree.getroot()
+        if xml_tree.find("default_session") is not None:
+            self.default_session = xml_tree.find("default_session").text
+        # print(f"""
+        # ************************************************************
+        # load_default_session : self.default_session {self.default_session}""")
+            
     def load_list_of_operational_modes(self):
         """
         Parse xml file and load list of operational modes :
@@ -433,6 +445,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
                                 self.beam_cal_pos_data_cancelled)              
             # self.load_zoom_positions_dict()
             self.load_list_of_operational_modes()
+            self.load_default_session()
             
             self.init_interface()
 
@@ -561,8 +574,8 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             self.fill_config_table()
             self.fill_op_modes_list()
             self.load_sessions()
-            # self.display_data_policy(0)
-
+            self.reload_data_policy()
+            
     def load_sessions(self):
         """
         Load list of sessions and populate combobox
@@ -579,7 +592,12 @@ class ESRFID13ConfigurationBrick(BaseWidget):
                 session
             )
 
-        self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
+        if self.default_session in self.bliss_session_list:
+            index = self.ui_widgets_manager.bliss_session_combo_box.findData(self.default_session)
+            if index != -1:
+                self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(index)
+        else:
+            self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
 
         self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
             self.display_data_policy
