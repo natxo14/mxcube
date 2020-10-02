@@ -631,7 +631,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             session_info_dict['data_path'] = scan_savings.data_path
             session_info_dict['dataset'] = scan_savings.dataset
             session_info_dict['date'] = scan_savings.date
-            session_info_dict['filename'] = scan_savings.filename
+            # session_info_dict['filename'] = scan_savings.filename
             session_info_dict['sample'] = scan_savings.sample
             session_info_dict['proposal'] = scan_savings.proposal
             session_info_dict['template'] = scan_savings.template
