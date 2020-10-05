@@ -49,8 +49,16 @@
 import sys
 import math
 import logging
+import numpy
 
 from gui.utils import Icons, Colors, QtImport
+
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+import matplotlib.pyplot as plt
+
+
 from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
 
@@ -109,16 +117,32 @@ class ESRFCenteringBrick(BaseWidget):
         # )
 
         # Layout --------------------------------------------------------------
-        _groupbox_vlayout = QtImport.QVBoxLayout(self)
+        _groupbox_vlayout = QtImport.QVBoxLayout()
         _groupbox_vlayout.addWidget(self.ui_widgets_manager)
-        _groupbox_vlayout.setSpacing(0)
-        _groupbox_vlayout.setContentsMargins(0, 0, 0, 0)
+        #_groupbox_vlayout.setSpacing(0)
+        #_groupbox_vlayout.setContentsMargins(0, 0, 0, 0)
         self.main_groupbox.setLayout(_groupbox_vlayout)
 
-        _main_vlayout = QtImport.QVBoxLayout(self)
+        # MatPlotWidget --------------------------------------------------------------
+         # a figure instance to plot on
+        self.figure = plt.figure()
+         # this is the Canvas Widget that displays the `figure`
+        # it takes the `figure` instance as a parameter to __init__
+        self.canvas = FigureCanvas(self.figure)
+
+        # this is the Navigation widget
+        # it takes the Canvas widget and a parent
+        self.toolbar = NavigationToolbar(self.canvas, self)
+        _matplotlib_widget_layout = QtImport.QVBoxLayout()
+        _matplotlib_widget_layout.addWidget(self.toolbar)
+        _matplotlib_widget_layout.addWidget(self.canvas)
+        
+        # Layout --------------------------------------------------------------
+        _main_vlayout = QtImport.QHBoxLayout()
         _main_vlayout.addWidget(self.main_groupbox)
-        _main_vlayout.setSpacing(0)
-        _main_vlayout.setContentsMargins(0, 0, 0, 0)
+        _main_vlayout.addLayout(_matplotlib_widget_layout)
+        #_main_vlayout.setSpacing(0)
+        #_main_vlayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(_main_vlayout)
 
         # Qt signal/slot connections ------------------------------------------
@@ -153,13 +177,16 @@ class ESRFCenteringBrick(BaseWidget):
         
         # Other ---------------------------------------------------------------
 
+        self.plot_data_X = []
+        self.plot_data_Y = []
         self.connect(HWR.beamline.sample_view, "centringStarted", self.centring_started)
         self.connect(HWR.beamline.sample_view, "centringFailed", self.centring_failed)
         self.connect(
             HWR.beamline.sample_view, "centringSuccessful", self.centring_successful
         )
         self.connect(HWR.beamline.diffractometer, "centring_image_clicked", self.image_clicked)
- 
+        self.connect(HWR.beamline.diffractometer, "centring_calculation_ended", self.show_centring_paremeters)
+
         self.change_point_number(self.points_for_aligment)
 
         # init delta_phi var value
@@ -218,11 +245,70 @@ class ESRFCenteringBrick(BaseWidget):
         print(f"CenteringBrick - image_clicked {x},{y} - num click {self.num_clicked_centring_pos}")
         table = self.ui_widgets_manager.aligment_table
         print(f"CenteringBrick - image_clicked table rows, cols : {table.rowCount()} {table.columnCount()}")
+        self.plot_data_Y.append(x)
+        self.plot_data_X.append(math.radians(self.delta_phi) * self.num_clicked_centring_pos)
         table.item(self.num_clicked_centring_pos, 1).setText(str(x))
         table.item(self.num_clicked_centring_pos, 2).setText(str(y))
         table.item(self.num_clicked_centring_pos, 0).setText(str(self.delta_phi * self.num_clicked_centring_pos))
 
         self.num_clicked_centring_pos += 1
+ 
+        # instead of ax.hold(False)
+        self.figure.clear()
+        # plot data
+        ax = self.figure.add_subplot()
+        ax.plot(self.plot_data_X, self.plot_data_Y , 'ro')
+        self.canvas.draw()
+
+    def show_centring_paremeters(self, parameter_dict):
+
+        # from multipointcenter
+        # p[0] * numpy.sin(x + p[1]) + p[2]
+        amplitude = parameter_dict['r']
+        phase = parameter_dict['alpha']
+        offset = parameter_dict['offset']
+        d_horizontal = parameter_dict['d_horizontal']
+        phi_positions = parameter_dict['phi_positions']
+        image_width_pix = HWR.beamline.sample_view.get_image_size()[0]
+        beam_position_x = HWR.beamline.beam.get_beam_position_on_screen()[0]
+        pixels_per_mm_hor = parameter_dict['pixelsPerMm_Hor']
+        
+        
+        x_angle = numpy.linspace(phi_positions[0], 2 *numpy.pi + phi_positions[0], 360)
+        sinus_signal = amplitude * numpy.sin(x_angle + phase) + offset
+        
+        print(f"""CenteringBrick - PLOT :
+        self.plot_data_X NOT DEPLACED BY phi_positions[0] {self.plot_data_X}
+        self.plot_data_Y  {self.plot_data_Y}
+        """)
+        # clear data
+        self.figure.clear()
+        # plot data
+        ax = self.figure.add_subplot(121)
+        ax.plot(x_angle, sinus_signal )
+        ax.plot(
+            numpy.array(phi_positions),
+            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor) , 'ro'
+        )
+        ax.axhspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
+        ax.axhline(y=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
+
+        ax.axhspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
+        ax.axhline(y=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
+
+        ax2 = self.figure.add_subplot(122)
+        ax2.plot(sinus_signal, x_angle)
+        ax2.plot(
+            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor) , 'ro',
+            numpy.array(phi_positions)            
+        )
+        ax2.axvspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
+        ax2.axvline(x=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
+
+        ax2.axvspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
+        ax2.axvline(x=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
+
+        self.canvas.draw()
 
     def show_center(self, checkbox_state):
         """
@@ -243,6 +329,9 @@ class ESRFCenteringBrick(BaseWidget):
         """
         Cancel aligment process
         """
+        self.plot_data_X.clear()
+        self.plot_data_Y.clear()
+        self.figure.clear()
         HWR.beamline.sample_view.reject_centring()
 
     def change_point_number(self, new_int_value):

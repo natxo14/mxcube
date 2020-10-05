@@ -129,6 +129,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         self.multipos_hwobj = None
 
         self.list_of_operational_modes = []
+        self.default_session = None
 
         #self.current_beam_position = None
         #self.current_zoom_pos_name = None
@@ -248,7 +249,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         #         "GraphicsManager: BeamInfo hwobj not defined"
         #     )
 
-        self.init_interface()
+        # self.init_interface()
     
     def return_operational_modes_list(self, input_list):
         #clear list
@@ -359,7 +360,18 @@ class ESRFID13ConfigurationBrick(BaseWidget):
     #         output_dict[pos.find('name').text] = dict_elem
             
     #     #self.zoom_positions_dict = copy.deepcopy(output_dict)
-
+    def load_default_session(self):
+        """
+        Parse xml file and search for 'default_session' tag
+        """
+        xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
+        xml_tree = xml_file_tree.getroot()
+        if xml_tree.find("default_session") is not None:
+            self.default_session = xml_tree.find("default_session").text
+        # print(f"""
+        # ************************************************************
+        # load_default_session : self.default_session {self.default_session}""")
+            
     def load_list_of_operational_modes(self):
         """
         Parse xml file and load list of operational modes :
@@ -433,6 +445,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
                                 self.beam_cal_pos_data_cancelled)              
             # self.load_zoom_positions_dict()
             self.load_list_of_operational_modes()
+            self.load_default_session()
             
             self.init_interface()
 
@@ -561,8 +574,8 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             self.fill_config_table()
             self.fill_op_modes_list()
             self.load_sessions()
-            # self.display_data_policy(0)
-
+            self.reload_data_policy()
+            
     def load_sessions(self):
         """
         Load list of sessions and populate combobox
@@ -579,13 +592,18 @@ class ESRFID13ConfigurationBrick(BaseWidget):
                 session
             )
 
-        self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
+        if self.default_session in self.bliss_session_list:
+            index = self.ui_widgets_manager.bliss_session_combo_box.findData(self.default_session)
+            if index != -1:
+                self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(index)
+        else:
+            self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(-1)
 
         self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
             self.display_data_policy
         )
-
-        print(f"ID13CONGI : load_sessions {self.bliss_session_list}")
+        
+        print(f"ID13CONGI : load_sessions {self.bliss_session_list} | self.default_session {self.default_session}")
             
     def reload_data_policy(self):
         
@@ -602,19 +620,14 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             new_session = self.bliss_session_list[index]
             print(f"ID13CONGI : display_data_policy new_session {new_session}")
             
-            # redis_connection = get_redis_connection()
-            #redis_connection.keys("*scan_saving*")
-
             scan_savings = ESRFScanSaving(new_session)
-
-            # request_dict = redis_connection.hgetall(f"parameters:scan_saving:{new_session}:default")
 
             session_info_string = ''
             session_info_dict = {}
             session_info_dict['session'] = new_session
             session_info_dict['base_path'] = scan_savings.base_path
             session_info_dict['data_filename'] = scan_savings.data_filename
-            # session_info_dict['data_fullpath'] = scan_savings.data_fullpath
+            #session_info_dict['data_fullpath'] = scan_savings.data_fullpath
             session_info_dict['data_path'] = scan_savings.data_path
             session_info_dict['dataset'] = scan_savings.dataset
             session_info_dict['date'] = scan_savings.date
@@ -628,11 +641,6 @@ class ESRFID13ConfigurationBrick(BaseWidget):
                 
                 info_str = ' ' + key + ' : ' + val
                 session_info_string += info_str + ' \n'
-
-                # info_str = key.decode()
-                # session_info_dict[info_str] = str(pickle.loads(val))
-                # info_str += ' : ' + str(pickle.loads(val))
-                # session_info_string += info_str + ' \n '
             
             self.data_policy_changed.emit(session_info_dict)
             self.ui_widgets_manager.data_policy_label.setText(

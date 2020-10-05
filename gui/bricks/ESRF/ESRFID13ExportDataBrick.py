@@ -73,8 +73,9 @@ from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
 
-from bliss.config import static
 from bliss.config import get_sessions_list
+from bliss.scanning.scan_saving import ESRFScanSaving
+        
 
 
 __credits__ = ["MXCuBE collaboration"]
@@ -136,6 +137,30 @@ class ESRFID13ExportDataBrick(BaseWidget):
             self.reload_policy_data_button_clicked
         )
 
+    def reload_policy_data_button_clicked(self):
+        """
+        reload data policy: use the one recorded in self.__data_policy_info_dict
+        """
+
+        session_name = self.__data_policy_info_dict.get('session', None)
+
+        if session_name is not None:
+            scan_savings = ESRFScanSaving(session_name)
+
+            session_info_dict = {}
+            session_info_dict['session'] = session_name
+            session_info_dict['base_path'] = scan_savings.base_path
+            session_info_dict['data_filename'] = scan_savings.data_filename
+            session_info_dict['data_path'] = scan_savings.data_path
+            session_info_dict['dataset'] = scan_savings.dataset
+            session_info_dict['date'] = scan_savings.date
+            session_info_dict['sample'] = scan_savings.sample
+            session_info_dict['proposal'] = scan_savings.proposal
+            session_info_dict['template'] = scan_savings.template
+            session_info_dict['beamline'] = scan_savings.beamline
+
+            self.data_policy_changed(session_info_dict)
+
     def data_policy_changed(self, data_policy_info_dict):
         """
         param : data_policy_info_dict
@@ -143,15 +168,9 @@ class ESRFID13ExportDataBrick(BaseWidget):
         """
         self.__data_policy_info_dict = data_policy_info_dict
         
+<<<<<<< HEAD
         self.set_export_file_path()
 
-    def reload_policy_data_button_clicked(self):
-        """
-        reload information recorded in self.__data_policy_info_dict
-        """
-        self.set_export_file_path()
-
-    def set_export_file_path(self):
         """
         set full path (and maybe also sample name) coming from data policy
         (changes from bliss console)

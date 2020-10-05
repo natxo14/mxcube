@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>545</width>
+    <width>616</width>
     <height>433</height>
    </rect>
   </property>
@@ -53,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>529</width>
-        <height>131</height>
+        <width>584</width>
+        <height>100</height>
        </rect>
       </property>
       <attribute name="label">
@@ -164,7 +164,37 @@
          </column>
          <column>
           <property name="text">
-           <string>Visible</string>
+           <string>Func. Mode</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Width (mm)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Height (mm)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Diagonal (mm)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Width (pix)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Height (pix)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Postition (pix)</string>
           </property>
          </column>
          <column>
@@ -174,7 +204,7 @@
          </column>
          <column>
           <property name="text">
-           <string>Used for collection</string>
+           <string>Visible</string>
           </property>
          </column>
         </widget>
@@ -186,8 +216,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>600</width>
-        <height>225</height>
+        <width>179</width>
+        <height>102</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -301,8 +331,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>600</width>
-        <height>225</height>
+        <width>136</width>
+        <height>102</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -412,8 +442,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>586</width>
-        <height>239</height>
+        <width>425</width>
+        <height>242</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -801,8 +831,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>600</width>
-        <height>225</height>
+        <width>173</width>
+        <height>120</height>
        </rect>
       </property>
       <attribute name="icon">
