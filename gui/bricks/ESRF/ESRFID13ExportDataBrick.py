@@ -168,9 +168,9 @@ class ESRFID13ExportDataBrick(BaseWidget):
         """
         self.__data_policy_info_dict = data_policy_info_dict
         
-<<<<<<< HEAD
         self.set_export_file_path()
 
+    def set_export_file_path(self):
         """
         set full path (and maybe also sample name) coming from data policy
         (changes from bliss console)
