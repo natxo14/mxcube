@@ -593,7 +593,7 @@ class ESRFID13ConfigurationBrick(BaseWidget):
             )
 
         if self.default_session in self.bliss_session_list:
-            index = self.ui_widgets_manager.bliss_session_combo_box.findData(self.default_session)
+            index = self.ui_widgets_manager.bliss_session_combo_box.findText(self.default_session)
             if index != -1:
                 self.ui_widgets_manager.bliss_session_combo_box.setCurrentIndex(index)
         else:
