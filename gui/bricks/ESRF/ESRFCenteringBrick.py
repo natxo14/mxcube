@@ -284,7 +284,7 @@ class ESRFCenteringBrick(BaseWidget):
         # clear data
         self.figure.clear()
         # plot data
-        ax = self.figure.add_subplot()
+        ax = self.figure.add_subplot(121)
         ax.plot(x_angle, sinus_signal )
         ax.plot(
             numpy.array(phi_positions),
@@ -295,6 +295,18 @@ class ESRFCenteringBrick(BaseWidget):
 
         ax.axhspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
         ax.axhline(y=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
+
+        ax2 = self.figure.add_subplot(122)
+        ax2.plot(sinus_signal, x_angle)
+        ax2.plot(
+            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor) , 'ro',
+            numpy.array(phi_positions)            
+        )
+        ax2.axvspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
+        ax2.axvline(x=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
+
+        ax2.axvspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
+        ax2.axvline(x=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
 
         self.canvas.draw()
 
