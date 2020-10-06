@@ -26,6 +26,7 @@ import logging
 
 from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
+from HardwareRepository import HardwareRepository as HWR
 
 __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
@@ -54,7 +55,8 @@ class VolpiBrick(BaseWidget):
         self.frame = QtImport.QGroupBox()
         self.frame_layout = QtImport.QVBoxLayout()
         
-        self.dial = PowerBar(["#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142"])
+        self.dial = PowerBar(["#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142",
+        "#006837", "#1a9850", "#66bd63", "#a6d96a", "#d9ef8b", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d73027", "#a50026"])
         self.dial.setMinimum(0)
         self.dial.setMaximum(100)
         self.dial.setSingleStep(1)
@@ -99,7 +101,16 @@ class VolpiBrick(BaseWidget):
         # Internal values -----------------------------------------------------
         self.step_editor = None
         self.move_step = 1
-                
+
+        # slots -------------------------------------------
+        self.define_slot("zoom_changed", ())
+
+        # initialization -------------------
+
+    def zoom_changed(self, new_position_dict):
+        new_light_value = new_position_dict['light']
+        self.value_changed(new_light_value)
+
     def value_changed(self, new_intensity):
         """set volpi to new value."""
         self.dial.setValue(new_intensity)
@@ -149,14 +160,19 @@ class VolpiBrick(BaseWidget):
                 self.set_volpi_object(new_value)
         
         elif property_name == "showBar":
+            self.dial.setBarVisible(new_value)
+            if self.dial.dialAndBarInvible():
+                self.frame.setVisible(False)
             if new_value:
-                self.dial.setBarVisible(new_value)
+                self.frame.setVisible(True)
         elif property_name == "showDial":
+            self.dial.setDialVisible(new_value)
+            if self.dial.dialAndBarInvible():
+                self.frame.setVisible(False)
             if new_value:
-                self.dial.setDialVisible(new_value)
+                self.frame.setVisible(True)
         elif property_name == "showStep":
-            if new_value:
-                self.step_button.show()
+            self.step_button.show()
         elif property_name == "stepValue":
             self.position_spinbox.setSingleStep(int(new_value))
         else:
@@ -351,6 +367,9 @@ class PowerBar(QtImport.QWidget):
 
     def setBarVisible(self, visible):
         self._bar.setVisible(visible)
+    
+    def dialAndBarInvible(self):
+        return (not self._bar.isVisible() and not self._dial.isVisible())
 
 
 class StepEditorDialog(QtImport.QDialog):
