@@ -37,7 +37,7 @@
             - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
               name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
             - {comment: '', default_value: /graphics, hidden: false, name: mnemonic,
-              old_value: /graphics, type: string, value: /graphicsCDI}
+              old_value: /graphics, type: string, value: /graphicsID10}
             type: CameraBrick
           - children:
             - children:
@@ -313,7 +313,7 @@
                   hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                   value: 0}
                 - {comment: '', default_value: '', hidden: false, name: mnemonic,
-                  old_value: '', type: string, value: /id10-diffractometer}
+                  old_value: '', type: string, value: /diffractometerID10}
                 - {comment: '', default_value: 0, hidden: false, name: table_y_inverted,
                   old_value: 0, type: boolean, value: 0}
                 - {comment: '', default_value: 0, hidden: false, name: table_z_inverted,
@@ -724,7 +724,7 @@
             - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
               name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
             - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
-              type: string, value: /multiple-positions-zoom}
+              type: string, value: /multiple-positions-zoom-ID10}
             type: MultiplePositionsBrick
           - brick: {class: MultiplePositionsBrick, name: MultiplePositionsBrick1}
             children: []
@@ -748,7 +748,7 @@
             - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
               name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
             - {comment: '', default_value: '', hidden: false, name: mnemonic, old_value: '',
-              type: string, value: /multiple-positions-blight}
+              type: string, value: /multiple-positions-blight-ID10}
             type: MultiplePositionsBrick
           - brick: {class: MotorSpinBoxBrick, name: MotorSpinBoxBrick0}
             children: []
@@ -1037,7 +1037,7 @@
         - {comment: Allow to control brick in slave mode, default_value: 0, hidden: false,
           name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
         - {comment: '', default_value: /multiple-positions, hidden: false, name: mnemonic,
-          old_value: /multiple-positions, type: string, value: /multiple-positions-zoom}
+          old_value: /multiple-positions, type: string, value: /multiple-positions-zoom-ID10}
         type: ESRFID13ConfigurationBrick
       - children: []
         connections: []
