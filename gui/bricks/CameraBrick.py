@@ -433,12 +433,15 @@ class CameraBrick(BaseWidget):
         self.magnification_action = tools_menu.addAction(
             Icons.load_icon("Magnify2"),
             "Magnification tool",
-            self.start_magnification_tool,
+        )
+
+        self.magnification_action.toggled.connect(
+            self.start_magnification_tool
         )
 
         self.toolbar.addAction(tools_menu.menuAction())
 
-        # self.magnification_action.setCheckable(True)
+        self.magnification_action.setCheckable(True)
 
         # self.display_histogram_action = self.popup_menu.addAction(\
         #     "Display histogram", self.display_histogram_toggled)
@@ -517,6 +520,10 @@ class CameraBrick(BaseWidget):
         )
         self.exclusive_action_group.addAction(
             self.measure_area_action
+        )
+
+        self.exclusive_action_group.addAction(
+            self.magnification_action
         )
         
         # Layout --------------------------------------------------------------
@@ -657,8 +664,8 @@ class CameraBrick(BaseWidget):
             self.display_beam_action.isChecked()
         )
 
-    def start_magnification_tool(self):
-        self.graphics_manager_hwobj.set_magnification_mode(True)
+    def start_magnification_tool(self, checked):
+        self.graphics_manager_hwobj.set_magnification_mode(checked)
 
     def set_control_mode(self, have_control):
         if have_control:
@@ -826,14 +833,16 @@ class CameraBrick(BaseWidget):
 
     def mouse_moved(self, x, y, scene_pixel_QRgb):
         self.coord_label.setText(
-            """X: <b>%d</b> Y: <b>%d</b> - QRgb : <b>%d</b>, <b>%d</b>, <b>%d</b>, <b>%d</b>"""
+            """X: <b>%d</b> Y: <b>%d</b> - QRgb : <b>%d</b> """
+            # , <b>%d</b>, <b>%d</b>, <b>%d</b>"""
             % (
                 x,
                 y,
-                QtImport.qRed(scene_pixel_QRgb),
-                QtImport.qGreen(scene_pixel_QRgb),
-                QtImport.qBlue(scene_pixel_QRgb),
-                QtImport.qAlpha(scene_pixel_QRgb),
+                QtImport.qGray(scene_pixel_QRgb),
+                # QtImport.qRed(scene_pixel_QRgb),
+                # QtImport.qGreen(scene_pixel_QRgb),
+                # QtImport.qBlue(scene_pixel_QRgb),
+                # QtImport.qAlpha(scene_pixel_QRgb),
             )
         )
 
@@ -857,7 +866,9 @@ class CameraBrick(BaseWidget):
         self.camera_control_dialog.show()
 
     def display_grid_toggled(self):
-        self.graphics_manager_hwobj.display_grid(self.display_grid_action.isChecked())
+        self.graphics_manager_hwobj.display_grid(
+            self.display_grid_action.isChecked()
+        )
 
     def define_beam_size(self):
         self.graphics_manager_hwobj.start_define_beam()
