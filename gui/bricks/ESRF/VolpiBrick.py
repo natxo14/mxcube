@@ -55,12 +55,12 @@ class VolpiBrick(BaseWidget):
         self.frame = QtImport.QGroupBox()
         self.frame_layout = QtImport.QVBoxLayout()
         
-        self.dial = PowerBar(["#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142",
+        self.power_bar = PowerBar(["#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142",
         "#006837", "#1a9850", "#66bd63", "#a6d96a", "#d9ef8b", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d73027", "#a50026"])
-        self.dial.setMinimum(0)
-        self.dial.setMaximum(100)
-        self.dial.setSingleStep(1)
-        self.dial.setNotchesVisible(True)
+        self.power_bar.setMinimum(0)
+        self.power_bar.setMaximum(100)
+        self.power_bar.setSingleStep(1)
+        self.power_bar.setNotchesVisible(True)
 
         self.position_spinbox = QtImport.QSpinBox()
         self.position_spinbox.setMinimum(0)
@@ -75,7 +75,7 @@ class VolpiBrick(BaseWidget):
 
         # Layout --------------------------------------------------------------
         
-        self.frame_layout.addWidget(self.dial)
+        self.frame_layout.addWidget(self.power_bar)
         self.frame.setLayout(self.frame_layout)
         
         self.main_layout = QtImport.QHBoxLayout()
@@ -86,7 +86,7 @@ class VolpiBrick(BaseWidget):
         self.setLayout(self.main_layout)
 
         # Qt signal/slot connections -----------------------------------------
-        self.dial.valueChanged.connect(self.value_changed)
+        self.power_bar.value_changed.connect(self.value_changed)
         self.position_spinbox.valueChanged.connect(self.value_changed)
 
         self.step_button.clicked.connect(self.open_step_editor)
@@ -113,9 +113,15 @@ class VolpiBrick(BaseWidget):
 
     def value_changed(self, new_intensity):
         """set volpi to new value."""
-        self.dial.setValue(new_intensity)
+        self.power_bar.blockSignals(True)
+        self.position_spinbox.blockSignals(True)
+        
+        self.power_bar.setValue(new_intensity)
         self.position_spinbox.setValue(new_intensity)
         self.volpi_hwobj.set_value(new_intensity)
+        
+        self.power_bar.blockSignals(False)
+        self.position_spinbox.blockSignals(True)
         
     def set_mnemonic(self, mne):
         """set mnemonic."""
@@ -152,7 +158,7 @@ class VolpiBrick(BaseWidget):
         self.setEnabled(False)
     
     def slot_intensity(self, new_intensity):
-        self.dial._dial.setValue(new_intensity)
+        self.value_changed(new_intensity)
     
     def property_changed(self, property_name, old_value, new_value):
         """Property changed in GUI designer and when launching app."""
@@ -160,14 +166,14 @@ class VolpiBrick(BaseWidget):
                 self.set_volpi_object(new_value)
         
         elif property_name == "showBar":
-            self.dial.setBarVisible(new_value)
-            if self.dial.dialAndBarInvible():
+            self.power_bar.setBarVisible(new_value)
+            if self.power_bar.dialAndBarInvible():
                 self.frame.setVisible(False)
             if new_value:
                 self.frame.setVisible(True)
         elif property_name == "showDial":
-            self.dial.setDialVisible(new_value)
-            if self.dial.dialAndBarInvible():
+            self.power_bar.setDialVisible(new_value)
+            if self.power_bar.dialAndBarInvible():
                 self.frame.setVisible(False)
             if new_value:
                 self.frame.setVisible(True)
@@ -302,8 +308,7 @@ class PowerBar(QtImport.QWidget):
     right-clicking resets the color to None (no-color).
     """
 
-    colorChanged = QtImport.pyqtSignal()
-    valueChanged = QtImport.pyqtSignal(int)
+    value_changed = QtImport.pyqtSignal(int)
 
     def __init__(self, steps=5, *args, **kwargs):
         super(PowerBar, self).__init__(*args, **kwargs)
@@ -337,7 +342,6 @@ class PowerBar(QtImport.QWidget):
     def setValue(self, new_value):
         self._dial.setValue(new_value)
 
-
     def setColor(self, color):
         self._bar.steps = [color] * self._bar.n_steps
         self._bar.update()
@@ -360,7 +364,7 @@ class PowerBar(QtImport.QWidget):
         self._bar.update()
 
     def slot_value_changed(self, new_value):
-        self.valueChanged.emit(new_value)
+        self.value_changed.emit(new_value)
     
     def setDialVisible(self, visible):
         self._dial.setVisible(visible)
