@@ -230,6 +230,7 @@ if (qt_variant == "PyQt5") or (qt_variant is None and not qt_imported):
             qBlue,
             qRed,
             qGreen,
+            qGray,
         )
         from PyQt5.uic import loadUi
 
@@ -373,6 +374,7 @@ if (qt_variant == "PyQt4") or (qt_variant is None and not qt_imported):
             QVBoxLayout,
             QWidget,
             QWhatsThis,
+            qGray,
         )
         from PyQt4.uic import loadUi
 
