@@ -374,13 +374,12 @@ class ESRFID13ExportDataBrick(BaseWidget):
                     centred_positions.append(shape.get_centred_position())
                     shape_dict["pixel_x"] = round(shape.get_start_position()[0])
                     shape_dict["pixel_y"] = round(shape.get_start_position()[1])
-                elif shape_type == "Line":
+                elif shape_type == "Line" or shape_type == "Square":
                     centred_positions.append(list(shape.get_centred_positions()))
                     shape_dict["pixel_positions"] = shape.get_points_info()
-                elif shape_type == "Square":
-                    centred_positions.append(list(shape.get_centred_positions()))
-                    shape_dict["pixel_positions"] = shape.get_points_info()                
-
+                    shape_dict["height_pix"] = shape.get_item_height_pix()
+                    shape_dict["width_pix"] = shape.get_item_width_pix()
+ 
                 shape_dict["graphic_type"] = shape_type
                 shape_dict["index"] = index
                 shape_dict["index_global"] = global_index
