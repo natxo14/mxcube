@@ -66,9 +66,6 @@ calibration_changed - y_res, z_res, zoom_pos
                                     - slot which should be connected to all
                                      client able to change calibration.
                                      
-
-setBrickEnabled - isEnabled - slot to call to disable the brick (expert mode for example).
-
 [Comments]
 
 """
@@ -101,7 +98,7 @@ __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
 __category__ = "ESRF"
 
-class ESRFID13ConfigurationBrick(BaseWidget):
+class ESRFConfigurationBrick(BaseWidget):
  
     graphic_data_edited = QtImport.pyqtSignal(dict)
     graphic_data_saved = QtImport.pyqtSignal()
@@ -160,7 +157,6 @@ class ESRFID13ConfigurationBrick(BaseWidget):
         
         # Slots ---------------------------------------------------------------
         self.define_slot("getBeamPosition", ())
-        self.define_slot("setBrickEnabled", ())
         self.define_slot("get_beam_cal_data", ())
         self.define_slot("return_operational_modes_list", ())
         
