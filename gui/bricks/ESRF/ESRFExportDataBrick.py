@@ -49,7 +49,7 @@ delete_graphic_items : sent after export data (if option checked)
 
 sample_changed - sample changed from outside GUI
 
-data_policy_changed(str) - slot to be connected to ESRFID13ConfigurationBrick
+data_policy_changed(str) - slot to be connected to ESRFConfigurationBrick
                              data_policy_changed signal
 
 [Comments]
@@ -82,7 +82,7 @@ __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
 __category__ = "ESRF"
 
-class ESRFID13ExportDataBrick(BaseWidget):
+class ESRFExportDataBrick(BaseWidget):
 
     get_data_policy_signal = QtImport.pyqtSignal(object)
     
