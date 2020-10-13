@@ -31,7 +31,6 @@ __category__ = "Graphics"
 
 class CameraBrick(BaseWidget):
 
-    #move_center_to_clicked_point_button_toggled = QtImport.pyqtSignal(bool)
     create_centring_point_button_toggled = QtImport.pyqtSignal(bool)
     
     def __init__(self, *args):
@@ -41,8 +40,8 @@ class CameraBrick(BaseWidget):
         self.graphics_manager_hwobj = None
 
         # Signals ------------------------------------------------------------
-        #self.define_signal("move_center_to_clicked_point_button_toggled", ())
         self.define_signal("create_centring_point_button_toggled", ())
+        
         # Slots ---------------------------------------------------------------
         self.define_slot("toggle_create_point_start_button", ())
         self.define_slot("set_camera_expo_and_gain_sliders", ())
@@ -51,7 +50,6 @@ class CameraBrick(BaseWidget):
         self.graphics_scene_size = None
         self.graphics_scene_fixed_size = None
         self.graphics_view = None
-        # self.graphics_camera_frame = None
         self.fixed_size = None
         self.display_beam = None
         self.display_scale = None
@@ -84,7 +82,7 @@ class CameraBrick(BaseWidget):
         self.create_centring_point_button = None
         self.select_button = None
 
-        # populate QMenu and QToolBar
+        # populate QMenu and QToolBar-----------------------------------------------------
         
         self.popup_menu = QtImport.QMenu(self)
         self.popup_menu.menuAction().setIconVisibleInMenu(True)
@@ -164,8 +162,6 @@ class CameraBrick(BaseWidget):
         temp_action.setShortcut("Ctrl+2")
 
         tmp_menu.addAction(temp_action)
-        
-        # in double temp_action.setIcon(Icons.load_icon("ThumbUp"))
         
         icon_point = QtImport.QIcon()
         qpixmap_inactive = Icons.load_pixmap("calibration_point")
@@ -257,7 +253,6 @@ class CameraBrick(BaseWidget):
             self.move_center_to_clicked_point
         )
         
-        # self.toolbar.addAction(self.move_center_to_clicked_point_button)
         move_to_pos_menu.addAction(self.move_center_to_clicked_point_button)
 
         icon = QtImport.QIcon()
@@ -353,9 +348,7 @@ class CameraBrick(BaseWidget):
         self.measure_area_action.toggled.connect(
             self.measure_area_clicked
         )
-
-        # self.toolbar.addAction(measure_menu.menuAction())
-
+        
         toolbar_measure_menu = MultiModeAction(self.toolbar, Icons.load_icon("measure_icon"))
         toolbar_measure_menu.addAction(self.measure_distance_action)
         toolbar_measure_menu.addAction(self.measure_angle_action)
@@ -366,7 +359,6 @@ class CameraBrick(BaseWidget):
 
         ##################################################
 
-
         beam_mark_menu = self.popup_menu.addMenu(
             Icons.load_icon("beam2"),
             "Beam mark",
@@ -374,11 +366,9 @@ class CameraBrick(BaseWidget):
         self.move_beam_mark_manual_action = beam_mark_menu.addAction(
             "Set position manually", self.move_beam_mark_manual
         )
-        # self.move_beam_mark_manual_action.setEnabled(False)
         self.move_beam_mark_auto_action = beam_mark_menu.addAction(
             "Set position automaticaly", self.move_beam_mark_auto
         )
-        # self.move_beam_mark_auto_action.setEnabled(False)
         self.display_beam_size_action = beam_mark_menu.addAction(
             "Display beam size",
         )
@@ -442,15 +432,7 @@ class CameraBrick(BaseWidget):
         self.toolbar.addAction(tools_menu.menuAction())
 
         self.magnification_action.setCheckable(True)
-
-        # self.display_histogram_action = self.popup_menu.addAction(\
-        #     "Display histogram", self.display_histogram_toggled)
-        # self.define_histogram_action = self.popup_menu.addAction(\
-        #     "Define histogram", self.define_histogram_clicked)
-
-        # self.display_histogram_action.setEnabled(False)
-        # self.define_histogram_action.setEnabled(False)
-
+        
         self.image_scale_menu = self.popup_menu.addMenu(
             Icons.load_icon("DocumentMag2"), "Image scale"
         )
@@ -465,7 +447,6 @@ class CameraBrick(BaseWidget):
         temp_action.triggered.connect(self.save_snapshot_clicked)
 
         self.toolbar.addAction(temp_action)
-
 
         camera_expo_gain_menu = self.popup_menu.addMenu(
             Icons.load_icon("camera-exposure"),
@@ -538,8 +519,8 @@ class CameraBrick(BaseWidget):
 
         self.main_layout = QtImport.QVBoxLayout(self)
         self.intern_main_layout = QtImport.QHBoxLayout()
-        #self.main_layout.setSpacing(0)
-        #self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
 
         # Qt signal/slot connections -----------------------------------------
         self.display_beam_size_cbox.stateChanged.connect(self.display_beam_size_toggled)
@@ -552,8 +533,7 @@ class CameraBrick(BaseWidget):
         # Scene elements ------------------------------------------------------
         self.setMouseTracking(True)
         self.toolbar.setOrientation(QtImport.Qt.Vertical)
-        # self.main_layout.addWidget(self.toolbar)
-        
+                
     def property_changed(self, property_name, old_value, new_value):
         if property_name == "mnemonic":
             if self.graphics_manager_hwobj is not None:
@@ -585,7 +565,6 @@ class CameraBrick(BaseWidget):
                 )
 
                 self.graphics_view = self.graphics_manager_hwobj.get_graphics_view()
-                # self.graphics_camera_frame = self.graphics_manager_hwobj.get_camera_frame()
                 self.intern_main_layout.addWidget(self.graphics_view)
                 self.intern_main_layout.addWidget(self.toolbar)
                 self.main_layout.addLayout(self.intern_main_layout)
@@ -599,8 +578,6 @@ class CameraBrick(BaseWidget):
                     
                     #set gain/expo control's values from camera
                     camera_expo_limits = self.graphics_manager_hwobj.camera.get_exposure_limits()
-                    print(f"CAMERABRICK ========================================")
-                    print(f"camera_expo_limits : {camera_expo_limits}")
                     self._camera_expo_spin_slider.set_limits(*camera_expo_limits)
 
                     camera_gain = self.graphics_manager_hwobj.camera.get_gain()
@@ -608,9 +585,6 @@ class CameraBrick(BaseWidget):
                                         
                     self._camera_expo_spin_slider.set_value(camera_expo)
                     self._camera_gain_spin_slider.set_value(camera_gain)
-
-                    print(f"CAMERABRICK ========================================")
-                    print(f"camera_expo_limits : {camera_expo_limits} - camera_gain {camera_gain} - camera_expo {camera_expo}")
 
                 # Init gui -------------------------------------------------------------
                 self.select_button.setChecked(True)
@@ -688,8 +662,7 @@ class CameraBrick(BaseWidget):
         if self.fixed_size and self.graphics_manager_hwobj:
             self.graphics_manager_hwobj.set_graphics_scene_size(self.fixed_size, True)
             self.graphics_view.setFixedSize(self.fixed_size[0], self.fixed_size[1])
-            # self.info_widget.setFixedWidth(self.fixed_size[0])
-
+    
     def image_scaled(self, scale_value):
         for index, action in enumerate(self.image_scale_menu.actions()):
             action.setChecked(scale_value == self.image_scale_list[index])
@@ -764,7 +737,6 @@ class CameraBrick(BaseWidget):
         slot connected to GraphicsManagerBrick
         if checked is false => check select_item checkbutton
         """
-        print(f"CAMERABRICK toggle_create_point_start_button checked {checked}")
         if checked:
             self.create_centring_point_button.setChecked(checked)
         else:
@@ -780,7 +752,6 @@ class CameraBrick(BaseWidget):
             self.graphics_manager_hwobj.stop_current_state()
 
     def create_points_one_click_clicked(self, checked):
-        print(f"CAMERABRICK create_points_one_click_clicked checked {checked}")
         if checked:
             self.graphics_manager_hwobj.start_one_click_centring()
         else:
@@ -789,20 +760,14 @@ class CameraBrick(BaseWidget):
         self.create_centring_point_button_toggled.emit(checked)
         
     def move_center_to_clicked_point(self, checked):
-        print(f"CAMERABRICK move_center_to_clicked_point_button_toggled checked {checked}")
-        #self.move_center_to_clicked_point_button_toggled.emit(checked)
         self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(checked)
 
     def move_hor_center_to_clicked_point(self, checked):
-        print(f"CAMERABRICK move_hor_center_to_clicked_point checked {checked}")
-        #self.move_center_to_clicked_point_button_toggled.emit(checked)
         self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(
             checked, direction="horizontal"
         )
    
     def move_ver_center_to_clicked_point(self, checked):
-        print(f"CAMERABRICK move_ver_center_to_clicked_point checked {checked}")
-        #self.move_center_to_clicked_point_button_toggled.emit(checked)
         self.graphics_manager_hwobj.move_beam_to_clicked_point_clicked(
             checked, direction="vertical"
         )
@@ -834,15 +799,10 @@ class CameraBrick(BaseWidget):
     def mouse_moved(self, x, y, scene_pixel_QRgb):
         self.coord_label.setText(
             """X: <b>%d</b> Y: <b>%d</b> - QRgb : <b>%d</b> """
-            # , <b>%d</b>, <b>%d</b>, <b>%d</b>"""
             % (
                 x,
                 y,
                 QtImport.qGray(scene_pixel_QRgb),
-                # QtImport.qRed(scene_pixel_QRgb),
-                # QtImport.qGreen(scene_pixel_QRgb),
-                # QtImport.qBlue(scene_pixel_QRgb),
-                # QtImport.qAlpha(scene_pixel_QRgb),
             )
         )
 
@@ -934,15 +894,6 @@ class CameraBrick(BaseWidget):
 
     def set_background_mode(self, checked=False):
         pass
-
-    # def uncheck_exclusive_actions(self):
-
-    #     self.exclusive_action_group.setExclusive(False)
-
-    #     if self.exclusive_action_group.checkedAction() is not None:
-    #         self.exclusive_action_group.checkedAction().setChecked(False)
-    #     self.exclusive_action_group.setExclusive(True)
-
 
 class CameraControlDialog(QtImport.QDialog):
     def __init__(self, parent=None, name=None, flags=0):
@@ -1232,9 +1183,6 @@ class CameraControlDialog(QtImport.QDialog):
         value = self.graphics_manager_hwobj.camera.get_exposure_time()
         self.exposure_time_slider.setValue(value)
         self.exposure_time_doublespinbox.setValue(value)
-
-
-# TODO : import from HutchMenuBrick ??
 class MonoStateButton(QtImport.QToolButton):
     def __init__(self, parent, caption=None, icon=None):
 
@@ -1274,8 +1222,6 @@ class DuoStateButton(QtImport.QToolButton):
 
     def button_clicked(self):
         self.commandExecuteSignal.emit(not self.executing)
-        # if not self.executing:
-        #    self.setEnabled(False)
 
     def command_started(self):
         Colors.set_widget_color(self, Colors.LIGHT_YELLOW, QtImport.QPalette.Button)
@@ -1312,13 +1258,9 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         
         self._slider = QtImport.QSlider(QtImport.Qt.Horizontal)
         self._spinbox = QtImport.QDoubleSpinBox()
-        #self._spinbox.setDecimals(6)
 
         self._spinbox.setRange(spin_min_value, spin_max_value)
-        print(f"_spinbox.setRange : {spin_min_value} {spin_max_value}")
-        print(f"_spinbox.setSingleStep : {(spin_max_value - spin_min_value)/100.0}")
         self._spinbox.setSingleStep((spin_max_value - spin_min_value)/100.0)
-        print(f"_spinbox.singleStep : {self._spinbox.singleStep()}")
         
         self._slider.setRange(0, 100)
 
@@ -1334,7 +1276,6 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self.setDefaultWidget(self.main_widget)
 
     def set_value_from_slider(self, slider_value):
-        print(f"set_value_from_slider : slider_value {slider_value} - limits {self._slider.minimum()}, {self._slider.maximum()}")
         
         spin_min = self._spinbox.minimum()
         spin_max = self._spinbox.maximum()
@@ -1344,13 +1285,6 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self.value_changed.emit(self._spinbox.value())
 
     def set_value_from_spin(self, spin_value):
-        print(f"set_value_from_spin : spin_value {spin_value} - limits {self._slider.minimum()}, {self._slider.maximum()}")
-        
-        # #limit spin_value
-        # if spin_value < self._spinbox.minimum():
-        #     spin_value = self._spinbox.minimum()
-        # elif spin_value > self._spinbox.maximum():
-        #     spin_value = self._spinbox.maximum()
         
         slider_val = ((spin_value - self._spinbox.minimum()) * 100.0) / self._spinbox.maximum()
         self._slider.setValue(slider_val)
@@ -1373,12 +1307,6 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self._spinbox.setSingleStep(spin_step)
 
         self._spinbox.valueChanged.connect(self.set_value_from_spin)
-
-        print(f"_spinbox.set_limits : {min_value} {max_value}")
-        print(f"_spinbox.setSingleStep calculated (max_value - min_value)/100.0 =: {(max_value - min_value)/100.0}")
-        print(f"_spinbox.setSingleStep real self._spinbox.singleStep() {self._spinbox.singleStep()}")
-        print(f"_spinbox.set_limits : minimum : {self._spinbox.minimum()} - max : {self._spinbox.maximum()}")
-    
 
 class MultiModeAction(QtImport.QWidgetAction):
     """This action provides a default checkable action from a list of checkable
