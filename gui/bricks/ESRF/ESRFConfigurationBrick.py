@@ -17,11 +17,12 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with MXCuBE.  If not, see <http://www.gnu.org/licenses/>.
 """
-ESRF ID13 ConfigurationTab
+ESRF Configuration Brick
 
 [Description]
 
-This brick displays configuation information related to ID13 EH2/EH3 beamlines at ESRF.
+This brick displays configuation information (beam position and calibration)
+related to beamlines at ESRF.
 It displays information from:
 * xml file ( at origin, called multiple-positions )
 
@@ -30,43 +31,44 @@ It displays information from:
         * Camera calibration ( nm / pixel )
         * light emiting device value
 IMPORTANT!! : this data is delivered by the MultiplePositions HWRObject:
-this object handles (load/edit/save) and delivers to different bricks to be displayed/edited like
-CameraBeamBrick / CameraBeamBrick
+this object handles (load/edit/save) and delivers to different bricks to be 
+displayed/edited like CameraBeamBrick / CameraBeamBrick
 
     * A list of editable 'tags' of different 'operation mode' (ex: signal, background, empty)
         this operation mode will be lately used by ESRFDataExportBrick to tag exported data.
 
-
-
-* Bliss/ESRF data policy : data saving paths of current experiment
+* BLISS/ESRF data policy : data saving paths of current experiment
 
 [Properties]
 
-xml file
+mnemonic - xml file with calibration and beam position data
 
 [Signals]
 
-graphic_data_edited - emitted when any of the data has been edited (not yet saved)
-params : freshly edited graphic data as dict
+data_policy_changed - emited when the combobox with the list of sessions
+                        changes its index, or when 'reload policy' button
+                        is pressed
+                        params : session data policy as dictionnary
 
-TODO: maybe split in beam_position_changed / calibration_changed ??
-
-TO BE DELETED: graphic_data_saved - emitted when data is saved in xml file
 
 operation_modes_edited - emitted when operation mode list edited (not yet saved)
-
+                        params : freshly edited graphic data as dict
 operation_modes_saved - emitted when operation mode list is saved in xml file
+                        params : freshly edited graphic data as dict
+
 
 [Slots]
 
-beam_cal_pos_data_changed - connected to MultiplePositions hwr_object
+beam_pos_cal_data_changed - connected to MultiplePositions hwr_object
 
-                                     
-calibration_changed - y_res, z_res, zoom_pos 
-                                    - slot which should be connected to all
-                                     client able to change calibration.
-                                     
+beam_cal_pos_data_saved     Connected to multipos_hwobj beam_pos_cal_data_saved signal
+                            Save table data to xml file. Clear table.
+
+beam_cal_pos_data_cancelled Connected to multipos_hwobj beam_pos_cal_data_cancelled signal
+                            Set table data to the one  in xml file. Clear table.
+                                    
 [Comments]
+See also MultiplePositions.py documentation on HardwareRepository submodule
 
 """
 
@@ -81,13 +83,8 @@ from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
 
 from bliss.config import get_sessions_list
-# from bliss.config.conductor.client import get_redis_connection
 
 from bliss.scanning.scan_saving import ESRFScanSaving
-from bliss.config.settings import OrderedHashSetting, ParametersWardrobe
-
-import pickle
-import pprint
 
 try:
     from xml.etree import cElementTree  # python2.5
@@ -100,12 +97,8 @@ __category__ = "ESRF"
 
 class ESRFConfigurationBrick(BaseWidget):
  
-    graphic_data_edited = QtImport.pyqtSignal(dict)
-    graphic_data_saved = QtImport.pyqtSignal()
     operation_modes_edited = QtImport.pyqtSignal(list)
     operation_modes_saved = QtImport.pyqtSignal(list)
-    # TODO : delete data_path_base_changed
-    data_path_base_changed = QtImport.pyqtSignal(str)
     data_policy_changed = QtImport.pyqtSignal(dict)
     
     def __init__(self, *args):
@@ -113,52 +106,30 @@ class ESRFConfigurationBrick(BaseWidget):
         BaseWidget.__init__(self, *args)
 
         # variables -----------------------------------------------------------
-
-        #self.zoom_positions_dict = {}
-        #{ "position_name" : { "beam_pos_x" : val, int - pixels
-        #                      "beam_pos_y" : val, int - pixels
-        #                      "cal_x" : val, int - nm
-        #                      "cal_y" : val, int - nm
-        #                      "light" : val,
-        #                     },
-        #}
-
-        self.multipos_hwobj = None
-
+        
         self.list_of_operational_modes = []
         self.default_session = None
 
-        #self.current_beam_position = None
-        #self.current_zoom_pos_name = None
-        #self.current_zoom_idx = -1
         self.multipos_file_xml_path = None
         self.bliss_session_list = None
-        self.data_policy_base_path = None
-        self.data_policy_full_info = None
-
-        # Hardware objects ----------------------------------------------------
         
+        # Hardware objects ----------------------------------------------------
+        self.multipos_hwobj = None
+
         # Internal values -----------------------------------------------------
         self.table_created = False
 
         # Properties ----------------------------------------------------------
-        # self.add_property("configfile", "string", "/multiple-positions")
         self.add_property("mnemonic", "string", "/multiple-positions")
         
         # Signals ------------------------------------------------------------
-        self.define_signal("graphic_data_edited", ())
-        self.define_signal("graphic_data_saved", ())
-
+        
         self.define_signal("operation_modes_edited", ())
         self.define_signal("operation_modes_saved", ())
-        self.define_signal("data_path_base_changed", ())
         self.define_signal("data_policy_changed", ())
         
         
         # Slots ---------------------------------------------------------------
-        self.define_slot("getBeamPosition", ())
-        self.define_slot("get_beam_cal_data", ())
-        self.define_slot("return_operational_modes_list", ())
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Beam Configuration", self)
@@ -169,11 +140,6 @@ class ESRFConfigurationBrick(BaseWidget):
             QtImport.QSizePolicy.Minimum,
             QtImport.QSizePolicy.Minimum,
         )
-     
-        #validator for input values for delta phi: min/max/decimals
-        # self.ui_widgets_manager.delta_phi_textbox.setValidator(
-        #     QtImport.QDoubleValidator(0, 180, 2)
-        # )
 
         # Layout --------------------------------------------------------------
         _groupbox_vlayout = QtImport.QVBoxLayout(self)
@@ -218,10 +184,6 @@ class ESRFConfigurationBrick(BaseWidget):
             self.save_op_mode_list
         )
 
-        # self.ui_widgets_manager.label_list.currentRowChanged.connect(
-        #     self.label_list_selection_changed
-        # )
-
         self.ui_widgets_manager.label_list.itemSelectionChanged.connect(
             self.label_list_selection_changed
         )
@@ -229,34 +191,8 @@ class ESRFConfigurationBrick(BaseWidget):
         self.ui_widgets_manager.reload_data_policy_button.clicked.connect(
             self.reload_data_policy
         )
-
-        # Other hardware object connections --------------------------
-
-
-        # beam_position_changed != beam_DATA_changed !!!
-        # if HWR.beamline.beam is not None:
-        #     self.beam_position = HWR.beamline.beam.get_beam_position_on_screen()
-        #     self.connect(
-        #         HWR.beamline.beam, "beamPosChanged", self.beam_position_changed
-        #     )
-        #     #self.beam_position_changed(HWR.beamline.beam.get_beam_position_on_screen())
-        # else:
-        #     logging.getLogger("HWR").error(
-        #         "GraphicsManager: BeamInfo hwobj not defined"
-        #     )
-
-        # self.init_interface()
-    
-    def return_operational_modes_list(self, input_list):
-        #clear list
-        input_list[:] = []
-        for item in self.list_of_operational_modes:
-            input_list.append(item)
-        #print(f"SLOT return_operational_modes_list : {input_list}")
     
     def configuration_table_item_changed(self, item):
-
-        #print(f"configuration_table_item_changed item {item.text()}")
 
         validated_value = self.validate_cell_value(
             item.text()
@@ -264,9 +200,7 @@ class ESRFConfigurationBrick(BaseWidget):
         item.setText(str(validated_value))
         item.setBackground(QtImport.QColor(QtImport.Qt.yellow))
 
-        # create new dict from new data and send it
-        # emit signal item changed
-        
+        # create new dict from new data
         table = self.ui_widgets_manager.configuration_table
         item_row = item.row()
         item_col = item.column()
@@ -296,66 +230,7 @@ class ESRFConfigurationBrick(BaseWidget):
         dict_elem["zoom"] = int(self.validate_cell_value(table.item(item_row, 6).text()))
         
         self.multipos_hwobj.edit_data(dict_elem, edited_key, who_changed)
-    
-    # def load_zoom_positions_dict(self):
-    #     """
-    #     recover dict from self.multipos_hwobj
-    #     """
-    #     if self.multipos_hwobj is not None:
-    #         #self.zoom_positions_dict = copy.deepcopy(output_dict)
-
-    #     """
-    #     Parse xml file and load dict :
-
-    #     { "position_name" : { "beam_pos_x" : val,int - pixels  
-    #                          "beam_pos_y" : val,int - pixels
-    #                          "cal_x" : val,int - nm
-    #                          "cal_y" : val,int - nm
-    #                          "light" : val,
-    #                         },
-    #     }
-    #     """
-    #     output_dict = {}
-    #     xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
-
-    #     xml_tree = xml_file_tree.getroot()
-    #     positions = xml_tree.find("positions")
-
-    #     pos_list = positions.findall("position")
         
-    #     for pos in pos_list:
-            
-    #         if pos.find("beamx") is not None:
-    #             pos_x = self.from_text_to_int(pos.find("beamx").text)
-    #         else:
-    #             pos_x = 0
-    #         if pos.find("beamy") is not None:
-    #             pos_y = self.from_text_to_int(pos.find("beamy").text)
-    #         else:
-    #             pos_y = 0
-    #         if pos.find("resox") is not None:
-    #             cal_x = self.from_text_to_int(pos.find("resox").text, 1e9)
-    #         else:
-    #             cal_x = 0
-    #         if pos.find("resoy") is not None:
-    #             cal_y = self.from_text_to_int(pos.find("resoy").text, 1e9)
-    #         else:
-    #             cal_y = 0
-            
-    #         if pos.find("light") is not None:
-    #             light_val = self.from_text_to_int(pos.find("light").text, 1e9)
-    #         else:
-    #             light_val = 0
-            
-    #         dict_elem = {"beam_pos_x" : pos_x,
-    #                     "beam_pos_y" : pos_y,
-    #                     "cal_x" : cal_x,
-    #                     "cal_y" : cal_y,
-    #                     "light" : light_val,
-    #         }
-    #         output_dict[pos.find('name').text] = dict_elem
-            
-    #     #self.zoom_positions_dict = copy.deepcopy(output_dict)
     def load_default_session(self):
         """
         Parse xml file and search for 'default_session' tag
@@ -364,9 +239,6 @@ class ESRFConfigurationBrick(BaseWidget):
         xml_tree = xml_file_tree.getroot()
         if xml_tree.find("default_session") is not None:
             self.default_session = xml_tree.find("default_session").text
-        # print(f"""
-        # ************************************************************
-        # load_default_session : self.default_session {self.default_session}""")
             
     def load_list_of_operational_modes(self):
         """
@@ -379,11 +251,8 @@ class ESRFConfigurationBrick(BaseWidget):
         xml_tree = xml_file_tree.getroot()
         mode_list = []
         if xml_tree.find("operational_modes") is not None:
-            #print(f"xml_tree.find(operational_modes) is not None:")
             mode_list = xml_tree.find("operational_modes").text
-            print(f"list_of_operational_modes :mode_list {mode_list} - {type(mode_list)}")
             self.list_of_operational_modes = eval(mode_list)
-        #print(f"list_of_operational_modes :mode_list {self.list_of_operational_modes} - {type(self.list_of_operational_modes)} - {type(self.list_of_operational_modes[0])}")
         else:
             #if no operational_mode, hide all related controls
             self.ui_widgets_manager.add_label_button.hide()
@@ -394,29 +263,16 @@ class ESRFConfigurationBrick(BaseWidget):
             self.ui_widgets_manager.save_labels_button.hide()
         
     def property_changed(self, property_name, old_value, new_value):
-        # if property_name == "configfile":
-        #     print(f"################ cameraCalibBrick property_name  new_value {new_value}")
-        #     if new_value.startswith("/"):
-        #             new_value = new_value[1:]
-
-        #     self.multipos_file_xml_path = os.path.join(
-        #         HWR.getHardwareRepositoryConfigPath(),
-        #         new_value + ".xml")
-        #     print(f"################ CONFIGTABBRICK property_changed - new full path {self.multipos_file_xml_path}")
-        #     self.load_zoom_positions_dict()
-        #     self.load_list_of_operational_modes()
-            
-        #     self.init_interface()
         
         if property_name == "mnemonic":
             if self.multipos_hwobj is not None:
+                # disconnect signal/slots
                 self.disconnect(self.multipos_hwobj, "beam_pos_cal_data_changed",
-                                self.beam_cal_pos_data_changed)
+                                self.beam_pos_cal_data_changed)
                 self.disconnect(self.multipos_hwobj, "beam_pos_cal_data_saved",
                                 self.beam_cal_pos_data_saved)
                 self.disconnect(self.multipos_hwobj, "beam_pos_cal_data_cancelled",
                                 self.beam_cal_pos_data_cancelled)
-                # disconnect signal/slots
                 pass
             
             if new_value is not None:
@@ -434,7 +290,7 @@ class ESRFConfigurationBrick(BaseWidget):
             
             if self.multipos_hwobj is not None:
                 self.connect(self.multipos_hwobj, "beam_pos_cal_data_changed",
-                                self.beam_cal_pos_data_changed)
+                                self.beam_pos_cal_data_changed)
                 self.connect(self.multipos_hwobj, "beam_pos_cal_data_saved",
                                 self.beam_cal_pos_data_saved)
                 self.connect(self.multipos_hwobj, "beam_pos_cal_data_cancelled",
@@ -448,8 +304,7 @@ class ESRFConfigurationBrick(BaseWidget):
         else:
             BaseWidget.property_changed(self, property_name, old_value, new_value)
 
-    def beam_cal_pos_data_changed(self, who_changed, new_data_dict):
-        print(f"ID13ConfTabBrick : beam_cal_pos_data_changed")
+    def beam_pos_cal_data_changed(self, who_changed, new_data_dict):
         self.fill_config_table()
 
         if new_data_dict:
@@ -489,8 +344,6 @@ class ESRFConfigurationBrick(BaseWidget):
         tmp_dict = self.multipos_hwobj.get_positions()
         if tmp_dict is not None:
         
-            print(f"fill_config_table tmp_dict {tmp_dict}")
-
             self.ui_widgets_manager.configuration_table.itemChanged.disconnect(
                 self.configuration_table_item_changed
             )
@@ -540,9 +393,7 @@ class ESRFConfigurationBrick(BaseWidget):
             self.ui_widgets_manager.configuration_table.itemChanged.connect(
                 self.configuration_table_item_changed
             )
-            print(f"fill_config_table itemChanged.connect")
-
-
+            
             self.ui_widgets_manager.configuration_table.horizontalHeader().setSectionResizeMode(
                 QtImport.QHeaderView.ResizeToContents
             )
@@ -598,8 +449,6 @@ class ESRFConfigurationBrick(BaseWidget):
         self.ui_widgets_manager.bliss_session_combo_box.currentIndexChanged.connect(
             self.display_data_policy
         )
-        
-        print(f"ID13CONGI : load_sessions {self.bliss_session_list} | self.default_session {self.default_session}")
             
     def reload_data_policy(self):
         
@@ -614,7 +463,6 @@ class ESRFConfigurationBrick(BaseWidget):
         
         if index > -1:
             new_session = self.bliss_session_list[index]
-            print(f"ID13CONGI : display_data_policy new_session {new_session}")
             
             scan_savings = ESRFScanSaving(new_session)
 
@@ -623,16 +471,18 @@ class ESRFConfigurationBrick(BaseWidget):
             session_info_dict['session'] = new_session
             session_info_dict['base_path'] = scan_savings.base_path
             session_info_dict['data_filename'] = scan_savings.data_filename
-            #session_info_dict['data_fullpath'] = scan_savings.data_fullpath
             session_info_dict['data_path'] = scan_savings.data_path
             session_info_dict['dataset'] = scan_savings.dataset
             session_info_dict['date'] = scan_savings.date
-            #session_info_dict['filename'] = scan_savings.filename
             session_info_dict['sample'] = scan_savings.sample
             session_info_dict['proposal'] = scan_savings.proposal
             session_info_dict['template'] = scan_savings.template
             session_info_dict['beamline'] = scan_savings.beamline
             
+            # waiting to https://gitlab.esrf.fr/bliss/bliss/-/merge_requests/2948
+            # be part of current BLISS version
+            #session_info_dict['filename'] = scan_savings.filename
+            #session_info_dict['data_fullpath'] = scan_savings.data_fullpath
             for key, val in session_info_dict.items():
                 
                 info_str = ' ' + key + ' : ' + val
@@ -642,66 +492,6 @@ class ESRFConfigurationBrick(BaseWidget):
             self.ui_widgets_manager.data_policy_label.setText(
                 session_info_string
             )
-    
-    def get_base_path(self):
-        """
-        recover data policy base path
-        """
-        return self.data_policy_base_path
-
-
-    # def get_zoom_index(self, position_to_find):
-    #     if self.multipos_motor_hwobj is not None:
-    #         positions = self.multipos_motor_hwobj.get_positions_names_list()
-    #         for i, position in enumerate(positions):
-    #             if position_to_find == position:
-    #                 return(i)
-    #         return(-1)
-
-    # def zoom_changed(self, name):
-    #     if name is None:
-    #         logging.getLogger("HWR").error("Multiple Position motor in no_position state")
-    #         return
-    #     if self.multipos_motor_hwobj is not None:
-    #         self.current_zoom_pos_name = name # self.multipos_motor_hwobj.get_value()
-    #         self.current_zoom_idx = self.get_zoom_index(name)
-    #         print(f"################ cameraBeamBrick zoom_changed current_zoom_pos_name : {self.current_zoom_pos_name} + current_zoom_idx : {self.current_zoom_idx}")        
-    #         if self.current_zoom_idx != -1:
-    #             self.current_beam_position = self.beam_position_dict[name]
-    #             print(f"################ cameraBeamBrick zoom_changed beampos : {self.current_beam_position} + zoom pos : {self.current_zoom_pos_name}")
-    #             if self.ui_widgets_manager.configuration_table.itemAt(self.current_zoom_idx, 1):
-    #                 self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 1).setText(str(int(self.current_beam_position[0])))
-    #                 self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 2).setText(str(int(self.current_beam_position[1])))
-    #             else:
-    #                 print(f"################ cameraBeamBrick zoom_changed TABLE NOT INITIALIZED")
-                
-    # def beam_position_changed(self,beam_x_y):
-    #     """
-    #         beam_x_y (tuple): Position (x, y) [pixel]
-    #     """
-    #     #update current_zoom_idx
-    #     self.current_zoom_pos_name = self.multipos_motor_hwobj.get_value()
-    #     conf_table = self.ui_widgets_manager.configuration_table
-
-    #     self.current_zoom_idx = -1
-    #     for index in range (conf_table.rowCount()):
-    #         if self.current_zoom_pos_name == conf_table.item(index, 0).text():
-    #             self.current_zoom_idx = index
-
-    #     if self.current_zoom_idx == -1:
-    #         print(f"################ cameraBeamBrick beam_position_changed ERROR!!! ZOOM POSITION NAME NOT IDENTIFIED!!!")
-    #         return
-        
-    #     print(f"################ cameraBeamBrick beam_position_changed beampos : {beam_x_y} + zoom pos : {self.current_zoom_pos_name} - {index}")
-    #     self.current_beam_position = beam_x_y
-        
-    #     self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 1).setText(str(int(beam_x_y[0])))
-    #     self.ui_widgets_manager.configuration_table.item(self.current_zoom_idx, 2).setText(str(int(beam_x_y[1])))
-
-    #     self.zoom_positions_dict[self.current_zoom_pos_name]["beam_pos_x"] = self.current_beam_position[0]
-    #     self.zoom_positions_dict[self.current_zoom_pos_name]["beam_pos_y"] = self.current_beam_position[1]
-
-    #     self.graphic_data_edited.emit(self.zoom_positions_dict)
    
     def save_op_mode_list(self):
         """
@@ -761,18 +551,7 @@ class ESRFConfigurationBrick(BaseWidget):
         if self.list_of_operational_modes:
             self.ui_widgets_manager.label_list.setCurrentRow(0)
         self.operation_modes_edited.emit(self.list_of_operational_modes)
-
-        # if label_to_delete not in self.list_of_operational_modes:
-        #     return
-        # else:
-        #     index = self.list_of_operational_modes.index(label_to_delete)
-        #     self.ui_widgets_manager.label_list.takeItem(index)
-        #     self.list_of_operational_modes.remove(label_to_delete)
-        #     #select first item
-        #     if self.list_of_operational_modes:
-        #         self.ui_widgets_manager.label_list.setCurrentRow(0)
-        #     self.operation_modes_edited.emit(self.list_of_operational_modes)
-
+        
     def label_list_selection_changed(self):
         selected_label_list = self.ui_widgets_manager.label_list.selectedItems()
         
@@ -814,55 +593,7 @@ class ESRFConfigurationBrick(BaseWidget):
         """
         if self.multipos_hwobj is not None:
             self.multipos_hwobj.save_data_to_file(self.multipos_file_xml_path)
-
-        # """
-        # Save data to xml file
-        # Clean cell background
-        # """
-        # table = self.ui_widgets_manager.configuration_table
-
-        # #open xml file
-        # xml_file_tree = cElementTree.parse(self.multipos_file_xml_path)
-
-        # xml_tree = xml_file_tree.getroot()
-        # positions = xml_tree.find("positions")
-        
-        # pos_list = positions.findall("position")
-        # # pdb.set_trace()
-
-        # for index, pos in enumerate(pos_list):
-        #     if pos.find('beamx') is not None:
-        #         beamx = self.validate_cell_value(table.item(index, 1).text())
-        #         pos.find('beamx').text = str(beamx)
-        #     if pos.find('beamy') is not None:
-        #         beamy = self.validate_cell_value(table.item(index, 2).text())
-        #         pos.find('beamy').text = str(beamy)
-        #     if pos.find('resox') is not None:
-        #         resox = self.validate_cell_value(table.item(index, 3).text())
-        #         pos.find('resox').text = str(resox * 1e-9)
-        #     if pos.find('resoy') is not None:
-        #         resoy = self.validate_cell_value(table.item(index, 4).text())
-        #         pos.find('resoy').text = str(resoy * 1e-9)
-        #     if pos.find('light') is not None:
-        #         light = self.validate_cell_value(table.item(index, 5).text())
-        #         pos.find('light').text = str(light)
-    
-        # xml_file_tree.write(self.multipos_file_xml_path)
-
-        # table.itemChanged.disconnect(
-        #         self.configuration_table_item_changed
-        #     )
-
-        # for row in range(table.rowCount()):
-        #     for col in range(table.columnCount()):
-        #         table.item(row, col).setData(QtImport.Qt.BackgroundRole, None)
-        
-        # table.itemChanged.connect(
-        #         self.configuration_table_item_changed
-        #     )
-
-        # self.graphic_data_saved.emit()
-    
+            
     def validate_cell_value(self, input_val):
         """
         return value adapted according to input
@@ -884,15 +615,7 @@ class ESRFConfigurationBrick(BaseWidget):
 
         # self.load_zoom_positions_dict()
         self.fill_config_table()
-
-    def get_beam_cal_data(self, data_dict):
-        """
-        slot to be connected to other bricks 
-        that need beam/calibration data:
-        ex GraphicsManagerBrick to export data
-        """
-        data_dict = self.multipos_hwobj.get_positions()
-    
+  
     def clear_table(self):
         """
         clean table of contents. keep headers
