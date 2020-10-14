@@ -69,7 +69,6 @@ from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
 
 from HardwareRepository import HardwareRepository as HWR
-from HardwareRepository.HardwareObjects import sample_centring
 
 try:
     from xml.etree import cElementTree  # python2.5
@@ -105,7 +104,6 @@ class ESRFCameraCalibrationBrick(BaseWidget):
         self.add_property("horizontal motor", "string", "")
         
         # Signals ------------------------------------------------------------
-        self.define_signal("getBeamPosition", ())
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Pixel Size Calibration", self)

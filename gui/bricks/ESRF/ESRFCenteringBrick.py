@@ -84,6 +84,7 @@ import matplotlib.pyplot as plt
 
 from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
+from HardwareRepository.HardwareObjects import sample_centring
 
 
 __credits__ = ["MXCuBE collaboration"]
@@ -242,13 +243,15 @@ class ESRFCenteringBrick(BaseWidget):
         self.figure.clear()
         # plot data
         ax = self.figure.add_subplot()
-        ax.plot(self.plot_data_X, self.plot_data_Y , 'ro')
+        ax.plot(self.plot_data_X, self.plot_data_Y, 'ro')
         self.canvas.draw()
 
     def show_centring_paremeters(self, parameter_dict):
         """
         Used to give feedback to user: update plot's data
         """
+        # use sample_centring module
+        sample_centring.
         # from multipointcenter
         # p[0] * numpy.sin(x + p[1]) + p[2]
         amplitude = parameter_dict['r']
