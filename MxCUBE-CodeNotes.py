@@ -9,6 +9,20 @@ papa je t`aime. signé ainhoa. :)
 ####################
 
 
+1s PR:  https://github.com/mxcube/mxcube/commit/8e19e095c5ff604d1eae104ea1175455dd8a6fc2
+https://github.com/mxcube/mxcube/pull/403
+
+285 gui/bricks/ESRF/ESRFCameraBeamBrick.py
+349 gui/bricks/ESRF/ESRFCameraCalibrationBrick.py
+379 gui/bricks/ESRF/ESRFCenteringBrick.py
+628 gui/bricks/ESRF/ESRFConfigurationBrick.py
+388 gui/bricks/ESRF/ESRFExportDataBrick.py
+198 gui/bricks/ESRF/TurretBrick.py
+184 gui/bricks/ESRF/VolpiBrick.py 
+
+TODO in BRICKS:
+
+TODO IN HWRepository:
 
 ####################
     DATA UNITS
