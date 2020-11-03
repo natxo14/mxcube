@@ -67,10 +67,10 @@
                 - {comment: '', default_value: '', hidden: false, name: op_mode_list_file,
                   old_value: '', type: string, value: ''}
                 type: GraphicsManagerBrick
-              - brick: {class: ESRFID13ExportDataBrick, name: ESRFID13ExportDataBrick0}
+              - brick: {class: ESRFExportDataBrick, name: ESRFExportDataBrick0}
                 children: []
                 connections: []
-                name: ESRFID13ExportDataBrick0
+                name: ESRFExportDataBrick0
                 properties:
                 - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
                   name: fixedHeight, old_value: -1, type: integer, value: -1}
@@ -88,7 +88,7 @@
                 - {comment: Allow to control brick in slave mode, default_value: 0,
                   hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                   value: 0}
-                type: ESRFID13ExportDataBrick
+                type: ESRFExportDataBrick
               connections: []
               name: hgroupbox2
               properties:
@@ -877,14 +877,14 @@
         value: default
       type: hgroupbox
     - children:
-      - brick: {class: ESRFID13ConfigurationBrick, name: ESRFID13ConfigurationBrick0}
+      - brick: {class: ESRFConfigurationBrick, name: ESRFConfigurationBrick0}
         children: []
         connections:
-        - {receiver: ESRFID13ExportDataBrick0, receiverWindow: window0, signal: data_policy_changed,
+        - {receiver: ESRFExportDataBrick0, receiverWindow: window0, signal: data_policy_changed,
           slot: data_policy_changed}
         - {receiver: GraphicsManagerBrick0, receiverWindow: window0, signal: operation_modes_saved,
           slot: update_operational_modes}
-        name: ESRFID13ConfigurationBrick0
+        name: ESRFConfigurationBrick0
         properties:
         - {comment: Set fixed height in pixels, default_value: -1, hidden: false,
           name: fixedHeight, old_value: -1, type: integer, value: -1}
@@ -902,7 +902,7 @@
           name: instanceAllowConnected, old_value: 0, type: boolean, value: 0}
         - {comment: '', default_value: /multiple-positions, hidden: false, name: mnemonic,
           old_value: /multiple-positions, type: string, value: /multiple-positionsID13EH2}
-        type: ESRFID13ConfigurationBrick
+        type: ESRFConfigurationBrick
       connections: []
       name: hgroupbox1
       properties:

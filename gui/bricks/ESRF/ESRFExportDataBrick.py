@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with MXCuBE.  If not, see <http://www.gnu.org/licenses/>.
 """
-ESRF ID13 Export Data Brick
+ESRF Export Data Brick
 
 [Description]
 
@@ -39,18 +39,13 @@ Created files:
 
 [Properties]
 
-xml file
-
 [Signals]
-
-delete_graphic_items : sent after export data (if option checked)
 
 [Slots]
 
-sample_changed - sample changed from outside GUI
-
-data_policy_changed(str) - slot to be connected to ESRFID13ConfigurationBrick
-                             data_policy_changed signal
+data_policy_changed (dict) - slot to be connected to ESRFConfigurationBrick's
+                             data_policy_changed signal.
+                             param : data_policy_info_dict
 
 [Comments]
 
@@ -62,12 +57,10 @@ import logging
 import json
 import os
 from os.path import expanduser
-from pprint import pprint
 import copy
 import datetime
 from datetime import date
 import logging
-import pprint
 
 from gui.utils import Icons, Colors, QtImport
 from gui.BaseComponents import BaseWidget
@@ -82,19 +75,15 @@ __credits__ = ["MXCuBE collaboration"]
 __license__ = "LGPLv3+"
 __category__ = "ESRF"
 
-class ESRFID13ExportDataBrick(BaseWidget):
+class ESRFExportDataBrick(BaseWidget):
 
-    get_data_policy_signal = QtImport.pyqtSignal(object)
-    
     def __init__(self, *args):
 
         BaseWidget.__init__(self, *args)
 
         # Signals ------------------------------------------------------------
-        self.define_signal("get_data_policy_signal", ())
     
         # Slots ---------------------------------------------------------------
-        self.define_slot("sample_changed", ())
         self.define_slot("data_policy_changed", ())
 
         # Graphic elements ----------------------------------------------------
@@ -158,7 +147,12 @@ class ESRFID13ExportDataBrick(BaseWidget):
             session_info_dict['proposal'] = scan_savings.proposal
             session_info_dict['template'] = scan_savings.template
             session_info_dict['beamline'] = scan_savings.beamline
-
+            
+            # waiting to https://gitlab.esrf.fr/bliss/bliss/-/merge_requests/2948
+            # be part of current BLISS version
+            #session_info_dict['filename'] = scan_savings.filename
+            #session_info_dict['data_fullpath'] = scan_savings.data_fullpath
+            
             self.data_policy_changed(session_info_dict)
 
     def data_policy_changed(self, data_policy_info_dict):
@@ -208,10 +202,14 @@ class ESRFID13ExportDataBrick(BaseWidget):
         self.ui_widgets_manager.export_filename_tbox.setText(filename)
 
     def select_file_path_button_clicked(self):
+        """
+        open file dialog to select a valid folder
+        """
+
         file_dialog = QtImport.QFileDialog(self)
         
         old_folder_path = self.ui_widgets_manager.export_folder_path_tbox.text().strip()
-        # file_dialog.setNameFilter("%s*" % self._base_image_dir)
+        
         if not os.path.exists(old_folder_path):
             old_folder_path = "/"
         selected_dir = str(
@@ -271,9 +269,8 @@ class ESRFID13ExportDataBrick(BaseWidget):
                 
         # file exists?? overwrite ??
         if self.ui_widgets_manager.overwrite_warn_cbbox.isChecked():
-            # get full filename and check if file already exists
             
-
+            # get full filename and check if file already exists
             if os.path.exists(file_full_path):
                 if (
                     QtImport.QMessageBox.warning(
@@ -354,11 +351,6 @@ class ESRFID13ExportDataBrick(BaseWidget):
             data['zoom_tag'] = position_dict['zoom_tag']
             data['zoom_value'] = position_dict['zoom']
 
-            # from PyQt5.QtCore import pyqtRemoveInputHook
-            # pyqtRemoveInputHook()
-            # import pdb
-            # pdb.set_trace()
-
             for shape in HWR.beamline.sample_view.get_shapes():
                 
                 display_name = shape.get_display_name()
@@ -388,7 +380,6 @@ class ESRFID13ExportDataBrick(BaseWidget):
                 shapes_dict[display_name.replace(" ", "_")] = shape_dict
 
         data['motors'] = motors_dict
-        # data["position_dict"] = position_dict
         data['graphic_items_points'] = shapes_dict
 
         return data

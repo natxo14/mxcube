@@ -21,21 +21,44 @@
 [Name] Centering Brick
 
 [Description]
+This brick allows to center the sample in order it gets the closest
+to the beam while it rotates with the 'phi' motor.
 
+First, it gets data for calculating the final motor positions making
+the user click several times on the 'same' sample point while it
+rotates the phi motor 'N Centring Points' times 'Delta Phi' degrees
+
+Then it calculates new motor positions and moves them.
+Usually, at the end of the procedure the following motors are moved:
+'sample y' and 'sample x' : motors on top of which is the sample
+'phi' : rotation motor in top of which sampley and samplex are
+'phiy', 'phiz' : translations motors on vertcal and horizontal axis
+
+When the centring is finished, it displays on a matplotlib figure
+the data used on the centring, and a visualization of the motor
+movements
 
 [Properties]
------------------------------------------------------------------------
-| name         | type   | description
------------------------------------------------------------------------
-| blah      | string | 
-| blah | string | 
------------------------------------------------------------------------
 
 [Signals] -
 
+centring_parameters_changed
+
 [Slots] -
 
+centring_started - connected to QtGraphicsManager centringStarted signal
+
+centring_failed - connected to QtGraphicsManager centringFailed signal
+
+centring_successful - connected to QtGraphicsManager centringSuccessful signal
+
+image_clicked - connected to Diffractometer centring_image_clicked signal
+
+show_centring_paremeters - connected to Diffractometer centring_calculation_ended signal
+
+
 [Comments] -
+See also sample_centring.py file in HardwareRepository git submodule
 
 [Hardware Objects]
 -----------------------------------------------------------------------
@@ -61,6 +84,7 @@ import matplotlib.pyplot as plt
 
 from gui.BaseComponents import BaseWidget
 from HardwareRepository import HardwareRepository as HWR
+from HardwareRepository.HardwareObjects import sample_centring
 
 
 __credits__ = ["MXCuBE collaboration"]
@@ -76,57 +100,34 @@ class ESRFCenteringBrick(BaseWidget):
         self.diffractometer_hwobj = None
 
         # Internal values -----------------------------------------------------
-        self.step_editor = None
-        self.move_step = 1
-        self.demand_move = 0
-        self.in_expert_mode = None
-        self.position_history = []
         self.num_clicked_centring_pos = 0
         
-        #match default values in .ui file
-        self.points_for_aligment = 3
-        self.delta_phi = 5
-
         # Properties ----------------------------------------------------------
-        self.add_property("mnemonic", "string", "")
-        self.add_property("clockwise", "boolean", False)
-        self.add_property("table_y_inverted", "boolean", False)
-        self.add_property("table_z_inverted", "boolean", False)
 
         # Signals ------------------------------------------------------------
-        self.define_signal("getBeamPosition", ())
         self.define_signal("centring_parameters_changed", ())
 
         # Slots ---------------------------------------------------------------
-        self.define_slot("changePixelScale", ())
         
         # Graphic elements ----------------------------------------------------
         self.main_groupbox = QtImport.QGroupBox("Sample centering", self)
-        self.ui_widgets_manager = QtImport.load_ui_file("centering.ui")
+        self.ui_widgets_manager = QtImport.load_ui_file("esrf_sample_centering.ui")
 
-        
         # Size policy --------------------------------
         self.ui_widgets_manager.aligment_table.setSizePolicy(
             QtImport.QSizePolicy.Minimum,
             QtImport.QSizePolicy.Minimum,
         )
 
-        #validator for input values for delta phi: min/max/decimals
-        # self.ui_widgets_manager.delta_phi_textbox.setValidator(
-        #     QtImport.QDoubleValidator(0, 180, 2)
-        # )
-
         # Layout --------------------------------------------------------------
         _groupbox_vlayout = QtImport.QVBoxLayout()
         _groupbox_vlayout.addWidget(self.ui_widgets_manager)
-        #_groupbox_vlayout.setSpacing(0)
-        #_groupbox_vlayout.setContentsMargins(0, 0, 0, 0)
         self.main_groupbox.setLayout(_groupbox_vlayout)
 
         # MatPlotWidget --------------------------------------------------------------
          # a figure instance to plot on
         self.figure = plt.figure()
-         # this is the Canvas Widget that displays the `figure`
+        # this is the Canvas Widget that displays the `figure`
         # it takes the `figure` instance as a parameter to __init__
         self.canvas = FigureCanvas(self.figure)
 
@@ -141,8 +142,6 @@ class ESRFCenteringBrick(BaseWidget):
         _main_vlayout = QtImport.QHBoxLayout()
         _main_vlayout.addWidget(self.main_groupbox)
         _main_vlayout.addLayout(_matplotlib_widget_layout)
-        #_main_vlayout.setSpacing(0)
-        #_main_vlayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(_main_vlayout)
 
         # Qt signal/slot connections ------------------------------------------
@@ -192,15 +191,23 @@ class ESRFCenteringBrick(BaseWidget):
         # init delta_phi var value
         self.delta_phi_changed()
 
+        # match default values in .ui file
+        self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
+        self.delta_phi = float(self.ui_widgets_manager.delta_phi_textbox.text())
+
     def centring_started(self):
+        """
+        Used to clean the table from precedent data
+        """
         #clean point table
         self.clean_table()
         self.num_clicked_centring_pos = 0
         self.ui_widgets_manager.number_points_spinbox.setEnabled(False)
 
     def centring_failed(self, method, centring_status):
-        #background cell color to red
-        print(f"ESRFCENTERINGBRICK ; centring_failed")
+        """
+        Used to give feedback to user: table cells' background to red
+        """
         table = self.ui_widgets_manager.aligment_table
         table.setRowCount(self.points_for_aligment)
         for row in range(table.rowCount()):
@@ -209,7 +216,9 @@ class ESRFCenteringBrick(BaseWidget):
         self.ui_widgets_manager.number_points_spinbox.setEnabled(True)
 
     def centring_successful(self):
-        #background cell color to green
+        """
+        Used to give feedback to user: table cells' background to green
+        """
         table = self.ui_widgets_manager.aligment_table
         table.setRowCount(self.points_for_aligment)
         for row in range(table.rowCount()):
@@ -217,34 +226,11 @@ class ESRFCenteringBrick(BaseWidget):
                 table.item(row, column).setBackground(QtImport.QColor(QtImport.Qt.green))
         self.ui_widgets_manager.number_points_spinbox.setEnabled(True)
 
-    # def property_changed(self, property_name, old_value, new_value):
-    #     if property_name == "mnemonic":
-    #         self.diffractometer_hwobj = self.get_hardware_object(new_value)
-            
-            # equipment = self.get_hardware_object(new_value)
-            # if equipment is not None :
-            #         xoryMotor = equipment.getDeviceByRole('horizontal')
-            #         if xoryMotor is not None:
-            #             self.__verticalPhi = True
-            #         else:
-            #             xoryMotor = equipment.getDeviceByRole('vertical')
-            #             if xoryMotor is None:
-            #                 logging.getLogger().error('%s: could not find motors horizontal nor vertical motor in Hardware Objects %s',
-            #                                           str(self.name()),equipment.name())
-            #                 return
-            #             self.__verticalPhi = False
-
-            #         zMotor = equipment.getDeviceByRole('inBeam')
-            #         rMotor = equipment.getDeviceByRole('rotation')
-            #         if zMotor is None or rMotor is None :
-            #             logging.getLogger().error('%s: could not find motors inBeam or rotation motor in Hardware Objects %s',
-            #                                       str(self.name()),equipment.name())
-            #             return          
-
     def image_clicked(self, x, y):
-        print(f"CenteringBrick - image_clicked {x},{y} - num click {self.num_clicked_centring_pos}")
+        """
+        Used to give feedback to user: update table's and plot's data
+        """
         table = self.ui_widgets_manager.aligment_table
-        print(f"CenteringBrick - image_clicked table rows, cols : {table.rowCount()} {table.columnCount()}")
         self.plot_data_Y.append(x)
         self.plot_data_X.append(math.radians(self.delta_phi) * self.num_clicked_centring_pos)
         table.item(self.num_clicked_centring_pos, 1).setText(str(x))
@@ -257,11 +243,15 @@ class ESRFCenteringBrick(BaseWidget):
         self.figure.clear()
         # plot data
         ax = self.figure.add_subplot()
-        ax.plot(self.plot_data_X, self.plot_data_Y , 'ro')
+        ax.plot(self.plot_data_X, self.plot_data_Y, 'ro')
         self.canvas.draw()
 
     def show_centring_paremeters(self, parameter_dict):
-
+        """
+        Used to give feedback to user: update plot's data
+        """
+        # use sample_centring module
+        sample_centring.
         # from multipointcenter
         # p[0] * numpy.sin(x + p[1]) + p[2]
         amplitude = parameter_dict['r']
@@ -277,18 +267,14 @@ class ESRFCenteringBrick(BaseWidget):
         x_angle = numpy.linspace(phi_positions[0], 2 *numpy.pi + phi_positions[0], 360)
         sinus_signal = amplitude * numpy.sin(x_angle + phase) + offset
         
-        print(f"""CenteringBrick - PLOT :
-        self.plot_data_X NOT DEPLACED BY phi_positions[0] {self.plot_data_X}
-        self.plot_data_Y  {self.plot_data_Y}
-        """)
         # clear data
         self.figure.clear()
         # plot data
         ax = self.figure.add_subplot(121)
-        ax.plot(x_angle, sinus_signal )
+        ax.plot(x_angle, sinus_signal)
         ax.plot(
             numpy.array(phi_positions),
-            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor) , 'ro'
+            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor), 'ro'
         )
         ax.axhspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
         ax.axhline(y=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
@@ -299,7 +285,7 @@ class ESRFCenteringBrick(BaseWidget):
         ax2 = self.figure.add_subplot(122)
         ax2.plot(sinus_signal, x_angle)
         ax2.plot(
-            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor) , 'ro',
+            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor), 'ro',
             numpy.array(phi_positions)            
         )
         ax2.axvspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
@@ -313,11 +299,15 @@ class ESRFCenteringBrick(BaseWidget):
     def show_center(self, checkbox_state):
         """
         Doc
+        TODO: Heritated from Framework2.
+        To be developped if needed
         """
         pass
     def show_help_lines(self, checkbox_state):
         """
         Doc
+        TODO: Heritated from Framework2.
+        To be developped if needed
         """
         pass
     def start_centring(self):
@@ -374,12 +364,6 @@ class ESRFCenteringBrick(BaseWidget):
                 self.points_for_aligment,
                 self.delta_phi
             )
-        #self.emit_centring_parameters_changed()
-    
-    # def emit_centring_parameters_changed(self):
-    #     self.emit("centring_parameters_changed",
-    #     (self.points_for_aligment, self.delta_phi)
-    #     )
         
     def clean_table(self):
         """
