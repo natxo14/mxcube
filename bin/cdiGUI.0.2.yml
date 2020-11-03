@@ -180,7 +180,7 @@
                 - {comment: '', default_value: '', hidden: false, name: vertical motor,
                   old_value: '', type: string, value: /sz}
                 - {comment: '', default_value: '', hidden: false, name: zoom, old_value: '',
-                  type: string, value: /multiple-positions-zoom}
+                  type: string, value: /multiple-positions-zoom-ID10}
                 type: ESRFCameraCalibrationBrick
               - brick: {class: ESRFCameraBeamBrick, name: ESRFCameraBeamBrick0}
                 children: []
@@ -204,7 +204,7 @@
                   hidden: false, name: instanceAllowConnected, old_value: 0, type: boolean,
                   value: 0}
                 - {comment: '', default_value: '', hidden: false, name: zoom, old_value: '',
-                  type: string, value: /multiple-positions-zoom}
+                  type: string, value: /multiple-positions-zoom-ID10}
                 type: ESRFCameraBeamBrick
               - children: []
                 connections: []
