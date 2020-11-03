@@ -472,20 +472,22 @@ class ESRFConfigurationBrick(BaseWidget):
             session_info_dict['base_path'] = scan_savings.base_path
             session_info_dict['data_filename'] = scan_savings.data_filename
             session_info_dict['data_path'] = scan_savings.data_path
-            session_info_dict['dataset'] = scan_savings.dataset
+            session_info_dict['dataset_name'] = scan_savings.dataset_name
             session_info_dict['date'] = scan_savings.date
-            session_info_dict['sample'] = scan_savings.sample
-            session_info_dict['proposal'] = scan_savings.proposal
+            session_info_dict['sample_name'] = scan_savings.sample_name
+            session_info_dict['proposal_name'] = scan_savings.proposal_name
             session_info_dict['template'] = scan_savings.template
             session_info_dict['beamline'] = scan_savings.beamline
-            
+                                    
             # waiting to https://gitlab.esrf.fr/bliss/bliss/-/merge_requests/2948
             # be part of current BLISS version
+            # TODO : still getting erros on the following. DEBUG
             #session_info_dict['filename'] = scan_savings.filename
             #session_info_dict['data_fullpath'] = scan_savings.data_fullpath
+            
             for key, val in session_info_dict.items():
                 
-                info_str = ' ' + key + ' : ' + val
+                info_str = ' ' + key + ' : ' + str(val)
                 session_info_string += info_str + ' \n'
             
             self.data_policy_changed.emit(session_info_dict)
