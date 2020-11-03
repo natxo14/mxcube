@@ -286,8 +286,8 @@ class ESRFCenteringBrick(BaseWidget):
         ax2 = self.figure.add_subplot(122)
         ax2.plot(sinus_signal, x_angle)
         ax2.plot(
-            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor), 'ro',
-            numpy.array(phi_positions)            
+            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor),
+            numpy.array(phi_positions), 'ro'
         )
         ax2.axvspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
         ax2.axvline(x=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
