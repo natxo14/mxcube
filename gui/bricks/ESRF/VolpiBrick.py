@@ -109,10 +109,12 @@ class VolpiBrick(BaseWidget):
 
     def zoom_changed(self, new_position_dict):
         new_light_value = new_position_dict['light']
+        print(f"VOLPI BRICK zoom_changed: new_position_dict : {new_position_dict} new_light_value {new_light_value}")
         self.value_changed(new_light_value)
 
     def value_changed(self, new_intensity):
         """set volpi to new value."""
+        print(f"VOLPI BRICK value_changed: new_intensity : {new_intensity}")
         self.dial.setValue(new_intensity)
         self.position_spinbox.setValue(new_intensity)
         self.volpi_hwobj.set_value(new_intensity)
@@ -152,7 +154,12 @@ class VolpiBrick(BaseWidget):
         self.setEnabled(False)
     
     def slot_intensity(self, new_intensity):
-        self.dial._dial.setValue(new_intensity)
+        self.dial.blockSignals(True)
+        self.position_spinbox.blockSignals(True)
+        self.dial.setValue(new_intensity)
+        self.position_spinbox.setValue(new_intensity)
+        self.dial.blockSignals(False)
+        self.position_spinbox.blockSignals(False)
     
     def property_changed(self, property_name, old_value, new_value):
         """Property changed in GUI designer and when launching app."""
