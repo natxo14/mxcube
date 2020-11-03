@@ -186,14 +186,15 @@ class ESRFCenteringBrick(BaseWidget):
         self.connect(HWR.beamline.diffractometer, "centring_image_clicked", self.image_clicked)
         self.connect(HWR.beamline.diffractometer, "centring_calculation_ended", self.show_centring_paremeters)
 
-        self.change_point_number(self.points_for_aligment)
-
+        
         # init delta_phi var value
         self.delta_phi_changed()
 
         # match default values in .ui file
         self.points_for_aligment = self.ui_widgets_manager.number_points_spinbox.value()
         self.delta_phi = float(self.ui_widgets_manager.delta_phi_textbox.text())
+
+        self.change_point_number(self.points_for_aligment)
 
     def centring_started(self):
         """
@@ -251,7 +252,7 @@ class ESRFCenteringBrick(BaseWidget):
         Used to give feedback to user: update plot's data
         """
         # use sample_centring module
-        sample_centring.
+        #sample_centring.
         # from multipointcenter
         # p[0] * numpy.sin(x + p[1]) + p[2]
         amplitude = parameter_dict['r']
@@ -314,14 +315,21 @@ class ESRFCenteringBrick(BaseWidget):
         """
         Launch aligment process
         """
+        self.reset_centring_display()
         HWR.beamline.sample_view.start_centring(tree_click=True)
-    def cancel_centring(self):
+
+    def reset_centring_display(self):
         """
-        Cancel aligment process
+        clean centring display and its data
         """
         self.plot_data_X.clear()
         self.plot_data_Y.clear()
         self.figure.clear()
+    def cancel_centring(self):
+        """
+        Cancel aligment process
+        """
+        self.reset_centring_display()
         HWR.beamline.sample_view.reject_centring()
 
     def change_point_number(self, new_int_value):
