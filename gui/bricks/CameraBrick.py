@@ -453,13 +453,15 @@ class CameraBrick(BaseWidget):
             "Camera Exposure and Gain",
         )
 
-        self._camera_expo_spin_slider = SpinAndSliderAction(0.05, 60, "Camera Exposition")
+        self._camera_expo_spin_slider = SpinAndSliderAction(0.05, 2.0, "Camera Exposition")
         self._camera_expo_spin_slider.value_changed.connect(
             self._set_camera_exposure_time
         )
         camera_expo_gain_menu.addAction(
             self._camera_expo_spin_slider
         )
+
+        camera_expo_gain_menu.addSeparator()
 
         self._camera_gain_spin_slider = SpinAndSliderAction(0, 1.0, "Camera Gain")
         self._camera_gain_spin_slider.value_changed.connect(
@@ -578,7 +580,7 @@ class CameraBrick(BaseWidget):
                     
                     #set gain/expo control's values from camera
                     camera_expo_limits = self.graphics_manager_hwobj.camera.get_exposure_limits()
-                    self._camera_expo_spin_slider.set_limits(*camera_expo_limits)
+                    #self._camera_expo_spin_slider.set_limits(*camera_expo_limits)
 
                     camera_gain = self.graphics_manager_hwobj.camera.get_gain()
                     camera_expo = self.graphics_manager_hwobj.camera.get_exposure_time()
@@ -1290,7 +1292,7 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self._slider.setValue(slider_val)
         self.value_changed.emit(spin_value)
 
-    def set_value(self,spin_value):
+    def set_value(self, spin_value):
         self._spinbox.setValue(spin_value)
 
     def set_limits(self, min_value, max_value):
