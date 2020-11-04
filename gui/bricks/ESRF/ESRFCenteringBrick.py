@@ -227,7 +227,7 @@ class ESRFCenteringBrick(BaseWidget):
                 table.item(row, column).setBackground(QtImport.QColor(QtImport.Qt.green))
         self.ui_widgets_manager.number_points_spinbox.setEnabled(True)
 
-    def image_clicked(self, x, y):
+    def image_clicked(self, x, y, phi_value):
         """
         Used to give feedback to user: update table's and plot's data
         """
@@ -236,7 +236,7 @@ class ESRFCenteringBrick(BaseWidget):
         self.plot_data_X.append(math.radians(self.delta_phi) * self.num_clicked_centring_pos)
         table.item(self.num_clicked_centring_pos, 1).setText(str(x))
         table.item(self.num_clicked_centring_pos, 2).setText(str(y))
-        table.item(self.num_clicked_centring_pos, 0).setText(str(self.delta_phi * self.num_clicked_centring_pos))
+        table.item(self.num_clicked_centring_pos, 0).setText(str(phi_value))
 
         self.num_clicked_centring_pos += 1
  
