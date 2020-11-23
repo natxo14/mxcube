@@ -1283,7 +1283,7 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         spin_max = self._spinbox.maximum()
         spin_range = spin_max - spin_min
 
-        spinbox_val = 
+        spinbox_val = self._spinbox.value()
         print(f"SpinAndSliderAction ^^^^^^^^^^^ set_value_from_slider : spinbox_val {spinbox_val} ")
         
         self._spinbox.setValue(spin_min + (slider_value/100.0) * spin_range)
