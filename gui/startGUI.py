@@ -405,10 +405,10 @@ def run(gui_config_file=None):
     palette.setColor(QtImport.QPalette.ToolTipText, QtImport.Qt.black)
     main_application.setPalette(palette)
 
-    main_application.setOrganizationName("MXCuBE")
-    main_application.setOrganizationDomain("https://github.com/mxcube")
-    main_application.setApplicationName("MXCuBE")
-    # app.setWindowIcon(QtImport.QIcon("images/icon.png"))
+    #main_application.setOrganizationName("MXCuBE")
+    #main_application.setOrganizationDomain("https://github.com/mxcube")
+    main_application.setApplicationName("TROIKACDI")
+    #app.setWindowIcon(QtImport.QIcon("images/icon.png"))
     main_application.exec_()
 
     supervisor.finalize()
