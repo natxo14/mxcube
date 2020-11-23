@@ -970,7 +970,7 @@ class WindowDisplayWidget(QtImport.QScrollArea):
         self._menubar.viewToolBarSignal.connect(self.view_toolbar_toggled)
 
         self.setWindowFlags(self.windowFlags() | QtImport.Qt.WindowMaximizeButtonHint)
-        self.setWindowIcon(Icons.load_icon("desktop_icon"))
+        self.setWindowIcon(Icons.load_icon("esrf_logo"))
 
         self._menubar.saveConfigSignal.connect(self.save_config_requested)
 

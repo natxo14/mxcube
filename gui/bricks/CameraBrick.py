@@ -1278,27 +1278,31 @@ class SpinAndSliderAction(QtImport.QWidgetAction):
         self.setDefaultWidget(self.main_widget)
 
     def set_value_from_slider(self, slider_value):
-        print(f"SpinAndSliderAction ^^^^^^^^^^^ set_value_from_slider : {slider_value} ")
         spin_min = self._spinbox.minimum()
         spin_max = self._spinbox.maximum()
         spin_range = spin_max - spin_min
 
-        spinbox_val = self._spinbox.value()
-        print(f"SpinAndSliderAction ^^^^^^^^^^^ set_value_from_slider : spinbox_val {spinbox_val} ")
+        spinbox_val = spin_min + (slider_value/100.0) * spin_range
+        spinbox_val = (round(spinbox_val,2))
         
+        self._spinbox.valueChanged.disconnect(self.set_value_from_spin)
         self._spinbox.setValue(spin_min + (slider_value/100.0) * spin_range)
+        self._spinbox.valueChanged.connect(self.set_value_from_spin)
+        
         self.value_changed.emit(self._spinbox.value())
 
     def set_value_from_spin(self, spin_value):
         
-        print(f"SpinAndSliderAction ^^^^^^^^^^^ set_value_from_spin : {spin_value} ")
         slider_val = ((spin_value - self._spinbox.minimum()) * 100.0) / self._spinbox.maximum()
-        print(f"SpinAndSliderAction ^^^^^^^^^^^ set_value_from_spin : slider_val {slider_val} ")
+        slider_val = int(round(slider_val))
+        
+        self._slider.valueChanged.disconnect(self.set_value_from_slider)
         self._slider.setValue(slider_val)
+        self._slider.valueChanged.connect(self.set_value_from_slider)
+        
         self.value_changed.emit(spin_value)
 
     def set_value(self, spin_value):
-        print(f"SpinAndSliderAction ^^^^^^^^^^^ set_value : {spin_value} ")
         self._spinbox.setValue(spin_value)
 
     def set_limits(self, min_value, max_value):

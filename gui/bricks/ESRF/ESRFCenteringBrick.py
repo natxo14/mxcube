@@ -176,8 +176,10 @@ class ESRFCenteringBrick(BaseWidget):
         
         # Other ---------------------------------------------------------------
 
-        self.plot_data_X = []
-        self.plot_data_Y = []
+        self.plot_data_phi = []
+        self.plot_data_Y_click = []
+        self.plot_data_X_click = []
+
         self.connect(HWR.beamline.sample_view, "centringStarted", self.centring_started)
         self.connect(HWR.beamline.sample_view, "centringFailed", self.centring_failed)
         self.connect(
@@ -216,10 +218,11 @@ class ESRFCenteringBrick(BaseWidget):
                 table.item(row, column).setBackground(QtImport.QColor(QtImport.Qt.red))
         self.ui_widgets_manager.number_points_spinbox.setEnabled(True)
 
-    def centring_successful(self):
+    def centring_successful(self, method, centring_status):
         """
         Used to give feedback to user: table cells' background to green
         """
+        
         table = self.ui_widgets_manager.aligment_table
         table.setRowCount(self.points_for_aligment)
         for row in range(table.rowCount()):
@@ -232,11 +235,12 @@ class ESRFCenteringBrick(BaseWidget):
         Used to give feedback to user: update table's and plot's data
         """
         table = self.ui_widgets_manager.aligment_table
-        self.plot_data_Y.append(x)
-        self.plot_data_X.append(math.radians(self.delta_phi) * self.num_clicked_centring_pos)
+        self.plot_data_Y_click.append(y)
+        self.plot_data_X_click.append(x)
+        self.plot_data_phi.append(math.radians(self.delta_phi) * self.num_clicked_centring_pos)
         table.item(self.num_clicked_centring_pos, 1).setText(str(x))
         table.item(self.num_clicked_centring_pos, 2).setText(str(y))
-        table.item(self.num_clicked_centring_pos, 0).setText(str(phi_value))
+        table.item(self.num_clicked_centring_pos, 0).setText(str(int(round(phi_value))))
 
         self.num_clicked_centring_pos += 1
  
@@ -244,7 +248,7 @@ class ESRFCenteringBrick(BaseWidget):
         self.figure.clear()
         # plot data
         ax = self.figure.add_subplot()
-        ax.plot(self.plot_data_X, self.plot_data_Y, 'ro')
+        ax.plot(self.plot_data_phi, self.plot_data_X_click, 'ro')
         self.canvas.draw()
 
     def show_centring_paremeters(self, parameter_dict):
@@ -253,48 +257,90 @@ class ESRFCenteringBrick(BaseWidget):
         """
         # use sample_centring module
         #sample_centring.
+        pixels_per_mm_hor, pixels_per_mm_ver = HWR.beamline.diffractometer.get_pixels_per_mm()
+        beam_position_x = HWR.beamline.beam.get_beam_position_on_screen()[0]
+        image_width_pix = HWR.beamline.sample_view.get_image_size()[0]
+        
+        X = numpy.array(self.plot_data_X_click)/pixels_per_mm_hor
+        Y = numpy.array(self.plot_data_Y_click)/pixels_per_mm_ver
+        phi_positions = numpy.array(self.plot_data_phi)
+
+        chi_angle = math.radians(90)
+        chi_rot_matrix = numpy.matrix(
+            [
+                [math.cos(chi_angle), -math.sin(chi_angle)],
+                [math.sin(chi_angle), math.cos(chi_angle)],
+            ]
+        )
+        Z = chi_rot_matrix * numpy.matrix([X, Y])
+
+        z = Z[1]
+        avg_pos = Z[0].mean()
+        amplitude, alpha, offset = sample_centring.multiPointCentre(numpy.array(z).flatten(), phi_positions)
+
+        dy = amplitude * numpy.sin(alpha)
+        dx = amplitude * numpy.cos(alpha)
+
+        d = chi_rot_matrix.transpose() * numpy.matrix([[avg_pos], [offset]])
+
+        d_horizontal = d[0] - (beam_position_x / float(pixels_per_mm_hor))
+        
         # from multipointcenter
         # p[0] * numpy.sin(x + p[1]) + p[2]
-        amplitude = parameter_dict['r']
-        phase = parameter_dict['alpha']
-        offset = parameter_dict['offset']
-        d_horizontal = parameter_dict['d_horizontal']
-        phi_positions = parameter_dict['phi_positions']
-        image_width_pix = HWR.beamline.sample_view.get_image_size()[0]
-        beam_position_x = HWR.beamline.beam.get_beam_position_on_screen()[0]
-        pixels_per_mm_hor = parameter_dict['pixelsPerMm_Hor']
+        # d_horizontal = parameter_dict['d_horizontal']
+        # phi_positions = parameter_dict['phi_positions']
         
         
-        x_angle = numpy.linspace(phi_positions[0], 2 *numpy.pi + phi_positions[0], 360)
-        sinus_signal = amplitude * numpy.sin(x_angle + phase) + offset
+        x_angle = numpy.linspace(phi_positions[0], 2 * numpy.pi + phi_positions[0], 360)
+        sinus_signal = amplitude * numpy.sin(x_angle + alpha) + offset
         
         # clear data
         self.figure.clear()
         # plot data
-        ax = self.figure.add_subplot(121)
-        ax.plot(x_angle, sinus_signal)
-        ax.plot(
-            numpy.array(phi_positions),
-            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor), 'ro'
-        )
-        ax.axhspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
-        ax.axhline(y=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
+        # ax = self.figure.add_subplot(121)
+        # ax.plot(x_angle, sinus_signal)
+        # ax.plot(
+        #     numpy.array(phi_positions),
+        #     numpy.array(self.plot_data_X_click) / float(pixels_per_mm_hor), 'ro'
+        # )
+        # ax.axhspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
+        # ax.axhline(y=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
 
-        ax.axhspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
-        ax.axhline(y=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
+        # ax.axhspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
+        # ax.axhline(y=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
 
-        ax2 = self.figure.add_subplot(122)
+        ax2 = self.figure.add_subplot()
+        ax2.set_title("Centring movement preview")
+        ax2.set_ylabel("\u03A9 (rad)")
+        ax2.set_xlabel("\u0394Hor from image left corner (mm)")
+
         ax2.plot(sinus_signal, x_angle)
         ax2.plot(
-            numpy.array(self.plot_data_Y) / float(pixels_per_mm_hor),
-            numpy.array(phi_positions), 'ro'
+            numpy.array(self.plot_data_X_click) / float(pixels_per_mm_hor),
+            numpy.array(phi_positions), 'ro', label='Clicked points'
         )
-        ax2.axvspan(0, float(image_width_pix / pixels_per_mm_hor), facecolor='y', alpha=0.5)
-        ax2.axvline(x=float(beam_position_x / pixels_per_mm_hor), color='r', linestyle='-.')
+        ax2.axvspan(0, float(image_width_pix / pixels_per_mm_hor),
+            facecolor='y',
+            alpha=0.5,
+            label='Previous visible range'
+        )
+        ax2.axvline(x=float(beam_position_x / pixels_per_mm_hor),
+            color='r',
+            linestyle='-.',
+            label='Beam Position'
+        )
 
-        ax2.axvspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor), facecolor='g', alpha=0.5)
-        ax2.axvline(x=d_horizontal + float(beam_position_x / pixels_per_mm_hor), color='b', linestyle='-.')
-
+        ax2.axvspan(d_horizontal, d_horizontal + float(image_width_pix / pixels_per_mm_hor),
+            facecolor='g',
+            alpha=0.25,
+            label='New visible range'
+        )
+        ax2.axvline(x=d_horizontal + float(beam_position_x / pixels_per_mm_hor),
+            color='b',
+            linestyle='-.',
+            label='Centring axe'
+        )
+        ax2.legend(loc='right',shadow=True,fontsize='x-small')
         self.canvas.draw()
 
     def show_center(self, checkbox_state):
@@ -322,8 +368,9 @@ class ESRFCenteringBrick(BaseWidget):
         """
         clean centring display and its data
         """
-        self.plot_data_X.clear()
-        self.plot_data_Y.clear()
+        self.plot_data_phi.clear()
+        self.plot_data_Y_click.clear()
+        self.plot_data_X_click.clear()
         self.figure.clear()
     def cancel_centring(self):
         """
